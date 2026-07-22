@@ -1,0 +1,72 @@
+is_global = true
+build_property.TargetFramework = net10.0
+build_property.TargetFrameworkIdentifier = .NETCoreApp
+build_property.TargetFrameworkVersion = v10.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property.EntryPointFilePath = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = CarnetDigitalWeb
+build_property.RootNamespace = CarnetDigitalWeb
+build_property.ProjectDir = D:\kenda\Downloads\CarnetDigitalWeb (3)\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 10.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = D:\kenda\Downloads\CarnetDigitalWeb (3)
+build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 10.0
+build_property.EnableCodeStyleSeverity = 
+
+[D:/kenda/Downloads/CarnetDigitalWeb (3)/Pages/EstadoUsuario/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXN0YWRvVXN1YXJpb1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/kenda/Downloads/CarnetDigitalWeb (3)/Pages/Fotografia/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRm90b2dyYWZpYVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/kenda/Downloads/CarnetDigitalWeb (3)/Pages/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/kenda/Downloads/CarnetDigitalWeb (3)/Pages/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW4uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/kenda/Downloads/CarnetDigitalWeb (3)/Pages/Parametro/Form.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUGFyYW1ldHJvXEZvcm0uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/kenda/Downloads/CarnetDigitalWeb (3)/Pages/Parametro/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUGFyYW1ldHJvXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/kenda/Downloads/CarnetDigitalWeb (3)/Pages/Qr/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUXJcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/kenda/Downloads/CarnetDigitalWeb (3)/Pages/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/kenda/Downloads/CarnetDigitalWeb (3)/Pages/TiposIdentificacion/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVGlwb3NJZGVudGlmaWNhY2lvblxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/kenda/Downloads/CarnetDigitalWeb (3)/Pages/TiposUsuario/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVGlwb3NVc3VhcmlvXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/kenda/Downloads/CarnetDigitalWeb (3)/Pages/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/kenda/Downloads/CarnetDigitalWeb (3)/Pages/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 

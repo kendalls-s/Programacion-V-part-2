@@ -8,23 +8,23 @@
     "net10.0": []
   },
   "packageFolders": {
-    "C:\\Users\\kenda\\.nuget\\packages\\": {},
+    "C:\\Users\\vane1\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\kenda\\Downloads\\CarnetDigitalWeb (3)\\CarnetDigitalWeb.csproj",
+      "projectUniqueName": "C:\\Users\\vane1\\OneDrive\\Documentos\\WEB_PROYECTO_PROGRAMACION\\Programacion-V-part-2\\Web\\CarnetDigitalWeb.csproj",
       "projectName": "CarnetDigitalWeb",
-      "projectPath": "D:\\kenda\\Downloads\\CarnetDigitalWeb (3)\\CarnetDigitalWeb.csproj",
-      "packagesPath": "C:\\Users\\kenda\\.nuget\\packages\\",
-      "outputPath": "D:\\kenda\\Downloads\\CarnetDigitalWeb (3)\\obj\\",
+      "projectPath": "C:\\Users\\vane1\\OneDrive\\Documentos\\WEB_PROYECTO_PROGRAMACION\\Programacion-V-part-2\\Web\\CarnetDigitalWeb.csproj",
+      "packagesPath": "C:\\Users\\vane1\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\vane1\\OneDrive\\Documentos\\WEB_PROYECTO_PROGRAMACION\\Programacion-V-part-2\\Web\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\kenda\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\vane1\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -33,6 +33,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {

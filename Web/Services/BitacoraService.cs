@@ -1,6 +1,6 @@
 ﻿using System.Net.Http.Json;
 
-namespace SRV11_AutoRegistro.Services;
+namespace CarnetDigitalWeb.Services;
 
 public class BitacoraService
 {

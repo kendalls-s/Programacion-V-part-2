@@ -1,7 +1,7 @@
 ﻿using MailKit.Net.Smtp;
 using MimeKit;
 
-namespace SRV11_AutoRegistro.Services
+namespace CarnetDigitalWeb.Services
 {
     public class EmailService : IEmailService
     {

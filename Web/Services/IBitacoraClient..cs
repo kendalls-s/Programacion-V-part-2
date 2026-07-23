@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace SRV3_Carreras.Services
+namespace SRV2_Instituciones.Services
 {
     public interface IBitacoraClient
     {

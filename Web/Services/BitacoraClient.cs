@@ -1,36 +1,46 @@
-﻿using System.Net.Http.Headers;
+﻿using System.Net.Http;
 using System.Net.Http.Json;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
-namespace RolSRV8.Services;
-
-public class BitacoraClient : IBitacoraClient
+namespace SRV2_Instituciones.Services
 {
-    private readonly HttpClient _httpClient;
-    private readonly IConfiguration _configuration;
-
-    public BitacoraClient(
-        HttpClient httpClient,
-        IConfiguration configuration)
+    public class BitacoraClient : IBitacoraClient
     {
-        _httpClient = httpClient;
-        _configuration = configuration;
-    }
+        private readonly HttpClient _httpClient;
+        private readonly IConfiguration _configuration;
 
-    public async Task RegistrarAsync(
-        string usuario,
-        string accion,
-        string detalleJson)
-    {
-        var bitacoraUrl = _configuration["Services:Bitacora"];
+        public BitacoraClient(
+            HttpClient httpClient,
+            IConfiguration configuration)
+        {
+            _httpClient = httpClient;
+            _configuration = configuration;
+        }
 
-        await _httpClient.PostAsJsonAsync(
-            bitacoraUrl,
-            new
+        public async Task RegistrarAsync(
+            string usuario,
+            string accion,
+            string detalleJson)
+        {
+            try
             {
-                Usuario = usuario,
-                Accion = accion,
-                DetalleJson = detalleJson,
-                EsError = false
-            });
+                var bitacoraUrl = _configuration["Services:Bitacora"];
+
+                await _httpClient.PostAsJsonAsync(
+                    bitacoraUrl,
+                    new
+                    {
+                        Usuario = usuario,
+                        Accion = accion,
+                        DetalleJson = detalleJson,
+                        EsError = false
+                    });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al registrar en bitacora: {ex.Message}");
+            }
+        }
     }
 }

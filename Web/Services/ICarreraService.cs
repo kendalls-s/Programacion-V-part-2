@@ -1,99 +1,33 @@
-﻿using System.Text.Json;
+﻿using SRV3_Carreras.Entities;
 
-namespace SRV11_AutoRegistro.Services;
+namespace SRV3_Carreras.Services;
 
 public interface ICarreraService
 {
-    Task<CarreraDto?> GetById(int id);
-    Task<List<CarreraDto>> GetAll();
+    Task<IEnumerable<Carrera>> GetAll();
+    Task<Carrera?> GetById(int id);
+    Task<(bool success, string message, int? id)> Create(CreateCarreraRequest request);
+    Task<(bool success, string message)> Update(UpdateCarreraRequest request);
+    Task<(bool success, string message)> Delete(int id);
 }
 
-public class CarreraService : ICarreraService
+public class CreateCarreraRequest
 {
-    private readonly HttpClient _httpClient;
-    private readonly IConfiguration _configuration;
-
-    public CarreraService(
-        HttpClient httpClient,
-        IConfiguration configuration)
-    {
-        _httpClient = httpClient;
-        _configuration = configuration;
-    }
-
-
-    public async Task<CarreraDto?> GetById(int id)
-    {
-        try
-        {
-            var carreraUrl = _configuration["Services:Carrera"];
-
-            var response = await _httpClient.GetAsync(
-                $"{carreraUrl}/carreras/{id}");
-
-            if (!response.IsSuccessStatusCode)
-                return null;
-
-
-            return await response.Content.ReadFromJsonAsync<CarreraDto>();
-        }
-        catch
-        {
-            return null;
-        }
-    }
-
-
-    public async Task<List<CarreraDto>> GetAll()
-    {
-        try
-        {
-            var carreraUrl = _configuration["Services:Carrera"];
-
-            var response = await _httpClient.GetAsync(
-                $"{carreraUrl}/carreras");
-
-
-            if (!response.IsSuccessStatusCode)
-                return new List<CarreraDto>();
-
-
-            var contenido = await response.Content.ReadAsStringAsync();
-
-
-            using var document = JsonDocument.Parse(contenido);
-
-
-            var lista = new List<CarreraDto>();
-
-
-            foreach (var item in document.RootElement.EnumerateArray())
-            {
-                lista.Add(new CarreraDto
-                {
-                    ID = item.GetProperty("id").GetInt32(),
-                    Nombre = item.GetProperty("nombre").GetString() ?? "",
-                    InstitucionID = item.GetProperty("institucionID").GetInt32()
-                });
-            }
-
-
-            return lista;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error CarreraService.GetAll: {ex.Message}");
-            return new List<CarreraDto>();
-        }
-    }
+    public string Nombre { get; set; } = string.Empty;
+    public string Director { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
+    public string Telefono { get; set; } = string.Empty;
+    public int InstitucionID { get; set; }
+    public string InstitucionNombre { get; set; } = string.Empty;
 }
 
-
-public class CarreraDto
+public class UpdateCarreraRequest
 {
     public int ID { get; set; }
-
     public string Nombre { get; set; } = string.Empty;
-
+    public string Director { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
+    public string Telefono { get; set; } = string.Empty;
     public int InstitucionID { get; set; }
+    public string InstitucionNombre { get; set; } = string.Empty;
 }

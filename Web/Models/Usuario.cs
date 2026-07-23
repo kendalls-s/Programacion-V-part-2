@@ -1,4 +1,4 @@
-﻿namespace SRV11_AutoRegistro.Entities;
+﻿namespace CarnetDigitalWeb.Models;
 
 public class Usuario
 {

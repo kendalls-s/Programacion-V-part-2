@@ -1,7 +1,7 @@
 ﻿using BitacoraSRV9.Entities;
 using BitacoraSRV9.Repository;
 
-namespace BitacoraSRV9.Services;
+namespace CarnetDigitalWeb.Services;
 
 public class BitacoraService : IBitacoraService
 {

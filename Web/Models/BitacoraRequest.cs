@@ -1,4 +1,4 @@
-﻿namespace BitacoraSRV9.Entities;
+﻿namespace CarnetDigitalWeb.Models;
 
 public class BitacoraRequest
 {

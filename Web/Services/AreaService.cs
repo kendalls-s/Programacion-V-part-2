@@ -1,7 +1,8 @@
 ﻿using SRV4_Areas.Entities;
 using SRV4_Areas.Repository;
 
-namespace SRV4_Areas.Services;
+
+namespace CarnetDigitalWeb.Services;
 
 public class AreaService : IAreaService
 {

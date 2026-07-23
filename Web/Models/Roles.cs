@@ -1,4 +1,4 @@
-﻿namespace RolSRV8.Entities;
+﻿namespace CarnetDigitalWeb.Models;
 
 public class Rol
 {

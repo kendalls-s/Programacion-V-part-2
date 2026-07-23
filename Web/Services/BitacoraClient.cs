@@ -3,7 +3,7 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 
-namespace SRV2_Instituciones.Services
+namespace CarnetDigitalWeb.Services
 {
     public class BitacoraClient : IBitacoraClient
     {

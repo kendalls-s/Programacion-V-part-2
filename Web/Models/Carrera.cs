@@ -1,4 +1,4 @@
-﻿namespace SRV3_Carreras.Entities;
+﻿namespace CarnetDigitalWeb.Models;
 
 public class Carrera
 {

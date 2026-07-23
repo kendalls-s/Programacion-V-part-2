@@ -1,4 +1,4 @@
-﻿namespace SRV2_Instituciones.Entities;
+﻿namespace CarnetDigitalWeb.Models;
 
 public class Institucion
 {

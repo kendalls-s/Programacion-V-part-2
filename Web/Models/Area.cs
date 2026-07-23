@@ -1,4 +1,4 @@
-﻿namespace SRV4_Areas.Entities;
+﻿namespace CarnetDigitalWeb.Models;
 
 public class AreaTrabajo
 {

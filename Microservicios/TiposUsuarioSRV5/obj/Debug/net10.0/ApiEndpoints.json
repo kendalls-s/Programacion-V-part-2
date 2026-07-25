@@ -1,0 +1,111 @@
+[
+  {
+    "ContainingType": "TiposUsuarioSRV5.Endpoints.TipoUsuarioEndpoints",
+    "Method": "GetTiposUsuario",
+    "RelativePath": "tiposusuario/",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "TiposUsuarioSRV5.Endpoints.TipoUsuarioEndpoints",
+    "Method": "CreateTipoUsuario",
+    "RelativePath": "tiposusuario/",
+    "HttpMethod": "POST",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "TiposUsuarioSRV5.DTOs.TipoUsuarioCreateDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "TiposUsuarioSRV5.Endpoints.TipoUsuarioEndpoints",
+    "Method": "GetTipoUsuarioById",
+    "RelativePath": "tiposusuario/{id:int}",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "TiposUsuarioSRV5.Endpoints.TipoUsuarioEndpoints",
+    "Method": "UpdateTipoUsuario",
+    "RelativePath": "tiposusuario/{id:int}",
+    "HttpMethod": "PUT",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "TiposUsuarioSRV5.DTOs.TipoUsuarioUpdateDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "TiposUsuarioSRV5.Endpoints.TipoUsuarioEndpoints",
+    "Method": "DeleteTipoUsuario",
+    "RelativePath": "tiposusuario/{id:int}",
+    "HttpMethod": "DELETE",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  }
+]

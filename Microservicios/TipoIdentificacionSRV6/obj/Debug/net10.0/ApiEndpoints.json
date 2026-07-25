@@ -1,0 +1,111 @@
+[
+  {
+    "ContainingType": "TipoIdentificacionSRV6.Endpoints.TipoIdentificacionEndpoints",
+    "Method": "GetTiposIdentificacion",
+    "RelativePath": "tiposidentificacion/",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "TipoIdentificacionSRV6.Endpoints.TipoIdentificacionEndpoints",
+    "Method": "CreateTipoIdentificacion",
+    "RelativePath": "tiposidentificacion/",
+    "HttpMethod": "POST",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "TipoIdentificacionSRV6.DTOs.TipoIdentificacionCreateDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "TipoIdentificacionSRV6.Endpoints.TipoIdentificacionEndpoints",
+    "Method": "GetTipoIdentificacionById",
+    "RelativePath": "tiposidentificacion/{id:int}",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "TipoIdentificacionSRV6.Endpoints.TipoIdentificacionEndpoints",
+    "Method": "UpdateTipoIdentificacion",
+    "RelativePath": "tiposidentificacion/{id:int}",
+    "HttpMethod": "PUT",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "TipoIdentificacionSRV6.DTOs.TipoIdentificacionUpdateDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "TipoIdentificacionSRV6.Endpoints.TipoIdentificacionEndpoints",
+    "Method": "DeleteTipoIdentificacion",
+    "RelativePath": "tiposidentificacion/{id:int}",
+    "HttpMethod": "DELETE",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  }
+]

@@ -1,0 +1,177 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Web\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\usuario\\desktop\\segundoentregable\\programacion-v-part-2-main\\web\\services\\itipousuarioservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:services\\itipousuarioservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\usuario\\desktop\\segundoentregable\\programacion-v-part-2-main\\web\\services\\itipoidentificacionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:services\\itipoidentificacionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\usuario\\desktop\\segundoentregable\\programacion-v-part-2-main\\web\\services\\tipoidentificacionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:services\\tipoidentificacionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\usuario\\desktop\\segundoentregable\\programacion-v-part-2-main\\web\\services\\tipousuarioservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:services\\tipousuarioservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\usuario\\desktop\\segundoentregable\\programacion-v-part-2-main\\web\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\usuario\\desktop\\segundoentregable\\programacion-v-part-2-main\\web\\pages\\bitacora\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:pages\\bitacora\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\usuario\\desktop\\segundoentregable\\programacion-v-part-2-main\\web\\pages\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:pages\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\usuario\\desktop\\segundoentregable\\programacion-v-part-2-main\\web\\services\\loginservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:services\\loginservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\usuario\\desktop\\segundoentregable\\programacion-v-part-2-main\\web\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 38,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "TipoUsuarioService.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Web\\Services\\TipoUsuarioService.cs",
+              "RelativeDocumentMoniker": "Services\\TipoUsuarioService.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Web\\Services\\TipoUsuarioService.cs",
+              "RelativeToolTip": "Services\\TipoUsuarioService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-25T21:35:46.568Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ITipoUsuarioService.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Web\\Services\\ITipoUsuarioService.cs",
+              "RelativeDocumentMoniker": "Services\\ITipoUsuarioService.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Web\\Services\\ITipoUsuarioService.cs",
+              "RelativeToolTip": "Services\\ITipoUsuarioService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAA5AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-25T21:35:36.904Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ITipoIdentificacionService.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Web\\Services\\ITipoIdentificacionService.cs",
+              "RelativeDocumentMoniker": "Services\\ITipoIdentificacionService.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Web\\Services\\ITipoIdentificacionService.cs",
+              "RelativeToolTip": "Services\\ITipoIdentificacionService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-25T21:34:18.736Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "TipoIdentificacionService.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Web\\Services\\TipoIdentificacionService.cs",
+              "RelativeDocumentMoniker": "Services\\TipoIdentificacionService.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Web\\Services\\TipoIdentificacionService.cs",
+              "RelativeToolTip": "Services\\TipoIdentificacionService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-25T21:26:22.382Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Web\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Web\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAACEAAAAAAAAAAADgvy8AAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-25T21:20:10.53Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Index.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Web\\Pages\\Bitacora\\Index.cshtml.cs",
+              "RelativeDocumentMoniker": "Pages\\Bitacora\\Index.cshtml.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Web\\Pages\\Bitacora\\Index.cshtml.cs",
+              "RelativeToolTip": "Pages\\Bitacora\\Index.cshtml.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAA0AAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-25T21:26:09.546Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "LoginService.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Web\\Services\\LoginService.cs",
+              "RelativeDocumentMoniker": "Services\\LoginService.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Web\\Services\\LoginService.cs",
+              "RelativeToolTip": "Services\\LoginService.cs",
+              "ViewState": "AgIAACkAAAAAAAAAAADwv0QAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-25T21:16:41.638Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Login.cshtml",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Web\\Pages\\Login.cshtml",
+              "RelativeDocumentMoniker": "Pages\\Login.cshtml",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Web\\Pages\\Login.cshtml",
+              "RelativeToolTip": "Pages\\Login.cshtml",
+              "ViewState": "AgIAAAsBAAAAAAAAAADwvyYBAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-07-25T21:13:29.007Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Web\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Web\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAAoAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-07-23T05:56:34.703Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

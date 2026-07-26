@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CarnetDigitalWeb")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b451c5cb590f3a4dbb6d86639213d1c6d3d92d16")]
 [assembly: System.Reflection.AssemblyProductAttribute("CarnetDigitalWeb")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CarnetDigitalWeb")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

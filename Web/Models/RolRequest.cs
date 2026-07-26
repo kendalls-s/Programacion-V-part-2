@@ -1,8 +1,9 @@
-﻿namespace CarnetDigitalWeb.Models;
-
-public class RolRequest
+﻿namespace CarnetDigitalWeb.Models
 {
-    public string Nombre { get; set; } = string.Empty;
+    public class RolRequest
+    {
+        public string Nombre { get; set; } = string.Empty;
 
-    public string Pantallas { get; set; } = string.Empty;
+        public List<int> Pantallas { get; set; } = new();
+    }
 }

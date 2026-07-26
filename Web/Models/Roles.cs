@@ -1,10 +1,11 @@
-﻿namespace CarnetDigitalWeb.Models;
-
-public class Rol
+﻿namespace CarnetDigitalWeb.Models
 {
-    public int Id { get; set; }
+    public class Rol
+    {
+        public int Id { get; set; }
 
-    public string Nombre { get; set; } = string.Empty;
+        public string Nombre { get; set; } = string.Empty;
 
-    public string Pantallas { get; set; } = string.Empty;
+        public List<PantallaRol> Pantallas { get; set; } = new();
+    }
 }

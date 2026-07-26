@@ -1,0 +1,390 @@
+﻿@page
+@model CarnetDigitalWeb.Pages.Roles.IndexModel
+@using System.Text.Json
+
+@{
+    ViewData["Title"] = "Administración de Roles";
+}
+
+<div class="page-header">
+    <h2>
+        <i class="bi bi-person-badge"></i>
+        Lista de Roles
+    </h2>
+
+    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <button type="button"
+                class="btn btn-primary"
+                onclick="abrirModalCrear()">
+            <i class="bi bi-plus-circle"></i>
+            Nuevo Rol
+        </button>
+
+        <button type="button"
+                class="btn btn-info"
+                onclick="abrirModalBuscar()">
+            <i class="bi bi-search"></i>
+            Buscar por ID
+        </button>
+    </div>
+</div>
+
+<form id="formAntiforgery">
+    @Html.AntiForgeryToken()
+</form>
+
+<div id="alertas">
+    @if (!string.IsNullOrWhiteSpace(Model.MensajeError))
+    {
+        <div class="alert alert-danger alert-dismissible">
+            <i class="bi bi-exclamation-circle"></i>
+            @Model.MensajeError
+
+            <button type="button"
+                    class="btn-close"
+                    onclick="this.parentElement.remove()">
+                &times;
+            </button>
+        </div>
+    }
+</div>
+
+<div id="loading"
+     class="loading"
+     style="display: none;">
+
+    <div class="spinner-border"></div>
+
+    <p style="margin-top: 10px;">
+        Cargando roles...
+    </p>
+</div>
+
+<div id="listaRoles"
+     class="grid-cards">
+</div>
+
+<div id="paginacionContainer"
+     style="display: none; margin-top: 30px;">
+
+    <div class="paginacion-wrapper">
+
+        <div class="paginacion-info">
+            Mostrando
+            <span id="inicioMostrar">0</span>
+            -
+            <span id="finMostrar">0</span>
+            de
+            <span id="totalRegistros">0</span>
+            roles
+        </div>
+
+        <div class="paginacion-botones">
+
+            <button type="button"
+                    class="btn-paginacion"
+                    id="btnAnterior"
+                    onclick="paginaAnterior()">
+
+                <i class="bi bi-chevron-left"></i>
+                Anterior
+            </button>
+
+            <span class="paginacion-numero"
+                  id="numeroPagina">
+                1
+            </span>
+
+            <button type="button"
+                    class="btn-paginacion"
+                    id="btnSiguiente"
+                    onclick="paginaSiguiente()">
+
+                Siguiente
+                <i class="bi bi-chevron-right"></i>
+            </button>
+
+        </div>
+    </div>
+</div>
+
+<!-- MODAL BUSCAR -->
+<div class="modal"
+     id="modalBuscar">
+
+    <div class="modal-dialog"
+         style="max-width: 500px;">
+
+        <div class="modal-content">
+
+            <div class="modal-header modal-header-info">
+
+                <h5>
+                    <i class="bi bi-search"></i>
+                    Buscar Rol por ID
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        onclick="cerrarModalBuscar()">
+                    &times;
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <div class="form-group">
+                    <label for="buscarId">
+                        ID del rol
+                    </label>
+
+                    <input id="buscarId"
+                           type="number"
+                           class="form-control"
+                           min="1"
+                           placeholder="Ejemplo: 1" />
+                </div>
+
+                <div id="buscarResultado"
+                     style="display: none; margin-top: 15px;">
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-secondary"
+                        onclick="cerrarModalBuscar()">
+                    Cancelar
+                </button>
+
+                <button type="button"
+                        class="btn btn-info"
+                        onclick="buscarRolPorId()">
+
+                    <i class="bi bi-search"></i>
+                    Buscar
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- MODAL CREAR / EDITAR -->
+<div class="modal"
+     id="modalFormulario">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 id="tituloModal">
+                    Nuevo Rol
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        onclick="cerrarModalFormulario()">
+                    &times;
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <input type="hidden"
+                       id="idRol"
+                       value="0" />
+
+                <div class="form-group">
+
+                    <label for="nombre">
+                        Nombre *
+                    </label>
+
+                    <input id="nombre"
+                           type="text"
+                           class="form-control"
+                           maxlength="100"
+                           placeholder="Nombre del rol" />
+
+                    <div class="invalid-feedback"
+                         id="errNombre">
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+                        Pantallas *
+                    </label>
+
+                    <div id="listaPantallasFormulario"
+                         style="
+                            border: 1px solid #ced4da;
+                            border-radius: 8px;
+                            padding: 12px;
+                            max-height: 300px;
+                            overflow-y: auto;">
+
+                        @if (Model.PantallasDisponibles.Count == 0)
+                        {
+                            <div class="alert alert-danger"
+                                 style="margin: 0;">
+                                No se encontraron pantallas disponibles.
+                            </div>
+                        }
+                        else
+                        {
+                            @foreach (var pantalla in Model.PantallasDisponibles)
+                            {
+                                <label style="
+                                    display: flex;
+                                    align-items: flex-start;
+                                    gap: 10px;
+                                    padding: 10px;
+                                    margin-bottom: 7px;
+                                    border: 1px solid #e0e0e0;
+                                    border-radius: 8px;
+                                    cursor: pointer;">
+
+                                    <input type="checkbox"
+                                           class="pantalla-checkbox"
+                                           value="@pantalla.Id"
+                                           style="margin-top: 4px;" />
+
+                                    <span>
+                                        <strong style="color: #003366;">
+                                            @pantalla.Nombre
+                                        </strong>
+
+                                        @if (!string.IsNullOrWhiteSpace(
+                                            pantalla.Descripcion))
+                                        {
+                                            <small style="
+                                                display: block;
+                                                color: #6c757d;
+                                                margin-top: 2px;">
+
+                                                @pantalla.Descripcion
+                                            </small>
+                                        }
+                                    </span>
+
+                                </label>
+                            }
+                        }
+
+                    </div>
+
+                    <div class="invalid-feedback"
+                         id="errPantallas">
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-secondary"
+                        onclick="cerrarModalFormulario()">
+                    Cancelar
+                </button>
+
+                <button type="button"
+                        class="btn btn-success"
+                        onclick="guardarRol()">
+
+                    <i class="bi bi-save"></i>
+                    Guardar
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- MODAL ELIMINAR -->
+<div class="modal"
+     id="modalEliminar">
+
+    <div class="modal-dialog"
+         style="max-width: 500px;">
+
+        <div class="modal-content">
+
+            <div class="modal-header modal-header-danger">
+
+                <h5>
+                    <i class="bi bi-exclamation-triangle"></i>
+                    Confirmar eliminación
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        onclick="cerrarModalEliminar()">
+                    &times;
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <p>
+                    ¿Realmente desea eliminar el elemento seleccionado?
+                </p>
+
+                <p style="
+                    color: #6c757d;
+                    font-size: 14px;
+                    margin-top: 8px;">
+
+                    <strong id="nombreEliminar"></strong>
+                </p>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-secondary"
+                        onclick="cerrarModalEliminar()">
+                    Cancelar
+                </button>
+
+                <button type="button"
+                        class="btn btn-danger"
+                        onclick="eliminarRol()">
+
+                    <i class="bi bi-trash"></i>
+                    Eliminar
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    window.rolesIniciales =
+        @Html.Raw(JsonSerializer.Serialize(Model.Roles));
+
+    window.pantallasDisponibles =
+        @Html.Raw(JsonSerializer.Serialize(Model.PantallasDisponibles));
+</script>
+
+@section Scripts {
+    <script src="~/js/roles.js"
+            asp-append-version="true"></script>
+}

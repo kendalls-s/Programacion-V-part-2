@@ -80,6 +80,29 @@ builder.Services.AddHttpClient("Parametro", c =>
     c.Timeout = TimeSpan.FromSeconds(30);
 });
 
+// HttpClient para SRV8 - Roles
+builder.Services.AddHttpClient("Roles", c =>
+{
+    c.BaseAddress = new Uri(UrlServicio("Roles", "RolesAPI"));
+    c.DefaultRequestHeaders.Add("Accept", "application/json");
+    c.Timeout = TimeSpan.FromSeconds(30);
+});
+
+// HttpClient para SRV9 - Bitácora
+builder.Services.AddHttpClient("Bitacora", c =>
+{
+    c.BaseAddress = new Uri(
+        UrlServicio("Bitacora", "BitacoraAPI")
+    );
+
+    c.DefaultRequestHeaders.Add(
+        "Accept",
+        "application/json"
+    );
+
+    c.Timeout = TimeSpan.FromSeconds(30);
+});
+
 // ✅ HttpClient para SRV14 - CarnetQR
 builder.Services.AddHttpClient("CarnetQR", c =>
 {
@@ -88,12 +111,15 @@ builder.Services.AddHttpClient("CarnetQR", c =>
     c.Timeout = TimeSpan.FromSeconds(30);
 });
 
+
 // ✅ Servicios
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IEstadoUsuarioService, EstadoUsuarioService>();
 builder.Services.AddScoped<ICarnetQRService, CarnetQRService>();
 builder.Services.AddScoped<IFotografiaService, FotografiaService>();
 builder.Services.AddScoped<IParametroService, ParametroService>();
+builder.Services.AddScoped<IRolService, RolService>();
+builder.Services.AddScoped<IBitacoraService, BitacoraService>();
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();

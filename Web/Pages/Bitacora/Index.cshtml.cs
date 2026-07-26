@@ -1,17 +1,17 @@
-using BitacoraSRV9.Entities;
-using BitacoraSRV9.Services;
+using CarnetDigitalWeb.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace BitacoraSRV9.Pages.Bitacora
+namespace CarnetDigitalWeb.Pages.Bitacora
 {
     public class IndexModel : PageModel
     {
-        private readonly IBitacoraService _service;
+        private readonly IBitacoraService _bitacoraService;
 
-        public IndexModel(IBitacoraService service)
+        public IndexModel(
+            IBitacoraService bitacoraService)
         {
-            _service = service;
+            _bitacoraService = bitacoraService;
         }
 
         public void OnGet()
@@ -19,28 +19,63 @@ namespace BitacoraSRV9.Pages.Bitacora
         }
 
         public async Task<IActionResult> OnGetFiltros(
-            DateTime? fechaInicio,
-            DateTime? fechaFin,
+            DateTime? fecha,
             string? usuario,
             string? accion,
             int pagina = 1,
             int tamanoPagina = 15,
             bool soloErrores = false)
         {
-            var filtros = new BitacoraFiltrosRequest
+            try
             {
-                FechaInicio = fechaInicio,
-                FechaFin = fechaFin,
-                Usuario = usuario,
-                Accion = accion,
-                Pagina = pagina,
-                TamanoPagina = tamanoPagina,
-                SoloErrores = soloErrores
-            };
+                var token =
+                    HttpContext.Session.GetString("Token");
 
-            var resultado = await _service.ObtenerConFiltrosAsync(filtros);
+                if (string.IsNullOrWhiteSpace(token))
+                {
+                    return new JsonResult(new
+                    {
+                        mensaje = "La sesión ha expirado. Inicie sesión nuevamente."
+                    })
+                    {
+                        StatusCode = StatusCodes.Status401Unauthorized
+                    };
+                }
 
-            return new JsonResult(resultado);
+                var resultado =
+                    await _bitacoraService.ObtenerConFiltrosAsync(
+                        token,
+                        fecha,
+                        usuario,
+                        accion,
+                        pagina,
+                        tamanoPagina,
+                        soloErrores
+                    );
+
+                return new JsonResult(resultado);
+            }
+            catch (HttpRequestException ex)
+            {
+                return new JsonResult(new
+                {
+                    mensaje = ex.Message
+                })
+                {
+                    StatusCode = StatusCodes.Status502BadGateway
+                };
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    mensaje = ex.Message
+                })
+                {
+                    StatusCode =
+                        StatusCodes.Status500InternalServerError
+                };
+            }
         }
     }
 }

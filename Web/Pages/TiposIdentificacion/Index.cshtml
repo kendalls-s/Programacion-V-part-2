@@ -1,0 +1,317 @@
+﻿@page
+@model CarnetDigitalWeb.Pages.TiposIdentificacion.IndexModel
+@using System.Text.Json
+
+@{
+    ViewData["Title"] = "Administración de Tipos de Identificación";
+}
+
+<div class="page-header">
+    <h2>
+        <i class="bi bi-id-card"></i>
+        Lista de Tipos de Identificación
+    </h2>
+
+    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <button type="button"
+                class="btn btn-primary"
+                onclick="abrirModalCrear()">
+            <i class="bi bi-plus-circle"></i>
+            Nuevo Tipo
+        </button>
+
+        <button type="button"
+                class="btn btn-info"
+                onclick="abrirModalBuscar()">
+            <i class="bi bi-search"></i>
+            Buscar por ID
+        </button>
+    </div>
+</div>
+
+<form id="formAntiforgery">
+    @Html.AntiForgeryToken()
+</form>
+
+<div id="alertas">
+    @if (!string.IsNullOrWhiteSpace(Model.MensajeError))
+    {
+        <div class="alert alert-danger alert-dismissible">
+            <i class="bi bi-exclamation-circle"></i>
+            @Model.MensajeError
+
+            <button type="button"
+                    class="btn-close"
+                    onclick="this.parentElement.remove()">
+                &times;
+            </button>
+        </div>
+    }
+</div>
+
+<div id="loading"
+     class="loading"
+     style="display: none;">
+
+    <div class="spinner-border"></div>
+
+    <p style="margin-top: 10px;">
+        Cargando tipos de identificación...
+    </p>
+</div>
+
+<div id="listaTiposIdentificacion"
+     class="grid-cards">
+</div>
+
+<div id="paginacionContainer"
+     style="display: none; margin-top: 30px;">
+
+    <div class="paginacion-wrapper">
+
+        <div class="paginacion-info">
+            Mostrando
+            <span id="inicioMostrar">0</span>
+            -
+            <span id="finMostrar">0</span>
+            de
+            <span id="totalRegistros">0</span>
+            tipos
+        </div>
+
+        <div class="paginacion-botones">
+
+            <button type="button"
+                    class="btn-paginacion"
+                    id="btnAnterior"
+                    onclick="paginaAnterior()">
+
+                <i class="bi bi-chevron-left"></i>
+                Anterior
+            </button>
+
+            <span class="paginacion-numero"
+                  id="numeroPagina">
+                1
+            </span>
+
+            <button type="button"
+                    class="btn-paginacion"
+                    id="btnSiguiente"
+                    onclick="paginaSiguiente()">
+
+                Siguiente
+                <i class="bi bi-chevron-right"></i>
+            </button>
+
+        </div>
+    </div>
+</div>
+
+<!-- MODAL BUSCAR -->
+<div class="modal"
+     id="modalBuscar">
+
+    <div class="modal-dialog"
+         style="max-width: 500px;">
+
+        <div class="modal-content">
+
+            <div class="modal-header modal-header-info">
+
+                <h5>
+                    <i class="bi bi-search"></i>
+                    Buscar Tipo de Identificación por ID
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        onclick="cerrarModalBuscar()">
+                    &times;
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <div class="form-group">
+                    <label for="buscarId">
+                        ID del tipo de identificación
+                    </label>
+
+                    <input id="buscarId"
+                           type="number"
+                           class="form-control"
+                           min="1"
+                           placeholder="Ejemplo: 1" />
+                </div>
+
+                <div id="buscarResultado"
+                     style="display: none; margin-top: 15px;">
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-secondary"
+                        onclick="cerrarModalBuscar()">
+                    Cancelar
+                </button>
+
+                <button type="button"
+                        class="btn btn-info"
+                        onclick="buscarTipoIdentificacionPorId()">
+
+                    <i class="bi bi-search"></i>
+                    Buscar
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- MODAL CREAR / EDITAR -->
+<div class="modal"
+     id="modalFormulario">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 id="tituloModal">
+                    Nuevo Tipo de Identificación
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        onclick="cerrarModalFormulario()">
+                    &times;
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <input type="hidden"
+                       id="idTipoIdentificacion"
+                       value="0" />
+
+                <div class="form-group">
+
+                    <label for="nombre">
+                        Nombre *
+                    </label>
+
+                    <input id="nombre"
+                           type="text"
+                           class="form-control"
+                           maxlength="50"
+                           placeholder="Ej: Cédula, Pasaporte, DIMEX, NITE" />
+
+                    <div class="invalid-feedback"
+                         id="errNombre">
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-secondary"
+                        onclick="cerrarModalFormulario()">
+                    Cancelar
+                </button>
+
+                <button type="button"
+                        class="btn btn-success"
+                        onclick="guardarTipoIdentificacion()">
+
+                    <i class="bi bi-save"></i>
+                    Guardar
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- MODAL ELIMINAR -->
+<div class="modal"
+     id="modalEliminar">
+
+    <div class="modal-dialog"
+         style="max-width: 500px;">
+
+        <div class="modal-content">
+
+            <div class="modal-header modal-header-danger">
+
+                <h5>
+                    <i class="bi bi-exclamation-triangle"></i>
+                    Confirmar eliminación
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        onclick="cerrarModalEliminar()">
+                    &times;
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <p>
+                    ¿Realmente desea eliminar el tipo de identificación seleccionado?
+                </p>
+
+                <p style="
+                    color: #6c757d;
+                    font-size: 14px;
+                    margin-top: 8px;">
+
+                    <strong id="nombreEliminar"></strong>
+                </p>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-secondary"
+                        onclick="cerrarModalEliminar()">
+                    Cancelar
+                </button>
+
+                <button type="button"
+                        class="btn btn-danger"
+                        onclick="eliminarTipoIdentificacion()">
+
+                    <i class="bi bi-trash"></i>
+                    Eliminar
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    window.tiposIdentificacionIniciales =
+        @Html.Raw(JsonSerializer.Serialize(Model.TiposIdentificacion));
+</script>
+
+@section Scripts {
+    <script src="~/js/tiposidentificacion.js"
+            asp-append-version="true"></script>
+}

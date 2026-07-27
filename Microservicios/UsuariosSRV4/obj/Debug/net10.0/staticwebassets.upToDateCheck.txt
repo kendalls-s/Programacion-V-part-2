@@ -1,0 +1,4 @@
+wwwroot\css\siteusuarios.css
+wwwroot\js\usuarios.js
+C:\Users\Usuario\Desktop\Prueba\Programacion-V-part-2-main\Microservicios\UsuariosSRV4\wwwroot\css\siteusuarios.css
+C:\Users\Usuario\Desktop\Prueba\Programacion-V-part-2-main\Microservicios\UsuariosSRV4\wwwroot\js\usuarios.js

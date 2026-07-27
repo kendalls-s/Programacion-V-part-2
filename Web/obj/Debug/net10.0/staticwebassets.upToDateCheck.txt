@@ -1,0 +1,10 @@
+wwwroot\css\crud.css
+wwwroot\js\bitacora.js
+wwwroot\js\roles.js
+wwwroot\js\tiposidentificacion.js
+wwwroot\js\tiposusuario.js
+C:\Users\Usuario\Desktop\Prueba\Programacion-V-part-2-main\Web\wwwroot\css\crud.css
+C:\Users\Usuario\Desktop\Prueba\Programacion-V-part-2-main\Web\wwwroot\js\bitacora.js
+C:\Users\Usuario\Desktop\Prueba\Programacion-V-part-2-main\Web\wwwroot\js\roles.js
+C:\Users\Usuario\Desktop\Prueba\Programacion-V-part-2-main\Web\wwwroot\js\tiposidentificacion.js
+C:\Users\Usuario\Desktop\Prueba\Programacion-V-part-2-main\Web\wwwroot\js\tiposusuario.js

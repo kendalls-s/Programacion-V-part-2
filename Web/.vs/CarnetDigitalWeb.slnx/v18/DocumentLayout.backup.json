@@ -1,0 +1,255 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Usuario\\Desktop\\Prueba\\Programacion-V-part-2-main\\Web\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\usuario\\desktop\\prueba\\programacion-v-part-2-main\\web\\pages\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:pages\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\usuario\\desktop\\prueba\\programacion-v-part-2-main\\web\\services\\loginservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:services\\loginservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\usuario\\desktop\\prueba\\programacion-v-part-2-main\\web\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\usuario\\desktop\\prueba\\programacion-v-part-2-main\\web\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\usuario\\desktop\\prueba\\programacion-v-part-2-main\\web\\pages\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:pages\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\usuario\\desktop\\prueba\\programacion-v-part-2-main\\web\\wwwroot\\js\\tiposusuario.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:wwwroot\\js\\tiposusuario.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\usuario\\desktop\\prueba\\programacion-v-part-2-main\\web\\wwwroot\\js\\tiposidentificacion.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:wwwroot\\js\\tiposidentificacion.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\usuario\\desktop\\prueba\\programacion-v-part-2-main\\web\\pages\\tiposusuario\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:pages\\tiposusuario\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\usuario\\desktop\\prueba\\programacion-v-part-2-main\\web\\pages\\tiposidentificacion\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:pages\\tiposidentificacion\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\usuario\\desktop\\prueba\\programacion-v-part-2-main\\web\\pages\\tiposidentificacion\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:pages\\tiposidentificacion\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\usuario\\desktop\\prueba\\programacion-v-part-2-main\\web\\pages\\tiposusuario\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:pages\\tiposusuario\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\usuario\\desktop\\prueba\\programacion-v-part-2-main\\web\\wwwroot\\js\\bitacora.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:wwwroot\\js\\bitacora.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\usuario\\desktop\\prueba\\programacion-v-part-2-main\\web\\pages\\bitacora\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:pages\\bitacora\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\usuario\\desktop\\prueba\\programacion-v-part-2-main\\web\\pages\\bitacora\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:pages\\bitacora\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 63,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            }
+          ]
+        },
+        {
+          "DockedHeight": 317,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\Prueba\\Programacion-V-part-2-main\\Web\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\Prueba\\Programacion-V-part-2-main\\Web\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-07-27T05:53:34.443Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\Prueba\\Programacion-V-part-2-main\\Web\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\Prueba\\Programacion-V-part-2-main\\Web\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAKIAAAAAAAAAAAAUwLoAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-27T05:39:33.573Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Login.cshtml",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\Prueba\\Programacion-V-part-2-main\\Web\\Pages\\Login.cshtml",
+              "RelativeDocumentMoniker": "Pages\\Login.cshtml",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\Prueba\\Programacion-V-part-2-main\\Web\\Pages\\Login.cshtml",
+              "RelativeToolTip": "Pages\\Login.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFMBAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-07-27T04:56:04.712Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "LoginService.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\Prueba\\Programacion-V-part-2-main\\Web\\Services\\LoginService.cs",
+              "RelativeDocumentMoniker": "Services\\LoginService.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\Prueba\\Programacion-V-part-2-main\\Web\\Services\\LoginService.cs",
+              "RelativeToolTip": "Services\\LoginService.cs",
+              "ViewState": "AgIAAF4AAAAAAAAAAAAUwHwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-27T04:59:05.654Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\Prueba\\Programacion-V-part-2-main\\Web\\Pages\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "Pages\\Shared\\_Layout.cshtml",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\Prueba\\Programacion-V-part-2-main\\Web\\Pages\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "Pages\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAAMYBAAAAAAAAAAAkwNkBAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-07-27T04:40:55.876Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Index.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\Prueba\\Programacion-V-part-2-main\\Web\\Pages\\TiposUsuario\\Index.cshtml.cs",
+              "RelativeDocumentMoniker": "Pages\\TiposUsuario\\Index.cshtml.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\Prueba\\Programacion-V-part-2-main\\Web\\Pages\\TiposUsuario\\Index.cshtml.cs",
+              "RelativeToolTip": "Pages\\TiposUsuario\\Index.cshtml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-27T02:42:03.388Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Index.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\Prueba\\Programacion-V-part-2-main\\Web\\Pages\\TiposIdentificacion\\Index.cshtml.cs",
+              "RelativeDocumentMoniker": "Pages\\TiposIdentificacion\\Index.cshtml.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\Prueba\\Programacion-V-part-2-main\\Web\\Pages\\TiposIdentificacion\\Index.cshtml.cs",
+              "RelativeToolTip": "Pages\\TiposIdentificacion\\Index.cshtml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-27T02:41:49.109Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "tiposidentificacion.js",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\Prueba\\Programacion-V-part-2-main\\Web\\wwwroot\\js\\tiposidentificacion.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\tiposidentificacion.js",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\Prueba\\Programacion-V-part-2-main\\Web\\wwwroot\\js\\tiposidentificacion.js",
+              "RelativeToolTip": "wwwroot\\js\\tiposidentificacion.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUCAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-07-27T02:39:33.135Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "tiposusuario.js",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\Prueba\\Programacion-V-part-2-main\\Web\\wwwroot\\js\\tiposusuario.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\tiposusuario.js",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\Prueba\\Programacion-V-part-2-main\\Web\\wwwroot\\js\\tiposusuario.js",
+              "RelativeToolTip": "wwwroot\\js\\tiposusuario.js",
+              "ViewState": "AgIAABwBAAAAAAAAAAAkwC8BAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-07-27T02:39:06.479Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\Prueba\\Programacion-V-part-2-main\\Web\\Pages\\TiposUsuario\\Index.cshtml",
+              "RelativeDocumentMoniker": "Pages\\TiposUsuario\\Index.cshtml",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\Prueba\\Programacion-V-part-2-main\\Web\\Pages\\TiposUsuario\\Index.cshtml",
+              "RelativeToolTip": "Pages\\TiposUsuario\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADwBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-07-27T02:38:08.422Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\Prueba\\Programacion-V-part-2-main\\Web\\Pages\\TiposIdentificacion\\Index.cshtml",
+              "RelativeDocumentMoniker": "Pages\\TiposIdentificacion\\Index.cshtml",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\Prueba\\Programacion-V-part-2-main\\Web\\Pages\\TiposIdentificacion\\Index.cshtml",
+              "RelativeToolTip": "Pages\\TiposIdentificacion\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADwBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-07-27T02:37:45.21Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "bitacora.js",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\Prueba\\Programacion-V-part-2-main\\Web\\wwwroot\\js\\bitacora.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\bitacora.js",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\Prueba\\Programacion-V-part-2-main\\Web\\wwwroot\\js\\bitacora.js",
+              "RelativeToolTip": "wwwroot\\js\\bitacora.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAPoDAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-07-26T09:45:53.919Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Index.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\Prueba\\Programacion-V-part-2-main\\Web\\Pages\\Bitacora\\Index.cshtml.cs",
+              "RelativeDocumentMoniker": "Pages\\Bitacora\\Index.cshtml.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\Prueba\\Programacion-V-part-2-main\\Web\\Pages\\Bitacora\\Index.cshtml.cs",
+              "RelativeToolTip": "Pages\\Bitacora\\Index.cshtml.cs",
+              "ViewState": "AgIAADMAAAAAAAAAAAAAwFAAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-26T09:45:31.21Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\Prueba\\Programacion-V-part-2-main\\Web\\Pages\\Bitacora\\Index.cshtml",
+              "RelativeDocumentMoniker": "Pages\\Bitacora\\Index.cshtml",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\Prueba\\Programacion-V-part-2-main\\Web\\Pages\\Bitacora\\Index.cshtml",
+              "RelativeToolTip": "Pages\\Bitacora\\Index.cshtml",
+              "ViewState": "AgIAAP0AAAAAAAAAAAAqwBwBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-07-26T09:32:06.308Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

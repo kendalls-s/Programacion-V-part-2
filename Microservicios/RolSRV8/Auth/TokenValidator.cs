@@ -1,4 +1,7 @@
-﻿namespace RolSRV8.Auth
+﻿using RolSRV8.Auth;
+using System.Net.Http.Headers;
+
+namespace SRV2_Instituciones.Auth
 {
     public class TokenValidator : ITokenValidator
     {
@@ -23,7 +26,7 @@
                 return false;
             }
 
-            var baseUrl =
+            string? baseUrl =
                 _configuration["Services:LoginSRV1"];
 
             if (string.IsNullOrWhiteSpace(baseUrl))
@@ -36,28 +39,51 @@
 
             try
             {
-                var url =
-                    $"{baseUrl.TrimEnd('/')}" +
-                    $"/api/auth/validate" +
-                    $"?token={Uri.EscapeDataString(token.Trim())}";
+                string url =
+                    $"{baseUrl.TrimEnd('/')}/api/Auth/validate";
+
+                using HttpRequestMessage request =
+                    new HttpRequestMessage(
+                        HttpMethod.Get,
+                        url);
+
+                request.Headers.Authorization =
+                    new AuthenticationHeaderValue(
+                        "Bearer",
+                        token.Trim());
+
+                request.Headers.Accept.Add(
+                    new MediaTypeWithQualityHeaderValue(
+                        "application/json"));
 
                 Console.WriteLine(
                     $"Validando token en: {url}");
 
-                var response =
-                    await _httpClient.GetAsync(url);
+                HttpResponseMessage response =
+                    await _httpClient.SendAsync(request);
 
-                var contenido =
+                string contenido =
                     await response.Content
                         .ReadAsStringAsync();
 
                 Console.WriteLine(
-                    $"VALIDATE STATUS: {response.StatusCode}");
+                    $"VALIDATE STATUS: " +
+                    $"{(int)response.StatusCode} " +
+                    $"{response.StatusCode}");
 
                 Console.WriteLine(
                     $"VALIDATE RESPONSE: {contenido}");
 
                 return response.IsSuccessStatusCode;
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine(
+                    "No se pudo conectar con LoginSRV1.");
+
+                Console.WriteLine(ex.Message);
+
+                return false;
             }
             catch (Exception ex)
             {

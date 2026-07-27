@@ -1,22 +1,82 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\Programacion-V-part-2\\Web\\",
+  "WorkspaceRootPath": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|d:\\programacion-v-part-2\\web\\services\\bitacoraservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\maddy\\source\\repos\\parq1926\\programacion-v-part-2\\web\\pages\\instituciones\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:pages\\instituciones\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\maddy\\source\\repos\\parq1926\\programacion-v-part-2\\web\\wwwroot\\js\\instituciones.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:wwwroot\\js\\instituciones.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\maddy\\source\\repos\\parq1926\\programacion-v-part-2\\web\\pages\\instituciones\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:pages\\instituciones\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\maddy\\source\\repos\\parq1926\\programacion-v-part-2\\web\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\maddy\\source\\repos\\parq1926\\programacion-v-part-2\\web\\pages\\areas\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:pages\\areas\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\maddy\\source\\repos\\parq1926\\programacion-v-part-2\\web\\pages\\areas\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:pages\\areas\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\maddy\\source\\repos\\parq1926\\programacion-v-part-2\\web\\pages\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:pages\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\maddy\\source\\repos\\parq1926\\programacion-v-part-2\\web\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\maddy\\source\\repos\\parq1926\\programacion-v-part-2\\web\\services\\institucionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:services\\institucionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\maddy\\source\\repos\\parq1926\\programacion-v-part-2\\web\\services\\iinstitucionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:services\\iinstitucionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\maddy\\source\\repos\\parq1926\\programacion-v-part-2\\web\\models\\institucion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:models\\institucion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\maddy\\source\\repos\\parq1926\\programacion-v-part-2\\web\\wwwroot\\js\\areas.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:wwwroot\\js\\areas.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\maddy\\source\\repos\\parq1926\\programacion-v-part-2\\web\\services\\iareaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:services\\iareaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\maddy\\source\\repos\\parq1926\\programacion-v-part-2\\web\\services\\areaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:services\\areaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\maddy\\source\\repos\\parq1926\\programacion-v-part-2\\web\\models\\area.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:models\\area.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\maddy\\source\\repos\\parq1926\\programacion-v-part-2\\web\\pages\\bitacora\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:pages\\bitacora\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\maddy\\source\\repos\\parq1926\\programacion-v-part-2\\web\\services\\bitacoraservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:services\\bitacoraservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|d:\\programacion-v-part-2\\web\\wwwroot\\js\\bitacora.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\maddy\\source\\repos\\parq1926\\programacion-v-part-2\\web\\wwwroot\\js\\bitacora.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
       "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:wwwroot\\js\\bitacora.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|d:\\programacion-v-part-2\\web\\pages\\bitacora\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|c:\\users\\maddy\\source\\repos\\parq1926\\programacion-v-part-2\\web\\pages\\bitacora\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:pages\\bitacora\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|d:\\programacion-v-part-2\\web\\pages\\bitacora\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:pages\\bitacora\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -28,18 +88,6 @@
           "DockedHeight": 63,
           "SelectedChildIndex": -1,
           "Children": [
-            {
-              "$type": "Bookmark",
-              "Name": "ST:42:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:36:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:3:0:{e8034f19-ab72-4f06-83fd-f6832b41aa63}"
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
@@ -70,15 +118,23 @@
             },
             {
               "$type": "Bookmark",
+              "Name": "ST:3:0:{e8034f19-ab72-4f06-83fd-f6832b41aa63}"
+            },
+            {
+              "$type": "Bookmark",
               "Name": "ST:0:0:{e5c86464-96be-4d7c-9a8b-abcb3bbf5f92}"
             },
             {
               "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
             },
             {
               "$type": "Bookmark",
-              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+              "Name": "ST:42:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:36:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
             },
             {
               "$type": "Bookmark",
@@ -200,8 +256,29 @@
         },
         {
           "DockedHeight": 317,
-          "SelectedChildIndex": 34,
+          "SelectedChildIndex": 37,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "Area.cs",
+              "DocumentMoniker": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\Models\\Area.cs",
+              "RelativeDocumentMoniker": "Models\\Area.cs",
+              "ToolTip": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\Models\\Area.cs",
+              "RelativeToolTip": "Models\\Area.cs",
+              "ViewState": "AgIAAB8AAAAAAAAAAAAowC4AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-27T01:38:22.122Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:32:0:{e8034f19-ab72-4f06-83fd-f6832b41aa63}"
@@ -331,33 +408,196 @@
               "Name": "ST:60:0:{e8034f19-ab72-4f06-83fd-f6832b41aa63}"
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
-            },
-            {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "BitacoraService.cs",
-              "DocumentMoniker": "D:\\Programacion-V-part-2\\Web\\Services\\BitacoraService.cs",
-              "RelativeDocumentMoniker": "Services\\BitacoraService.cs",
-              "ToolTip": "D:\\Programacion-V-part-2\\Web\\Services\\BitacoraService.cs",
-              "RelativeToolTip": "Services\\BitacoraService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAABCAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-26T09:57:10.937Z",
+              "DocumentIndex": 1,
+              "Title": "instituciones.js",
+              "DocumentMoniker": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\wwwroot\\js\\instituciones.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\instituciones.js",
+              "ToolTip": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\wwwroot\\js\\instituciones.js",
+              "RelativeToolTip": "wwwroot\\js\\instituciones.js",
+              "ViewState": "AgIAAGcBAAAAAAAAAAAqwMwBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-07-27T05:01:46.908Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
+              "Title": "Index.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\Pages\\Instituciones\\Index.cshtml.cs",
+              "RelativeDocumentMoniker": "Pages\\Instituciones\\Index.cshtml.cs",
+              "ToolTip": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\Pages\\Instituciones\\Index.cshtml.cs",
+              "RelativeToolTip": "Pages\\Instituciones\\Index.cshtml.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAACgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-27T05:00:49.187Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\Pages\\Instituciones\\Index.cshtml",
+              "RelativeDocumentMoniker": "Pages\\Instituciones\\Index.cshtml",
+              "ToolTip": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\Pages\\Instituciones\\Index.cshtml",
+              "RelativeToolTip": "Pages\\Instituciones\\Index.cshtml",
+              "ViewState": "AgIAAC0DAAAAAAAAAAAswFQDAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-07-27T05:00:41.49Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Institucion.cs",
+              "DocumentMoniker": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\Models\\Institucion.cs",
+              "RelativeDocumentMoniker": "Models\\Institucion.cs",
+              "ToolTip": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\Models\\Institucion.cs",
+              "RelativeToolTip": "Models\\Institucion.cs",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAywDMAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-27T02:14:41.544Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "InstitucionService.cs",
+              "DocumentMoniker": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\Services\\InstitucionService.cs",
+              "RelativeDocumentMoniker": "Services\\InstitucionService.cs",
+              "ToolTip": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\Services\\InstitucionService.cs",
+              "RelativeToolTip": "Services\\InstitucionService.cs",
+              "ViewState": "AgIAAGAAAAAAAAAAAAAYwH4AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-27T02:10:45.706Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "IInstitucionService.cs",
+              "DocumentMoniker": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\Services\\IInstitucionService.cs",
+              "RelativeDocumentMoniker": "Services\\IInstitucionService.cs",
+              "ToolTip": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\Services\\IInstitucionService.cs",
+              "RelativeToolTip": "Services\\IInstitucionService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-27T02:10:20.594Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "areas.js",
+              "DocumentMoniker": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\wwwroot\\js\\areas.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\areas.js",
+              "ToolTip": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\wwwroot\\js\\areas.js",
+              "RelativeToolTip": "wwwroot\\js\\areas.js",
+              "ViewState": "AgIAAAoCAAAAAAAAAAAowDkCAAADAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-07-27T02:03:55.737Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Index.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\Pages\\Areas\\Index.cshtml.cs",
+              "RelativeDocumentMoniker": "Pages\\Areas\\Index.cshtml.cs",
+              "ToolTip": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\Pages\\Areas\\Index.cshtml.cs",
+              "RelativeToolTip": "Pages\\Areas\\Index.cshtml.cs",
+              "ViewState": "AgIAAMcAAAAAAAAAAAAUwNAAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-27T01:57:33.884Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\Pages\\Areas\\Index.cshtml",
+              "RelativeDocumentMoniker": "Pages\\Areas\\Index.cshtml",
+              "ToolTip": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\Pages\\Areas\\Index.cshtml",
+              "RelativeToolTip": "Pages\\Areas\\Index.cshtml",
+              "ViewState": "AgIAAEQBAAAAAAAAAAAUwFYBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-07-27T01:57:14.796Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\Pages\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "Pages\\Shared\\_Layout.cshtml",
+              "ToolTip": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\Pages\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "Pages\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAM8BAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-07-27T01:51:40.452Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAABQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-07-27T01:50:14.703Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAANgAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-27T01:46:31.804Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "AreaService.cs",
+              "DocumentMoniker": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\Services\\AreaService.cs",
+              "RelativeDocumentMoniker": "Services\\AreaService.cs",
+              "ToolTip": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\Services\\AreaService.cs",
+              "RelativeToolTip": "Services\\AreaService.cs",
+              "ViewState": "AgIAAGgAAAAAAAAAAAAmwH4AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-27T01:42:37.62Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "IAreaService.cs",
+              "DocumentMoniker": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\Services\\IAreaService.cs",
+              "RelativeDocumentMoniker": "Services\\IAreaService.cs",
+              "ToolTip": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\Services\\IAreaService.cs",
+              "RelativeToolTip": "Services\\IAreaService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-27T01:42:00.144Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "BitacoraService.cs",
+              "DocumentMoniker": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\Services\\BitacoraService.cs",
+              "RelativeDocumentMoniker": "Services\\BitacoraService.cs",
+              "ToolTip": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\Services\\BitacoraService.cs",
+              "RelativeToolTip": "Services\\BitacoraService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAABCAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-26T09:57:10.937Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
               "Title": "bitacora.js",
-              "DocumentMoniker": "D:\\Programacion-V-part-2\\Web\\wwwroot\\js\\bitacora.js",
+              "DocumentMoniker": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\wwwroot\\js\\bitacora.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\bitacora.js",
-              "ToolTip": "D:\\Programacion-V-part-2\\Web\\wwwroot\\js\\bitacora.js",
+              "ToolTip": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\wwwroot\\js\\bitacora.js",
               "RelativeToolTip": "wwwroot\\js\\bitacora.js",
               "ViewState": "AgIAAN0DAAAAAAAAAAAAwPoDAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
@@ -365,24 +605,24 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "index.cshtml.cs",
-              "DocumentMoniker": "D:\\Programacion-V-part-2\\Web\\Pages\\Bitacora\\index.cshtml.cs",
-              "RelativeDocumentMoniker": "Pages\\Bitacora\\index.cshtml.cs",
-              "ToolTip": "D:\\Programacion-V-part-2\\Web\\Pages\\Bitacora\\index.cshtml.cs",
-              "RelativeToolTip": "Pages\\Bitacora\\index.cshtml.cs",
+              "DocumentIndex": 18,
+              "Title": "Index.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\Pages\\Bitacora\\Index.cshtml.cs",
+              "RelativeDocumentMoniker": "Pages\\Bitacora\\Index.cshtml.cs",
+              "ToolTip": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\Pages\\Bitacora\\Index.cshtml.cs",
+              "RelativeToolTip": "Pages\\Bitacora\\Index.cshtml.cs",
               "ViewState": "AgIAADMAAAAAAAAAAAAAwFAAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-07-26T09:45:31.21Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "index.cshtml",
-              "DocumentMoniker": "D:\\Programacion-V-part-2\\Web\\Pages\\Bitacora\\index.cshtml",
-              "RelativeDocumentMoniker": "Pages\\Bitacora\\index.cshtml",
-              "ToolTip": "D:\\Programacion-V-part-2\\Web\\Pages\\Bitacora\\index.cshtml",
-              "RelativeToolTip": "Pages\\Bitacora\\index.cshtml",
+              "DocumentIndex": 15,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\Pages\\Bitacora\\Index.cshtml",
+              "RelativeDocumentMoniker": "Pages\\Bitacora\\Index.cshtml",
+              "ToolTip": "C:\\Users\\maddy\\source\\repos\\Parq1926\\Programacion-V-part-2\\Web\\Pages\\Bitacora\\Index.cshtml",
+              "RelativeToolTip": "Pages\\Bitacora\\Index.cshtml",
               "ViewState": "AgIAAP0AAAAAAAAAAAAqwBwBAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-07-26T09:32:06.308Z"

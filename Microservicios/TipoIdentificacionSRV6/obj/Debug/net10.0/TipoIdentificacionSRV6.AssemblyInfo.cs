@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TipoIdentificacionSRV6")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e9c80e3d3273f6a8224f441e7ef0536b7886909d")]
 [assembly: System.Reflection.AssemblyProductAttribute("TipoIdentificacionSRV6")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TipoIdentificacionSRV6")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

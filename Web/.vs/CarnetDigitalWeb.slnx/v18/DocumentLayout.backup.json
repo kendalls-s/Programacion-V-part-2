@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "D:\\Programacion-V-part-2\\Web\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|d:\\programacion-v-part-2\\web\\services\\bitacoraservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:services\\bitacoraservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|d:\\programacion-v-part-2\\web\\wwwroot\\js\\bitacora.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
       "RelativeMoniker": "D:0:0:{F95D018D-7B9D-95EA-A802-1190F9CD9736}|CarnetDigitalWeb.csproj|solutionrelative:wwwroot\\js\\bitacora.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
@@ -196,34 +200,8 @@
         },
         {
           "DockedHeight": 317,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 34,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "bitacora.js",
-              "DocumentMoniker": "D:\\Programacion-V-part-2\\Web\\wwwroot\\js\\bitacora.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\bitacora.js",
-              "ToolTip": "D:\\Programacion-V-part-2\\Web\\wwwroot\\js\\bitacora.js",
-              "RelativeToolTip": "wwwroot\\js\\bitacora.js",
-              "ViewState": "AgIAAN0DAAAAAAAAAAAAwPoDAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2026-07-26T09:45:53.919Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "index.cshtml.cs",
-              "DocumentMoniker": "D:\\Programacion-V-part-2\\Web\\Pages\\Bitacora\\index.cshtml.cs",
-              "RelativeDocumentMoniker": "Pages\\Bitacora\\index.cshtml.cs",
-              "ToolTip": "D:\\Programacion-V-part-2\\Web\\Pages\\Bitacora\\index.cshtml.cs",
-              "RelativeToolTip": "Pages\\Bitacora\\index.cshtml.cs",
-              "ViewState": "AgIAADMAAAAAAAAAAAAAwFAAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-26T09:45:31.21Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:32:0:{e8034f19-ab72-4f06-83fd-f6832b41aa63}"
@@ -362,7 +340,44 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "BitacoraService.cs",
+              "DocumentMoniker": "D:\\Programacion-V-part-2\\Web\\Services\\BitacoraService.cs",
+              "RelativeDocumentMoniker": "Services\\BitacoraService.cs",
+              "ToolTip": "D:\\Programacion-V-part-2\\Web\\Services\\BitacoraService.cs",
+              "RelativeToolTip": "Services\\BitacoraService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAABCAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-26T09:57:10.937Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "bitacora.js",
+              "DocumentMoniker": "D:\\Programacion-V-part-2\\Web\\wwwroot\\js\\bitacora.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\bitacora.js",
+              "ToolTip": "D:\\Programacion-V-part-2\\Web\\wwwroot\\js\\bitacora.js",
+              "RelativeToolTip": "wwwroot\\js\\bitacora.js",
+              "ViewState": "AgIAAN0DAAAAAAAAAAAAwPoDAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-07-26T09:45:53.919Z"
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 2,
+              "Title": "index.cshtml.cs",
+              "DocumentMoniker": "D:\\Programacion-V-part-2\\Web\\Pages\\Bitacora\\index.cshtml.cs",
+              "RelativeDocumentMoniker": "Pages\\Bitacora\\index.cshtml.cs",
+              "ToolTip": "D:\\Programacion-V-part-2\\Web\\Pages\\Bitacora\\index.cshtml.cs",
+              "RelativeToolTip": "Pages\\Bitacora\\index.cshtml.cs",
+              "ViewState": "AgIAADMAAAAAAAAAAAAAwFAAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-26T09:45:31.21Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "index.cshtml",
               "DocumentMoniker": "D:\\Programacion-V-part-2\\Web\\Pages\\Bitacora\\index.cshtml",
               "RelativeDocumentMoniker": "Pages\\Bitacora\\index.cshtml",
@@ -370,8 +385,7 @@
               "RelativeToolTip": "Pages\\Bitacora\\index.cshtml",
               "ViewState": "AgIAAP0AAAAAAAAAAAAqwBwBAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-07-26T09:32:06.308Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-26T09:32:06.308Z"
             }
           ]
         },

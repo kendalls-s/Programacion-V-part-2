@@ -88,22 +88,6 @@ builder.Services.AddHttpClient("Roles", c =>
     c.Timeout = TimeSpan.FromSeconds(30);
 });
 
-// HttpClient para SRV4 - Áreas
-builder.Services.AddHttpClient("Areas", c =>
-{
-    c.BaseAddress = new Uri(UrlServicio("Areas", "areasAPI"));
-    c.DefaultRequestHeaders.Add("Accept", "application/json");
-    c.Timeout = TimeSpan.FromSeconds(30);
-});
-
-// HttpClient para SRV2 - Instituciones
-builder.Services.AddHttpClient("Instituciones", c =>
-{
-    c.BaseAddress = new Uri(UrlServicio("Instituciones", "institucionesAPI"));
-    c.DefaultRequestHeaders.Add("Accept", "application/json");
-    c.Timeout = TimeSpan.FromSeconds(30);
-});
-
 // HttpClient para SRV9 - Bitácora
 builder.Services.AddHttpClient("Bitacora", c =>
 {
@@ -136,8 +120,6 @@ builder.Services.AddScoped<IFotografiaService, FotografiaService>();
 builder.Services.AddScoped<IParametroService, ParametroService>();
 builder.Services.AddScoped<IRolService, RolService>();
 builder.Services.AddScoped<IBitacoraService, BitacoraService>();
-builder.Services.AddScoped<IAreaService, AreaService>();
-builder.Services.AddScoped<IInstitucionService, InstitucionService>();
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();

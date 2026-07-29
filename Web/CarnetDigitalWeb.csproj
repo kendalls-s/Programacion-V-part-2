@@ -7,8 +7,4 @@
     <RootNamespace>CarnetDigitalWeb</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Pages\Carrera\" />
-  </ItemGroup>
-
 </Project>

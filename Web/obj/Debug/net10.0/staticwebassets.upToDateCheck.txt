@@ -1,6 +1,10 @@
 wwwroot\css\crud.css
-wwwroot\js\roles.js
 wwwroot\js\bitacora.js
-D:\Programacion-V-part-2\Web\wwwroot\css\crud.css
-D:\Programacion-V-part-2\Web\wwwroot\js\roles.js
-D:\Programacion-V-part-2\Web\wwwroot\js\bitacora.js
+wwwroot\js\roles.js
+wwwroot\js\tiposidentificacion.js
+wwwroot\js\tiposusuario.js
+C:\Git\Programacion-V-part-2\Web\wwwroot\css\crud.css
+C:\Git\Programacion-V-part-2\Web\wwwroot\js\bitacora.js
+C:\Git\Programacion-V-part-2\Web\wwwroot\js\roles.js
+C:\Git\Programacion-V-part-2\Web\wwwroot\js\tiposidentificacion.js
+C:\Git\Programacion-V-part-2\Web\wwwroot\js\tiposusuario.js

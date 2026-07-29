@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "yetyoF/iUB4=",
+  "dgSpecHash": "hBW4qte5lO4=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\UsuariosSRV4.csproj",
+  "projectFilePath": "C:\\Git\\Programacion-V-part-2\\Microservicios\\UsuariosSRV4\\UsuariosSRV4.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Usuario\\.nuget\\packages\\azure.core\\1.47.1\\azure.core.1.47.1.nupkg.sha512",
     "C:\\Users\\Usuario\\.nuget\\packages\\azure.identity\\1.14.2\\azure.identity.1.14.2.nupkg.sha512",
@@ -39,9 +39,9 @@
       "code": "NU1903",
       "level": "Warning",
       "message": "El paquete \"Microsoft.OpenApi\" 2.0.0 tiene una vulnerabilidad de gravedad alta conocida, https://github.com/advisories/GHSA-v5pm-xwqc-g5wc",
-      "projectPath": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\UsuariosSRV4.csproj",
+      "projectPath": "C:\\Git\\Programacion-V-part-2\\Microservicios\\UsuariosSRV4\\UsuariosSRV4.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\UsuariosSRV4.csproj",
+      "filePath": "C:\\Git\\Programacion-V-part-2\\Microservicios\\UsuariosSRV4\\UsuariosSRV4.csproj",
       "libraryId": "Microsoft.OpenApi",
       "targetGraphs": [
         "net10.0"

@@ -150,16 +150,46 @@ app.MapGet("/set-token", (HttpContext ctx) =>
 
 app.MapPost("/api/login", async (LoginRequest request, ILoginService loginService, HttpContext ctx) =>
 {
-    var result = await loginService.LoginAsync(request);
-
-    // ✅ Guardar el token en la sesión del servidor para las páginas server-side
-    // (Fotografía, Cambio de Estado, Parámetros, QR leen HttpContext.Session["Token"])
-    if (result.Success && !string.IsNullOrEmpty(result.AccessToken))
+    try
     {
-        ctx.Session.SetString("Token", result.AccessToken);
-    }
+        // ✅ LOG PARA DEPURACIÓN
+        Console.WriteLine("=== /api/login RECIBIDO ===");
+        Console.WriteLine($"Email: {request.Email}");
+        Console.WriteLine($"Password: {request.Password}");
+        Console.WriteLine($"Tipo: {request.Tipo}");
 
-    return Results.Ok(result);
+        // ✅ VALIDAR QUE LOS DATOS NO ESTÉN VACÍOS
+        if (string.IsNullOrEmpty(request.Email))
+        {
+            return Results.BadRequest(new { message = "El email es requerido" });
+        }
+
+        if (string.IsNullOrEmpty(request.Password))
+        {
+            return Results.BadRequest(new { message = "La contraseña es requerida" });
+        }
+
+        var result = await loginService.LoginAsync(request);
+
+        // Guardar el token en la sesión del servidor
+        if (result.Success && !string.IsNullOrEmpty(result.AccessToken))
+        {
+            ctx.Session.SetString("Token", result.AccessToken);
+        }
+
+        // Si no es exitoso, devolver 400 Bad Request con el mensaje
+        if (!result.Success)
+        {
+            return Results.BadRequest(new { message = result.Message ?? "Credenciales inválidas" });
+        }
+
+        return Results.Ok(result);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error en /api/login: {ex.Message}");
+        return Results.BadRequest(new { message = $"Error: {ex.Message}" });
+    }
 });
 
 app.MapPost("/api/logout", (HttpContext ctx) =>

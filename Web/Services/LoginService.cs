@@ -19,6 +19,32 @@ namespace CarnetDigitalWeb.Services
         {
             try
             {
+                _logger.LogInformation($"=== LoginService.LoginAsync ===");
+                _logger.LogInformation($"Email: {request.Email}");
+                _logger.LogInformation($"Password: {request.Password}");
+                _logger.LogInformation($"Tipo: {request.Tipo}");
+
+                // ✅ VALIDAR QUE LOS DATOS NO ESTÉN VACÍOS
+                if (string.IsNullOrEmpty(request.Email))
+                {
+                    _logger.LogWarning("Email vacío en LoginService");
+                    return new LoginResponse
+                    {
+                        Success = false,
+                        Message = "El email es requerido"
+                    };
+                }
+
+                if (string.IsNullOrEmpty(request.Password))
+                {
+                    _logger.LogWarning("Password vacío en LoginService");
+                    return new LoginResponse
+                    {
+                        Success = false,
+                        Message = "La contraseña es requerida"
+                    };
+                }
+
                 var client = _httpClientFactory.CreateClient("Login");
 
                 var loginData = new
@@ -29,30 +55,60 @@ namespace CarnetDigitalWeb.Services
                 };
 
                 var json = JsonSerializer.Serialize(loginData);
+                _logger.LogInformation($"JSON enviado a LoginSRV1: {json}");
+
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                 var response = await client.PostAsync("api/auth/login", content);
+                var responseJson = await response.Content.ReadAsStringAsync();
 
-                if (!response.IsSuccessStatusCode)
+                _logger.LogInformation($"Respuesta de LoginSRV1: {responseJson}");
+                _logger.LogInformation($"Status Code: {response.StatusCode}");
+
+                // ✅ Intentar deserializar la respuesta
+                try
                 {
-                    _logger.LogWarning("Login fallido: {StatusCode}", response.StatusCode);
-                    return new LoginResponse
+                    var result = JsonSerializer.Deserialize<LoginResponse>(responseJson, new JsonSerializerOptions
                     {
-                        Success = false,
-                        Message = "Credenciales inválidas"
-                    };
+                        PropertyNameCaseInsensitive = true
+                    });
+
+                    if (result != null)
+                    {
+                        return result;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error al deserializar LoginResponse");
                 }
 
-                var responseJson = await response.Content.ReadAsStringAsync();
-                var result = JsonSerializer.Deserialize<LoginResponse>(responseJson, new JsonSerializerOptions
+                // ✅ Si no se pudo deserializar, intentar como mensaje de error simple
+                try
                 {
-                    PropertyNameCaseInsensitive = true
-                });
+                    var errorObj = JsonSerializer.Deserialize<Dictionary<string, string>>(responseJson, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
 
-                return result ?? new LoginResponse
+                    if (errorObj != null && errorObj.TryGetValue("message", out var msg))
+                    {
+                        return new LoginResponse
+                        {
+                            Success = false,
+                            Message = msg
+                        };
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error al deserializar mensaje de error");
+                }
+
+                return new LoginResponse
                 {
                     Success = false,
-                    Message = "Error al procesar respuesta"
+                    Message = "Credenciales inválidas"
                 };
             }
             catch (Exception ex)

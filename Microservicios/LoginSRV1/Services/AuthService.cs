@@ -13,9 +13,6 @@ namespace LoginSRV1.Services
 {
     public class AuthService : IAuthService
     {
-        private const string MensajeCredencialesInvalidas = "Usuario y/o contraseña incorrectos";
-        private const string MensajeNoAutorizado = "No autorizado";
-
         private readonly AuthDbContext _authDb;
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _configuration;
@@ -33,73 +30,116 @@ namespace LoginSRV1.Services
             _logger = logger;
         }
 
-        // Minutos de validez del access token (JWT). Configurable, default 5 minutos.
-        private int AccessTokenExpirationMinutes =>
-            _configuration.GetValue<int?>("Jwt:ExpirationMinutes") ?? 5;
-
-        // Minutos de validez del refresh token. Configurable, debe ser mayor al del access token.
-        private int RefreshTokenExpirationMinutes
+        public async Task<LoginResponseDto> LoginAsync(LoginRequestDto request)
         {
-            get
-            {
-                var configured = _configuration.GetValue<int?>("Jwt:RefreshTokenExpirationMinutes") ?? 60;
-                // Garantiza que el refresh token siempre viva más que el access token.
-                return configured > AccessTokenExpirationMinutes
-                    ? configured
-                    : AccessTokenExpirationMinutes + 1;
-            }
-        }
-
-        public async Task<AuthOperationResult<LoginSuccessResponseDto>> LoginAsync(string? usuario, string? password, string? tipo)
-        {
-            // ✅ Validación: todos los datos son requeridos y no pueden ser nulos ni blancos
-            if (string.IsNullOrWhiteSpace(usuario) || string.IsNullOrWhiteSpace(password) || string.IsNullOrWhiteSpace(tipo))
-            {
-                return AuthOperationResult<LoginSuccessResponseDto>.Fail(
-                    "Los campos usuario, password y tipo son requeridos y no pueden estar vacíos.",
-                    AuthErrorType.Validation);
-            }
-
             try
             {
-                _logger.LogInformation("=== INICIO LOGIN === Usuario: {Usuario}", usuario);
+                _logger.LogInformation("=== INICIO LOGIN ===");
+                _logger.LogInformation($"Email: {request.Email}");
 
+                // ✅ SIEMPRE validar contra UsuariosSRV4
                 var requestData = new
                 {
-                    email = usuario,
-                    password = password,
-                    tipo = tipo
+                    email = request.Email,
+                    password = request.Password,
+                    tipo = request.Tipo ?? ""
                 };
 
+                _logger.LogInformation($"Enviando a UsuariosSRV4: {JsonSerializer.Serialize(requestData)}");
+
                 var response = await _httpClient.PostAsJsonAsync("api/Usuarios/validar-credenciales", requestData);
+                var responseContent = await response.Content.ReadAsStringAsync();
 
-                if (response.StatusCode == System.Net.HttpStatusCode.NotFound ||
-                    response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                {
-                    _logger.LogWarning("Credenciales inválidas para el usuario {Usuario}", usuario);
-                    return AuthOperationResult<LoginSuccessResponseDto>.Fail(MensajeCredencialesInvalidas, AuthErrorType.Unauthorized);
-                }
+                _logger.LogInformation($"Respuesta de UsuariosSRV4: {responseContent}");
 
+                // ✅ SI LA RESPUESTA NO ES EXITOSA (400, 404, 500, etc.)
                 if (!response.IsSuccessStatusCode)
                 {
-                    var errorContent = await response.Content.ReadAsStringAsync();
-                    _logger.LogWarning("Error en UsuariosSRV4: {StatusCode} - {Error}", response.StatusCode, errorContent);
-                    return AuthOperationResult<LoginSuccessResponseDto>.Fail(MensajeCredencialesInvalidas, AuthErrorType.Unauthorized);
+                    _logger.LogWarning($"Error en UsuariosSRV4: {response.StatusCode} - {responseContent}");
+
+                    // ✅ Intentar parsear el mensaje de error de UsuariosSRV4
+                    try
+                    {
+                        var errorObj = JsonSerializer.Deserialize<Dictionary<string, string>>(responseContent, new JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true
+                        });
+
+                        if (errorObj != null && errorObj.TryGetValue("message", out var msg))
+                        {
+                            _logger.LogWarning($"Error de UsuariosSRV4: {msg}");
+
+                            // ✅ DEVOLVER EL MENSAJE EXACTO DE USUARIOSSRV4
+                            return new LoginResponseDto
+                            {
+                                Success = false,
+                                Message = msg
+                            };
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Error al parsear respuesta de UsuariosSRV4");
+                    }
+
+                    // ✅ Si contiene "bloqueado", devolver mensaje de bloqueo
+                    if (responseContent.Contains("bloqueado", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return new LoginResponseDto
+                        {
+                            Success = false,
+                            Message = "Usuario bloqueado por intentos fallidos. Contacte al administrador."
+                        };
+                    }
+
+                    return new LoginResponseDto
+                    {
+                        Success = false,
+                        Message = "Credenciales inválidas"
+                    };
                 }
 
-                var userResponse = await response.Content.ReadFromJsonAsync<ValidarCredencialesResponse>();
-
-                if (userResponse == null || userResponse.Bloqueado || !userResponse.Activo)
+                // ✅ RESPUESTA EXITOSA - Parsear el objeto
+                var userResponse = JsonSerializer.Deserialize<ValidarCredencialesResponse>(responseContent, new JsonSerializerOptions
                 {
-                    return AuthOperationResult<LoginSuccessResponseDto>.Fail(MensajeCredencialesInvalidas, AuthErrorType.Unauthorized);
-                }
+                    PropertyNameCaseInsensitive = true
+                });
 
-                // Verificación explícita de que el tipo de usuario coincide con el indicado
-                if (!string.Equals(userResponse.TipoUsuario, tipo, StringComparison.OrdinalIgnoreCase))
+                if (userResponse == null)
                 {
-                    return AuthOperationResult<LoginSuccessResponseDto>.Fail(MensajeCredencialesInvalidas, AuthErrorType.Unauthorized);
+                    _logger.LogWarning("Usuario no encontrado");
+                    return new LoginResponseDto
+                    {
+                        Success = false,
+                        Message = "Usuario no encontrado"
+                    };
                 }
 
+                _logger.LogInformation($"Usuario encontrado: ID={userResponse.Id}, Email={userResponse.Email}, Tipo={userResponse.TipoUsuario}");
+
+                // ✅ Verificar bloqueo (por si acaso)
+                if (userResponse.Bloqueado)
+                {
+                    _logger.LogWarning($"Usuario bloqueado: {userResponse.Email}");
+                    return new LoginResponseDto
+                    {
+                        Success = false,
+                        Message = "Usuario bloqueado por intentos fallidos. Contacte al administrador."
+                    };
+                }
+
+                // ✅ Verificar activo
+                if (!userResponse.Activo)
+                {
+                    _logger.LogWarning($"Usuario inactivo: {userResponse.Email}");
+                    return new LoginResponseDto
+                    {
+                        Success = false,
+                        Message = "Usuario inactivo"
+                    };
+                }
+
+                // ✅ Crear objeto UserInfoDto
                 var user = new UserInfoDto
                 {
                     Id = userResponse.Id,
@@ -108,19 +148,19 @@ namespace LoginSRV1.Services
                     TipoUsuario = userResponse.TipoUsuario,
                     Activo = userResponse.Activo,
                     TipoUsuarioId = userResponse.TipoUsuarioId,
-                    RolId = userResponse.RolId,
-                    Institutions = userResponse.Institutions
+                    RolId = userResponse.RolId
                 };
 
-                var expiresAt = DateTimeOffset.UtcNow.AddMinutes(AccessTokenExpirationMinutes);
-                var accessToken = GenerateAccessToken(user, expiresAt);
+                // ✅ Generar tokens
+                var accessToken = GenerateAccessToken(user);
                 var refreshToken = GenerateRefreshToken();
 
+                // ✅ Guardar refresh token
                 var refreshTokenEntity = new RefreshToken
                 {
                     UsuarioId = user.Id,
                     Token = refreshToken,
-                    ExpiresAt = DateTimeOffset.UtcNow.AddMinutes(RefreshTokenExpirationMinutes).UtcDateTime,
+                    ExpiresAt = DateTime.UtcNow.AddDays(7),
                     CreatedAt = DateTime.UtcNow,
                     IsRevoked = false
                 };
@@ -128,69 +168,88 @@ namespace LoginSRV1.Services
                 _authDb.RefreshTokens.Add(refreshTokenEntity);
                 await _authDb.SaveChangesAsync();
 
-                var result = new LoginSuccessResponseDto
+                _logger.LogInformation($"Login exitoso para: {user.Email}");
+
+                return new LoginResponseDto
                 {
-                    ExpiresIn = expiresAt,
+                    Success = true,
+                    Message = "Login exitoso",
                     AccessToken = accessToken,
                     RefreshToken = refreshToken,
-                    UsuarioId = user.Id,
-                    Institutions = user.Institutions ?? new List<InstitutionDto>(),
-                    NombreCompleto = user.NombreCompleto,
-                    TipoUsuario = user.TipoUsuario
+                    TokenType = "Bearer",
+                    ExpiresIn = 3600,
+                    User = user
                 };
-
-                return AuthOperationResult<LoginSuccessResponseDto>.Ok(result);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error en LoginAsync");
-                return AuthOperationResult<LoginSuccessResponseDto>.Fail(MensajeCredencialesInvalidas, AuthErrorType.Unauthorized);
+                _logger.LogError($"Error en LoginAsync: {ex.Message}");
+                return new LoginResponseDto
+                {
+                    Success = false,
+                    Message = $"Error al autenticar: {ex.Message}"
+                };
             }
         }
 
-        public async Task<AuthOperationResult<RefreshResponseDto>> RefreshTokenAsync(string? refreshToken)
+        public async Task<LoginResponseDto> RefreshTokenAsync(string refreshToken)
         {
-            if (string.IsNullOrWhiteSpace(refreshToken))
-            {
-                return AuthOperationResult<RefreshResponseDto>.Fail(MensajeNoAutorizado, AuthErrorType.Unauthorized);
-            }
-
             try
             {
                 var storedToken = await _authDb.RefreshTokens
                     .FirstOrDefaultAsync(rt => rt.Token == refreshToken && rt.IsRevoked == false);
 
-                if (storedToken == null || storedToken.ExpiresAt < DateTime.UtcNow)
+                if (storedToken == null)
                 {
-                    return AuthOperationResult<RefreshResponseDto>.Fail(MensajeNoAutorizado, AuthErrorType.Unauthorized);
+                    return new LoginResponseDto
+                    {
+                        Success = false,
+                        Message = "Refresh token inválido"
+                    };
+                }
+
+                if (storedToken.ExpiresAt < DateTime.UtcNow)
+                {
+                    return new LoginResponseDto
+                    {
+                        Success = false,
+                        Message = "Refresh token expirado"
+                    };
                 }
 
                 var response = await _httpClient.GetAsync($"api/Usuarios/{storedToken.UsuarioId}");
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    return AuthOperationResult<RefreshResponseDto>.Fail(MensajeNoAutorizado, AuthErrorType.Unauthorized);
+                    return new LoginResponseDto
+                    {
+                        Success = false,
+                        Message = "Usuario no encontrado"
+                    };
                 }
 
                 var user = await response.Content.ReadFromJsonAsync<UserInfoDto>();
 
                 if (user == null || !user.Activo)
                 {
-                    return AuthOperationResult<RefreshResponseDto>.Fail(MensajeNoAutorizado, AuthErrorType.Unauthorized);
+                    return new LoginResponseDto
+                    {
+                        Success = false,
+                        Message = "Usuario inactivo"
+                    };
                 }
 
-                // Revocar el token anterior (rotación de refresh tokens)
                 storedToken.IsRevoked = true;
+                await _authDb.SaveChangesAsync();
 
-                var expiresAt = DateTimeOffset.UtcNow.AddMinutes(AccessTokenExpirationMinutes);
-                var newAccessToken = GenerateAccessToken(user, expiresAt);
+                var newAccessToken = GenerateAccessToken(user);
                 var newRefreshToken = GenerateRefreshToken();
 
                 var newRefreshTokenEntity = new RefreshToken
                 {
                     UsuarioId = user.Id,
                     Token = newRefreshToken,
-                    ExpiresAt = DateTimeOffset.UtcNow.AddMinutes(RefreshTokenExpirationMinutes).UtcDateTime,
+                    ExpiresAt = DateTime.UtcNow.AddDays(7),
                     CreatedAt = DateTime.UtcNow,
                     IsRevoked = false
                 };
@@ -198,19 +257,25 @@ namespace LoginSRV1.Services
                 _authDb.RefreshTokens.Add(newRefreshTokenEntity);
                 await _authDb.SaveChangesAsync();
 
-                var result = new RefreshResponseDto
+                return new LoginResponseDto
                 {
-                    ExpiresIn = expiresAt,
+                    Success = true,
+                    Message = "Token renovado exitosamente",
                     AccessToken = newAccessToken,
-                    RefreshToken = newRefreshToken
+                    RefreshToken = newRefreshToken,
+                    TokenType = "Bearer",
+                    ExpiresIn = 3600,
+                    User = user
                 };
-
-                return AuthOperationResult<RefreshResponseDto>.Ok(result);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error en RefreshTokenAsync");
-                return AuthOperationResult<RefreshResponseDto>.Fail(MensajeNoAutorizado, AuthErrorType.Unauthorized);
+                _logger.LogError($"Error en RefreshTokenAsync: {ex.Message}");
+                return new LoginResponseDto
+                {
+                    Success = false,
+                    Message = $"Error al renovar token: {ex.Message}"
+                };
             }
         }
 
@@ -236,15 +301,13 @@ namespace LoginSRV1.Services
             }
         }
 
-        public Task<bool> ValidateTokenAsync(string? token)
+        public async Task<bool> ValidateTokenAsync(string token)
         {
-            if (string.IsNullOrWhiteSpace(token))
-            {
-                return Task.FromResult(false);
-            }
-
             try
             {
+                if (string.IsNullOrWhiteSpace(token))
+                    return false;
+
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var key = Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"] ?? "TuSuperSecretKeyLarga123456789012345678901234567890");
 
@@ -261,15 +324,15 @@ namespace LoginSRV1.Services
                 };
 
                 var principal = tokenHandler.ValidateToken(token, validationParameters, out _);
-                return Task.FromResult(principal != null);
+                return principal != null;
             }
             catch
             {
-                return Task.FromResult(false);
+                return false;
             }
         }
 
-        private string GenerateAccessToken(UserInfoDto user, DateTimeOffset expiresAt)
+        private string GenerateAccessToken(UserInfoDto user)
         {
             var key = Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"] ?? "TuSuperSecretKeyLarga123456789012345678901234567890");
             var issuer = _configuration["Jwt:Issuer"] ?? "CUC";
@@ -291,7 +354,7 @@ namespace LoginSRV1.Services
                 issuer: issuer,
                 audience: audience,
                 claims: claims,
-                expires: expiresAt.UtcDateTime,
+                expires: DateTime.UtcNow.AddMinutes(5),
                 signingCredentials: credentials
             );
 

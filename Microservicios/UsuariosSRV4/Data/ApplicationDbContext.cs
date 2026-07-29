@@ -24,37 +24,28 @@ namespace UsuariosSRV4.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // ✅ Nombres de tablas (CON LOS NOMBRES REALES DE LA BD)
-            modelBuilder.Entity<Usuario>().ToTable("Usuario", "dbo");
-            modelBuilder.Entity<TipoUsuario>().ToTable("TipoUsuario", "dbo");
-            modelBuilder.Entity<TipoIdentificacion>().ToTable("TipoIdentificacion", "dbo");  // ← CORREGIDO
-            modelBuilder.Entity<EstadoUsuario>().ToTable("EstadoUsuario", "dbo");
-            modelBuilder.Entity<Rol>().ToTable("Rol", "dbo");
-            modelBuilder.Entity<UsuarioTelefono>().ToTable("UsuarioTelefono", "dbo");
-            modelBuilder.Entity<UsuarioArea>().ToTable("UsuarioArea", "dbo");
-            modelBuilder.Entity<UsuarioCarrera>().ToTable("UsuarioCarera", "dbo");  // ← CORREGIDO (sin la 'r')
-            modelBuilder.Entity<UsuarioInstitucion>().ToTable("UsuarioInstitución", "dbo");  // ← CORREGIDO (con tilde)
+            modelBuilder.Entity<Usuario>(entity =>
+            {
+                entity.ToTable("Usuario");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).HasColumnName("Id");
+                entity.Property(e => e.Email).HasColumnName("Email");
+                entity.Property(e => e.Contrasena).HasColumnName("Contrasena");
+                entity.Property(e => e.TipoUsuarioId).HasColumnName("TipoUsuarioId");
+                entity.Property(e => e.EstadoId).HasColumnName("EstadoId");
+                entity.Property(e => e.NombreCompleto).HasColumnName("NombreCompleto");
+                entity.Property(e => e.TipoIdentificacionId).HasColumnName("TipoIdentificacionId");
+                entity.Property(e => e.NumeroIdentificacion).HasColumnName("NumeroIdentificacion");
+                entity.Property(e => e.RolId).HasColumnName("RolId");
+                entity.Property(e => e.Fotografia).HasColumnName("Fotografia");
+                entity.Property(e => e.Confirmado).HasColumnName("Confirmado");
+                entity.Property(e => e.FechaCreacion).HasColumnName("FechaCreacion");
 
-            // Configurar relaciones
-            modelBuilder.Entity<Usuario>()
-                .HasOne(u => u.TipoUsuario)
-                .WithMany()
-                .HasForeignKey(u => u.TipoUsuarioId);
-
-            modelBuilder.Entity<Usuario>()
-                .HasOne(u => u.Estado)
-                .WithMany()
-                .HasForeignKey(u => u.EstadoId);
-
-            modelBuilder.Entity<Usuario>()
-                .HasOne(u => u.TipoIdentificacion)
-                .WithMany()
-                .HasForeignKey(u => u.TipoIdentificacionId);
-
-            modelBuilder.Entity<Usuario>()
-                .HasOne(u => u.Rol)
-                .WithMany()
-                .HasForeignKey(u => u.RolId);
+                // ✅ NUEVAS COLUMNAS - DEBEN ESTAR MAPEADAS
+                entity.Property(e => e.IntentosFallidos).HasColumnName("IntentosFallidos");
+                entity.Property(e => e.Bloqueado).HasColumnName("Bloqueado");
+                entity.Property(e => e.FechaBloqueo).HasColumnName("FechaBloqueo");
+            });
         }
     }
 }

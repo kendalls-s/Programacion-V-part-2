@@ -8,10 +8,12 @@ namespace UsuariosSRV4.Services
     public class UsuarioService : IUsuarioService
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<UsuarioService> _logger;
 
-        public UsuarioService(ApplicationDbContext context)
+        public UsuarioService(ApplicationDbContext context, ILogger<UsuarioService> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public async Task<(bool ok, string? error, IEnumerable<UsuarioDto>? data)> GetAllAsync()
@@ -29,17 +31,17 @@ namespace UsuariosSRV4.Services
                 var result = usuarios.Select(u => new UsuarioDto
                 {
                     Id = u.Id,
-                    Email = u.Email,
-                    TipoIdentificacion = u.TipoIdentificacion?.Nombre ?? "",
-                    NumeroIdentificacion = u.NumeroIdentificacion,
-                    NombreCompleto = u.NombreCompleto,
-                    TipoUsuario = u.TipoUsuario?.Nombre ?? "",
+                    Email = u.Email ?? string.Empty,
+                    TipoIdentificacion = (u.TipoIdentificacion != null) ? u.TipoIdentificacion.Nombre ?? string.Empty : string.Empty,
+                    NumeroIdentificacion = u.NumeroIdentificacion ?? string.Empty,
+                    NombreCompleto = u.NombreCompleto ?? string.Empty,
+                    TipoUsuario = (u.TipoUsuario != null) ? u.TipoUsuario.Nombre ?? string.Empty : string.Empty,
                     Activo = u.EstadoId == 1,
-                    Bloqueado = false,
-                    IntentosFallidos = 0,
+                    Bloqueado = u.Bloqueado,
+                    IntentosFallidos = u.IntentosFallidos,
                     FechaCreacion = u.FechaCreacion,
-                    FotografiaBase64 = u.Fotografia != null ? Convert.ToBase64String(u.Fotografia) : null,
-                    Telefonos = u.Telefonos?.Select(t => t.Telefono).ToList() ?? new List<string>()
+                    FotografiaBase64 = null,
+                    Telefonos = (u.Telefonos != null) ? u.Telefonos.Select(t => t.Telefono ?? string.Empty).ToList() : new List<string>()
                 });
 
                 return (true, null, result);
@@ -69,17 +71,17 @@ namespace UsuariosSRV4.Services
                 var result = new UsuarioDto
                 {
                     Id = u.Id,
-                    Email = u.Email,
-                    TipoIdentificacion = u.TipoIdentificacion?.Nombre ?? "",
-                    NumeroIdentificacion = u.NumeroIdentificacion,
-                    NombreCompleto = u.NombreCompleto,
-                    TipoUsuario = u.TipoUsuario?.Nombre ?? "",
+                    Email = u.Email ?? string.Empty,
+                    TipoIdentificacion = (u.TipoIdentificacion != null) ? u.TipoIdentificacion.Nombre ?? string.Empty : string.Empty,
+                    NumeroIdentificacion = u.NumeroIdentificacion ?? string.Empty,
+                    NombreCompleto = u.NombreCompleto ?? string.Empty,
+                    TipoUsuario = (u.TipoUsuario != null) ? u.TipoUsuario.Nombre ?? string.Empty : string.Empty,
                     Activo = u.EstadoId == 1,
-                    Bloqueado = false,
-                    IntentosFallidos = 0,
+                    Bloqueado = u.Bloqueado,
+                    IntentosFallidos = u.IntentosFallidos,
                     FechaCreacion = u.FechaCreacion,
-                    FotografiaBase64 = u.Fotografia != null ? Convert.ToBase64String(u.Fotografia) : null,
-                    Telefonos = u.Telefonos?.Select(t => t.Telefono).ToList() ?? new List<string>()
+                    FotografiaBase64 = null,
+                    Telefonos = (u.Telefonos != null) ? u.Telefonos.Select(t => t.Telefono ?? string.Empty).ToList() : new List<string>()
                 };
 
                 return (true, null, result);
@@ -90,12 +92,11 @@ namespace UsuariosSRV4.Services
             }
         }
 
-        // ✅ CREATE - Implementación correcta
+        // ✅ CREATE
         public async Task<(bool ok, string? error, UsuarioDto? data)> CreateAsync(CrearUsuarioDto dto)
         {
             try
             {
-                // Verificar si el email ya existe
                 var exists = await _context.Usuarios.AnyAsync(u => u.Email == dto.Email);
                 if (exists)
                 {
@@ -104,37 +105,42 @@ namespace UsuariosSRV4.Services
 
                 var usuario = new Usuario
                 {
-                    Email = dto.Email,
-                    Contrasena = dto.Contrasena,
+                    Email = dto.Email ?? string.Empty,
+                    Contrasena = dto.Contrasena ?? string.Empty,
                     TipoUsuarioId = dto.TipoUsuarioId,
-                    EstadoId = 1, // Activo por defecto
-                    NombreCompleto = dto.NombreCompleto,
+                    EstadoId = 1,
+                    NombreCompleto = dto.NombreCompleto ?? string.Empty,
                     TipoIdentificacionId = dto.TipoIdentificacionId,
-                    NumeroIdentificacion = dto.NumeroIdentificacion,
-                    RolId = 1, // Rol por defecto
+                    NumeroIdentificacion = dto.NumeroIdentificacion ?? string.Empty,
+                    RolId = 1,
                     Confirmado = true,
-                    FechaCreacion = DateTime.Now
+                    FechaCreacion = DateTime.Now,
+                    IntentosFallidos = 0,
+                    Bloqueado = false,
+                    Fotografia = null
                 };
 
                 _context.Usuarios.Add(usuario);
                 await _context.SaveChangesAsync();
 
-                // Agregar teléfonos
-                foreach (var telefono in dto.Telefonos)
+                var telefonosList = dto.Telefonos;
+                if (telefonosList != null)
                 {
-                    if (!string.IsNullOrWhiteSpace(telefono))
+                    foreach (var telefono in telefonosList)
                     {
-                        _context.UsuariosTelefonos.Add(new UsuarioTelefono
+                        if (!string.IsNullOrWhiteSpace(telefono))
                         {
-                            UsuarioId = usuario.Id,
-                            Telefono = telefono
-                        });
+                            _context.UsuariosTelefonos.Add(new UsuarioTelefono
+                            {
+                                UsuarioId = usuario.Id,
+                                Telefono = telefono ?? string.Empty
+                            });
+                        }
                     }
                 }
 
                 await _context.SaveChangesAsync();
 
-                // Obtener el usuario creado
                 var (ok, _, data) = await GetByIdAsync(usuario.Id);
                 return (ok, null, data);
             }
@@ -144,7 +150,7 @@ namespace UsuariosSRV4.Services
             }
         }
 
-        // ✅ UPDATE - Implementación correcta
+        // ✅ UPDATE
         public async Task<(bool ok, string? error, UsuarioDto? data)> UpdateAsync(int id, ActualizarUsuarioDto dto)
         {
             try
@@ -158,34 +164,38 @@ namespace UsuariosSRV4.Services
                     return (false, "Usuario no encontrado", null);
                 }
 
-                usuario.Email = dto.Email;
+                usuario.Email = dto.Email ?? string.Empty;
                 usuario.TipoIdentificacionId = dto.TipoIdentificacionId;
-                usuario.NumeroIdentificacion = dto.NumeroIdentificacion;
-                usuario.NombreCompleto = dto.NombreCompleto;
+                usuario.NumeroIdentificacion = dto.NumeroIdentificacion ?? string.Empty;
+                usuario.NombreCompleto = dto.NombreCompleto ?? string.Empty;
                 usuario.TipoUsuarioId = dto.TipoUsuarioId;
-                usuario.EstadoId = dto.Activo ? 1 : 2; // 1=Activo, 2=Inactivo
+                usuario.EstadoId = dto.Activo ? 1 : 2;
+                usuario.Fotografia = null;
 
                 if (!string.IsNullOrWhiteSpace(dto.Contrasena))
                 {
-                    usuario.Contrasena = dto.Contrasena;
+                    usuario.Contrasena = dto.Contrasena ?? string.Empty;
                 }
 
-                // Actualizar teléfonos
                 var telefonosActuales = usuario.Telefonos.ToList();
                 foreach (var tel in telefonosActuales)
                 {
                     _context.UsuariosTelefonos.Remove(tel);
                 }
 
-                foreach (var telefono in dto.Telefonos)
+                var telefonosList = dto.Telefonos;
+                if (telefonosList != null)
                 {
-                    if (!string.IsNullOrWhiteSpace(telefono))
+                    foreach (var telefono in telefonosList)
                     {
-                        _context.UsuariosTelefonos.Add(new UsuarioTelefono
+                        if (!string.IsNullOrWhiteSpace(telefono))
                         {
-                            UsuarioId = usuario.Id,
-                            Telefono = telefono
-                        });
+                            _context.UsuariosTelefonos.Add(new UsuarioTelefono
+                            {
+                                UsuarioId = usuario.Id,
+                                Telefono = telefono ?? string.Empty
+                            });
+                        }
                     }
                 }
 
@@ -200,7 +210,7 @@ namespace UsuariosSRV4.Services
             }
         }
 
-        // ✅ DELETE - Implementación correcta
+        // ✅ DELETE
         public async Task<(bool ok, string? error)> DeleteAsync(int id)
         {
             try
@@ -211,7 +221,7 @@ namespace UsuariosSRV4.Services
                     return (false, "Usuario no encontrado");
                 }
 
-                usuario.EstadoId = 2; // Inactivo (borrado lógico)
+                usuario.EstadoId = 2;
                 await _context.SaveChangesAsync();
                 return (true, null);
             }
@@ -221,11 +231,14 @@ namespace UsuariosSRV4.Services
             }
         }
 
-        // ✅ VALIDAR CREDENCIALES
-        public async Task<(bool ok, string? error, ValidarCredencialesResponse? data)> ValidarCredencialesAsync(string email, string password, string? tipo = null)
+        // ✅ VALIDAR CREDENCIALES CON BLOQUEO DE USUARIO (COMPLETO)
+        public async Task<(bool ok, string? error, ValidarCredencialesResponse? data)> ValidarCredencialesAsync(
+    string email, string password, string? tipo = null)
         {
             try
             {
+                _logger.LogInformation($"=== VALIDANDO CREDENCIALES: {email} ===");
+
                 var usuario = await _context.Usuarios
                     .Include(u => u.TipoUsuario)
                     .Include(u => u.Estado)
@@ -233,23 +246,59 @@ namespace UsuariosSRV4.Services
 
                 if (usuario == null)
                 {
+                    _logger.LogWarning($"Usuario no encontrado: {email}");
                     return (false, "Usuario no encontrado", null);
                 }
 
+                _logger.LogInformation($"Usuario: {email}, IntentosFallidos: {usuario.IntentosFallidos}, Bloqueado: {usuario.Bloqueado}");
+
+                // ✅ VERIFICAR BLOQUEO
+                if (usuario.Bloqueado)
+                {
+                    _logger.LogWarning($"Usuario BLOQUEADO: {email}");
+                    return (false, "Usuario bloqueado por intentos fallidos. Contacte al administrador.", null);
+                }
+
+                // ✅ VERIFICAR CONTRASEÑA
                 if (usuario.Contrasena != password)
                 {
+                    usuario.IntentosFallidos++;
+                    _logger.LogWarning($"Contraseña incorrecta, IntentosFallidos: {usuario.IntentosFallidos}");
+
+                    if (usuario.IntentosFallidos >= 3)
+                    {
+                        usuario.Bloqueado = true;
+                        usuario.FechaBloqueo = DateTime.Now;
+                        await _context.SaveChangesAsync();
+                        _logger.LogWarning($"Usuario BLOQUEADO por 3 intentos fallidos: {email}");
+                        return (false, "Usuario bloqueado por 3 intentos fallidos. Contacte al administrador.", null);
+                    }
+
+                    await _context.SaveChangesAsync();
                     return (false, "Contraseña incorrecta", null);
                 }
 
+                // ✅ CONTRASEÑA CORRECTA - REINICIAR INTENTOS
+                if (usuario.IntentosFallidos > 0)
+                {
+                    usuario.IntentosFallidos = 0;
+                    usuario.Bloqueado = false;
+                    usuario.FechaBloqueo = null;
+                    await _context.SaveChangesAsync();
+                    _logger.LogInformation($"Intentos reiniciados para: {email}");
+                }
+
+                // ✅ VERIFICAR ESTADO (1 = Activo)
                 if (usuario.EstadoId != 1)
                 {
-                    var estado = usuario.Estado?.Nombre ?? "Inactivo";
+                    var estado = usuario.Estado != null ? usuario.Estado.Nombre : "Inactivo";
                     return (false, $"Usuario {estado}", null);
                 }
 
+                // ✅ VERIFICAR TIPO
                 if (!string.IsNullOrEmpty(tipo))
                 {
-                    var tipoUsuario = usuario.TipoUsuario?.Nombre ?? "";
+                    var tipoUsuario = usuario.TipoUsuario != null ? usuario.TipoUsuario.Nombre : "";
                     if (!tipoUsuario.Equals(tipo, StringComparison.OrdinalIgnoreCase))
                     {
                         return (false, "Tipo de usuario no coincide", null);
@@ -261,19 +310,21 @@ namespace UsuariosSRV4.Services
                     Id = usuario.Id,
                     Email = usuario.Email,
                     NombreCompleto = usuario.NombreCompleto,
-                    TipoUsuario = usuario.TipoUsuario?.Nombre ?? "",
+                    TipoUsuario = usuario.TipoUsuario != null ? usuario.TipoUsuario.Nombre : "",
                     Activo = usuario.EstadoId == 1,
-                    Bloqueado = false,
-                    IntentosFallidos = 0,
+                    Bloqueado = usuario.Bloqueado,
+                    IntentosFallidos = usuario.IntentosFallidos,
                     TipoUsuarioId = usuario.TipoUsuarioId,
                     RolId = usuario.RolId
                 };
 
+                _logger.LogInformation($"Credenciales válidas para: {email}");
                 return (true, null, result);
             }
             catch (Exception ex)
             {
-                return (false, $"Error al validar credenciales: {ex.Message}", null);
+                _logger.LogError(ex, $"Error en ValidarCredencialesAsync: {email}");
+                return (false, $"Error: {ex.Message}", null);
             }
         }
     }

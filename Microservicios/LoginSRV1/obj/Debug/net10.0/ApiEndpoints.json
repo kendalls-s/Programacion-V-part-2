@@ -8,19 +8,9 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "usuario",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "password",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "tipo",
-        "Type": "System.String",
-        "IsRequired": false
+        "Name": "request",
+        "Type": "LoginSRV1.DTOs.LoginRequestDto",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": [
@@ -35,28 +25,6 @@
     "ContainingType": "LoginSRV1.Endpoints.LoginEndpoints",
     "Method": "LogoutAsync",
     "RelativePath": "api/auth/logout",
-    "HttpMethod": "POST",
-    "IsController": false,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "request",
-        "Type": "LoginSRV1.DTOs.RefreshTokenRequestDto",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "LoginSRV1.Endpoints.LoginEndpoints",
-    "Method": "RefreshTokenAsync",
-    "RelativePath": "api/auth/refresh",
     "HttpMethod": "POST",
     "IsController": false,
     "Order": 0,
@@ -77,6 +45,28 @@
   },
   {
     "ContainingType": "LoginSRV1.Endpoints.LoginEndpoints",
+    "Method": "RefreshTokenAsync",
+    "RelativePath": "api/auth/refresh",
+    "HttpMethod": "POST",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "LoginSRV1.DTOs.RefreshTokenRequestDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "LoginSRV1.Endpoints.LoginEndpoints",
     "Method": "ValidateTokenAsync",
     "RelativePath": "api/auth/validate",
     "HttpMethod": "GET",
@@ -84,7 +74,7 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "token",
+        "Name": "Authorization",
         "Type": "System.String",
         "IsRequired": false
       }

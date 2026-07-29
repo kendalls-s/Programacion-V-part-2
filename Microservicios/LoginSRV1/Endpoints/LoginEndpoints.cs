@@ -16,62 +16,116 @@ namespace LoginSRV1.Endpoints
             group.MapGet("/validate", ValidateTokenAsync);
         }
 
-        // POST /api/auth/login
-        // Headers requeridos: usuario, password, tipo
         private static async Task<IResult> LoginAsync(
-            HttpContext httpContext,
+            [FromBody] LoginRequestDto request,
             IAuthService authService,
-            [FromHeader(Name = "usuario")] string? usuario,
-            [FromHeader(Name = "password")] string? password,
-            [FromHeader(Name = "tipo")] string? tipo)
+            ILogger<Program> logger)
         {
-            var result = await authService.LoginAsync(usuario, password, tipo);
+            logger.LogInformation($"=== LoginAsync ===");
+            logger.LogInformation($"Email: {request.Email}");
+
+            if (string.IsNullOrEmpty(request.Email))
+            {
+                return Results.BadRequest(new { message = "El email es requerido" });
+            }
+
+            if (string.IsNullOrEmpty(request.Password))
+            {
+                return Results.BadRequest(new { message = "La contraseña es requerida" });
+            }
+
+            var result = await authService.LoginAsync(request);
 
             if (!result.Success)
             {
-                return result.ErrorType == AuthErrorType.Validation
-                    ? Results.BadRequest(new ErrorResponseDto { Message = result.ErrorMessage! })
-                    : Results.Json(new ErrorResponseDto { Message = result.ErrorMessage! }, statusCode: StatusCodes.Status401Unauthorized);
+                return Results.BadRequest(new { message = result.Message ?? "Credenciales inválidas" });
             }
 
-            return Results.Json(result.Data, statusCode: StatusCodes.Status201Created);
+            return Results.Ok(new
+            {
+                success = result.Success,
+                message = result.Message,
+                accessToken = result.AccessToken,
+                refreshToken = result.RefreshToken,
+                tokenType = result.TokenType ?? "Bearer",
+                expiresIn = result.ExpiresIn ?? 3600,
+                user = result.User != null ? new
+                {
+                    id = result.User.Id,
+                    email = result.User.Email,
+                    nombreCompleto = result.User.NombreCompleto,
+                    tipoUsuario = result.User.TipoUsuario,
+                    activo = result.User.Activo,
+                    tipoUsuarioId = result.User.TipoUsuarioId,
+                    rolId = result.User.RolId
+                } : null
+            });
         }
 
-        // POST /api/auth/refresh
-        // Header requerido: refresh_token
         private static async Task<IResult> RefreshTokenAsync(
-            [FromHeader(Name = "refresh_token")] string? refreshToken,
-            IAuthService authService)
-        {
-            var result = await authService.RefreshTokenAsync(refreshToken);
-
-            if (!result.Success)
-            {
-                return Results.Json(new ErrorResponseDto { Message = result.ErrorMessage! }, statusCode: StatusCodes.Status401Unauthorized);
-            }
-
-            return Results.Json(result.Data, statusCode: StatusCodes.Status201Created);
-        }
-
-        private static async Task<IResult> LogoutAsync(
             [FromBody] RefreshTokenRequestDto request,
             IAuthService authService)
         {
-            var result = await authService.LogoutAsync(request.RefreshToken);
+            if (string.IsNullOrEmpty(request.RefreshToken))
+            {
+                return Results.BadRequest(new { message = "Refresh token es requerido" });
+            }
+
+            var result = await authService.RefreshTokenAsync(request.RefreshToken);
+
+            if (!result.Success)
+            {
+                return Results.Unauthorized();
+            }
+
+            return Results.Ok(new
+            {
+                success = result.Success,
+                message = result.Message,
+                accessToken = result.AccessToken,
+                refreshToken = result.RefreshToken,
+                tokenType = result.TokenType ?? "Bearer",
+                expiresIn = result.ExpiresIn ?? 3600,
+                user = result.User != null ? new
+                {
+                    id = result.User.Id,
+                    email = result.User.Email,
+                    nombreCompleto = result.User.NombreCompleto,
+                    tipoUsuario = result.User.TipoUsuario,
+                    activo = result.User.Activo,
+                    tipoUsuarioId = result.User.TipoUsuarioId,
+                    rolId = result.User.RolId
+                } : null
+            });
+        }
+
+        // ✅ Logout SIN LogoutRequestDto - usa Header en su lugar
+        private static async Task<IResult> LogoutAsync(
+            [FromHeader(Name = "refresh_token")] string? refreshToken,
+            IAuthService authService)
+        {
+            if (string.IsNullOrEmpty(refreshToken))
+            {
+                return Results.BadRequest(new { message = "Refresh token es requerido" });
+            }
+
+            var result = await authService.LogoutAsync(refreshToken);
             return Results.Ok(new { success = result });
         }
 
-        // GET /api/auth/validate
-        // Header requerido: token
         private static async Task<IResult> ValidateTokenAsync(
-            [FromHeader(Name = "token")] string? token,
+            [FromHeader(Name = "Authorization")] string? authorization,
             IAuthService authService)
         {
-            var isValid = await authService.ValidateTokenAsync(token);
+            var token = authorization?.Replace("Bearer ", "") ?? "";
 
-            return isValid
-                ? Results.Json(true, statusCode: StatusCodes.Status200OK)
-                : Results.StatusCode(StatusCodes.Status401Unauthorized);
+            if (string.IsNullOrEmpty(token))
+            {
+                return Results.Unauthorized();
+            }
+
+            var isValid = await authService.ValidateTokenAsync(token);
+            return isValid ? Results.Ok(new { valid = true }) : Results.Unauthorized();
         }
     }
 }

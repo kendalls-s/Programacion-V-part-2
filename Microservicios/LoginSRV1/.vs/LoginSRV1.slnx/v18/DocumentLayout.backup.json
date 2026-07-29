@@ -1,10 +1,66 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\LoginSRV1\\",
+  "WorkspaceRootPath": "C:\\Git\\Programacion-V-part-2\\Microservicios\\LoginSRV1\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{B47F80BE-3FF8-0065-2659-69764B0B892D}|LoginSRV1.csproj|c:\\users\\usuario\\desktop\\segundoentregable\\programacion-v-part-2-main\\microservicios\\loginsrv1\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "AbsoluteMoniker": "D:0:0:{B47F80BE-3FF8-0065-2659-69764B0B892D}|LoginSRV1.csproj|c:\\git\\programacion-v-part-2\\microservicios\\loginsrv1\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B47F80BE-3FF8-0065-2659-69764B0B892D}|LoginSRV1.csproj|solutionrelative:services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B47F80BE-3FF8-0065-2659-69764B0B892D}|LoginSRV1.csproj|c:\\git\\programacion-v-part-2\\microservicios\\loginsrv1\\endpoints\\loginendpoints.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B47F80BE-3FF8-0065-2659-69764B0B892D}|LoginSRV1.csproj|solutionrelative:endpoints\\loginendpoints.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B47F80BE-3FF8-0065-2659-69764B0B892D}|LoginSRV1.csproj|c:\\git\\programacion-v-part-2\\microservicios\\loginsrv1\\dtos\\microservicesconfigdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B47F80BE-3FF8-0065-2659-69764B0B892D}|LoginSRV1.csproj|solutionrelative:dtos\\microservicesconfigdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B47F80BE-3FF8-0065-2659-69764B0B892D}|LoginSRV1.csproj|c:\\git\\programacion-v-part-2\\microservicios\\loginsrv1\\dtos\\authdtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B47F80BE-3FF8-0065-2659-69764B0B892D}|LoginSRV1.csproj|solutionrelative:dtos\\authdtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B47F80BE-3FF8-0065-2659-69764B0B892D}|LoginSRV1.csproj|c:\\git\\programacion-v-part-2\\microservicios\\loginsrv1\\services\\iauthservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B47F80BE-3FF8-0065-2659-69764B0B892D}|LoginSRV1.csproj|solutionrelative:services\\iauthservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B47F80BE-3FF8-0065-2659-69764B0B892D}|LoginSRV1.csproj|c:\\git\\programacion-v-part-2\\microservicios\\loginsrv1\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{B47F80BE-3FF8-0065-2659-69764B0B892D}|LoginSRV1.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\Entities\\Usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\Endpoints\\UsuarioEndpoints.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\Services\\UsuarioService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\Data\\ApplicationDbContext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\DTOs\\ValidarCredencialesDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\TiposUsuarioSRV5\\Entities\\TipoUsuarioEntities.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\DTOs\\UsuarioDTOs.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\DTOs\\AreaDTOs.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\DTOs\\CarreraDTOs.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\TiposUsuarioSRV5\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\TipoIdentificacionSRV6\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -17,21 +73,221 @@
           "SelectedChildIndex": 1,
           "Children": [
             {
-              "$type": "Bookmark",
-              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "MicroservicesConfigDto.cs",
+              "DocumentMoniker": "C:\\Git\\Programacion-V-part-2\\Microservicios\\LoginSRV1\\DTOs\\MicroservicesConfigDto.cs",
+              "RelativeDocumentMoniker": "DTOs\\MicroservicesConfigDto.cs",
+              "ToolTip": "C:\\Git\\Programacion-V-part-2\\Microservicios\\LoginSRV1\\DTOs\\MicroservicesConfigDto.cs",
+              "RelativeToolTip": "DTOs\\MicroservicesConfigDto.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAxwBoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-27T05:59:46.242Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "AuthService.cs",
+              "DocumentMoniker": "C:\\Git\\Programacion-V-part-2\\Microservicios\\LoginSRV1\\Services\\AuthService.cs",
+              "RelativeDocumentMoniker": "Services\\AuthService.cs",
+              "ToolTip": "C:\\Git\\Programacion-V-part-2\\Microservicios\\LoginSRV1\\Services\\AuthService.cs",
+              "RelativeToolTip": "Services\\AuthService.cs",
+              "ViewState": "AgIAABoBAAAAAAAAAAAkwC0BAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-27T03:17:18.482Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "IAuthService.cs",
+              "DocumentMoniker": "C:\\Git\\Programacion-V-part-2\\Microservicios\\LoginSRV1\\Services\\IAuthService.cs",
+              "RelativeDocumentMoniker": "Services\\IAuthService.cs",
+              "ToolTip": "C:\\Git\\Programacion-V-part-2\\Microservicios\\LoginSRV1\\Services\\IAuthService.cs",
+              "RelativeToolTip": "Services\\IAuthService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-27T03:20:11.914Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "LoginEndpoints.cs",
+              "DocumentMoniker": "C:\\Git\\Programacion-V-part-2\\Microservicios\\LoginSRV1\\Endpoints\\LoginEndpoints.cs",
+              "RelativeDocumentMoniker": "Endpoints\\LoginEndpoints.cs",
+              "ToolTip": "C:\\Git\\Programacion-V-part-2\\Microservicios\\LoginSRV1\\Endpoints\\LoginEndpoints.cs",
+              "RelativeToolTip": "Endpoints\\LoginEndpoints.cs",
+              "ViewState": "AgIAAEYAAAAAAAAAAAAswIIAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-27T03:20:59.43Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AuthDTOs.cs",
+              "DocumentMoniker": "C:\\Git\\Programacion-V-part-2\\Microservicios\\LoginSRV1\\DTOs\\AuthDTOs.cs",
+              "RelativeDocumentMoniker": "DTOs\\AuthDTOs.cs",
+              "ToolTip": "C:\\Git\\Programacion-V-part-2\\Microservicios\\LoginSRV1\\DTOs\\AuthDTOs.cs",
+              "RelativeToolTip": "DTOs\\AuthDTOs.cs",
+              "ViewState": "AgIAACQAAAAAAAAAAAAQwDYAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-27T03:19:19.637Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Usuario.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\Entities\\Usuario.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\Entities\\Usuario.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\Entities\\Usuario.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\Entities\\Usuario.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAAA9wCkAAABgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-27T03:21:48.093Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "UsuarioEndpoints.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\Endpoints\\UsuarioEndpoints.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\Endpoints\\UsuarioEndpoints.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\Endpoints\\UsuarioEndpoints.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\Endpoints\\UsuarioEndpoints.cs",
+              "ViewState": "AgIAAGsAAAAAAAAAAADwv4YAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-27T04:47:43.386Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "UsuarioService.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\Services\\UsuarioService.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\Services\\UsuarioService.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\Services\\UsuarioService.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\Services\\UsuarioService.cs",
+              "ViewState": "AgIAADUBAAAAAAAAAAAkwEgBAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-27T03:16:26.96Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "ApplicationDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\Data\\ApplicationDbContext.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\Data\\ApplicationDbContext.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\Data\\ApplicationDbContext.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\Data\\ApplicationDbContext.cs",
+              "ViewState": "AgIAABsAAAAAAAAAAADwvzAAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-27T03:46:46.227Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "ValidarCredencialesDto.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\DTOs\\ValidarCredencialesDto.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\DTOs\\ValidarCredencialesDto.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\DTOs\\ValidarCredencialesDto.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\DTOs\\ValidarCredencialesDto.cs",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAAABUAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-27T03:22:15.668Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\Program.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\Program.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\Program.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\Program.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAADwvyEAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-27T02:47:16.313Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "TipoUsuarioEntities.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\TiposUsuarioSRV5\\Entities\\TipoUsuarioEntities.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\TiposUsuarioSRV5\\Entities\\TipoUsuarioEntities.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\TiposUsuarioSRV5\\Entities\\TipoUsuarioEntities.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\TiposUsuarioSRV5\\Entities\\TipoUsuarioEntities.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-27T04:35:52.141Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "UsuarioDTOs.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\DTOs\\UsuarioDTOs.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\DTOs\\UsuarioDTOs.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\DTOs\\UsuarioDTOs.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\DTOs\\UsuarioDTOs.cs",
+              "ViewState": "AgIAAB8AAAAAAAAAAAAswDoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-27T03:22:06.503Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "AreaDTOs.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\DTOs\\AreaDTOs.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\DTOs\\AreaDTOs.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\DTOs\\AreaDTOs.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\DTOs\\AreaDTOs.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-27T03:24:03.543Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "CarreraDTOs.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\DTOs\\CarreraDTOs.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\DTOs\\CarreraDTOs.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\DTOs\\CarreraDTOs.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\UsuariosSRV4\\DTOs\\CarreraDTOs.cs",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAswB0AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-27T03:23:55.719Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\TiposUsuarioSRV5\\Program.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\TiposUsuarioSRV5\\Program.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\TiposUsuarioSRV5\\Program.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\TiposUsuarioSRV5\\Program.cs",
+              "ViewState": "AgIAAL4AAAAAAAAAAADwv9kAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-27T02:47:48.615Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\TipoIdentificacionSRV6\\Program.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\TipoIdentificacionSRV6\\Program.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\TipoIdentificacionSRV6\\Program.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\TipoIdentificacionSRV6\\Program.cs",
+              "ViewState": "AgIAAK4AAAAAAAAAAAAYwNUAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-27T02:47:34.485Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\LoginSRV1\\appsettings.json",
+              "DocumentMoniker": "C:\\Git\\Programacion-V-part-2\\Microservicios\\LoginSRV1\\appsettings.json",
               "RelativeDocumentMoniker": "appsettings.json",
-              "ToolTip": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\LoginSRV1\\appsettings.json",
+              "ToolTip": "C:\\Git\\Programacion-V-part-2\\Microservicios\\LoginSRV1\\appsettings.json",
               "RelativeToolTip": "appsettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAcwAcAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-07-25T20:29:29.539Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-25T20:29:29.539Z"
             }
           ]
         }

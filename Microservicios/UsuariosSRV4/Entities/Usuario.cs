@@ -17,13 +17,16 @@ namespace UsuariosSRV4.Entities
         public int TipoIdentificacionId { get; set; }
         public string NumeroIdentificacion { get; set; } = string.Empty;
         public int RolId { get; set; }
-
-        // ✅ Cambiar de string a byte[] para que coincida con varbinary en la BD
-        public byte[]? Fotografia { get; set; }  // ← CORREGIDO
-
+        public string? Fotografia { get; set; }
         public bool Confirmado { get; set; }
         public DateTime FechaCreacion { get; set; }
 
+        // ✅ PROPIEDADES PARA BLOQUEO
+        public int IntentosFallidos { get; set; } = 0;
+        public bool Bloqueado { get; set; } = false;
+        public DateTime? FechaBloqueo { get; set; }
+
+        // Propiedades de navegación
         [ForeignKey("TipoUsuarioId")]
         public virtual TipoUsuario? TipoUsuario { get; set; }
 

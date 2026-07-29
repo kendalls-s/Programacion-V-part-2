@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "lg93ssPyjhU=",
+  "dgSpecHash": "gwqSTCZA/d8=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Usuario\\Desktop\\SegundoEntregable\\Programacion-V-part-2-main\\Microservicios\\TipoIdentificacionSRV6\\TipoIdentificacionSRV6.csproj",
+  "projectFilePath": "C:\\Git\\Programacion-V-part-2\\Microservicios\\TipoIdentificacionSRV6\\TipoIdentificacionSRV6.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Usuario\\.nuget\\packages\\azure.core\\1.47.1\\azure.core.1.47.1.nupkg.sha512",
     "C:\\Users\\Usuario\\.nuget\\packages\\azure.identity\\1.14.2\\azure.identity.1.14.2.nupkg.sha512",

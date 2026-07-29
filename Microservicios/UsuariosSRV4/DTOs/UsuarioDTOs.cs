@@ -20,7 +20,6 @@
         public List<AreaDto> Areas { get; set; } = new();
     }
 
-    // ✅ CrearUsuarioDto - Para crear un nuevo usuario
     public class CrearUsuarioDto
     {
         public string Email { get; set; } = string.Empty;
@@ -34,7 +33,6 @@
         public List<int> AreasIds { get; set; } = new();
     }
 
-    // ✅ ActualizarUsuarioDto - Para actualizar un usuario existente
     public class ActualizarUsuarioDto
     {
         public int Id { get; set; }
@@ -50,7 +48,7 @@
         public List<int> AreasIds { get; set; } = new();
     }
 
-    // ✅ FiltroUsuarioDto - Para filtrar usuarios
+    // ✅ MANTENER FiltroUsuarioDto AQUÍ
     public class FiltroUsuarioDto
     {
         public string? Identificacion { get; set; }

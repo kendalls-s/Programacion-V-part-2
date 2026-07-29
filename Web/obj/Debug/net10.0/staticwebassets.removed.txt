@@ -1,0 +1,7 @@
+D:\kenda\Downloads\Programacion-V-part-2 (4)\Programacion-V-part-2\Web\wwwroot\css\crud.css
+D:\kenda\Downloads\Programacion-V-part-2 (4)\Programacion-V-part-2\Web\wwwroot\js\areas.js
+D:\kenda\Downloads\Programacion-V-part-2 (4)\Programacion-V-part-2\Web\wwwroot\js\bitacora.js
+D:\kenda\Downloads\Programacion-V-part-2 (4)\Programacion-V-part-2\Web\wwwroot\js\instituciones.js
+D:\kenda\Downloads\Programacion-V-part-2 (4)\Programacion-V-part-2\Web\wwwroot\js\roles.js
+D:\kenda\Downloads\Programacion-V-part-2 (4)\Programacion-V-part-2\Web\wwwroot\js\tiposidentificacion.js
+D:\kenda\Downloads\Programacion-V-part-2 (4)\Programacion-V-part-2\Web\wwwroot\js\tiposusuario.js

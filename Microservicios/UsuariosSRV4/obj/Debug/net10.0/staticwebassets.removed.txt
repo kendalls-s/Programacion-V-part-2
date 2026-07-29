@@ -1,0 +1,2 @@
+D:\kenda\Downloads\Programacion-V-part-2 (4)\Programacion-V-part-2\Microservicios\UsuariosSRV4\wwwroot\css\siteusuarios.css
+D:\kenda\Downloads\Programacion-V-part-2 (4)\Programacion-V-part-2\Microservicios\UsuariosSRV4\wwwroot\js\usuarios.js

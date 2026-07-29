@@ -243,26 +243,40 @@
                 Microservicios
             </div>
 
+            <!-- Usuarios - Remoto -->
             <a href="#"
                onclick="abrirMicroservicio('https://tiusr22pl.cuc-carrera-ti.ac.cr/Usuarios'); return false;">
                 <i class="bi bi-people"></i>
                 Usuarios
             </a>
 
+            <!-- Tipos de Usuario - Local -->
+            <a href="/TiposUsuario">
+                <i class="bi bi-tags"></i>
+                Tipos de Usuario
+            </a>
+
+            <!-- Tipos de Identificación - Local -->
+            <a href="/TiposIdentificacion">
+                <i class="bi bi-id-card"></i>
+                Tipos de Identificación
+            </a>
+
+            <!-- Carreras - Remoto -->
             <a href="#"
                onclick="abrirMicroservicio('https://tiusr22pl.cuc-carrera-ti.ac.cr/Carreras'); return false;">
                 <i class="bi bi-mortarboard"></i>
                 Carreras
             </a>
 
-            <a href="#"
-               onclick="abrirMicroservicio('https://tiusr22pl.cuc-carrera-ti.ac.cr/Areas'); return false;">
+            <!-- Áreas - Local -->
+            <a href="/Areas">
                 <i class="bi bi-building"></i>
                 Áreas
             </a>
 
-            <a href="#"
-               onclick="abrirMicroservicio('https://tiusr22pl.cuc-carrera-ti.ac.cr/Instituciones'); return false;">
+            <!-- ✅ Instituciones - Local (SOLO ESTE) -->
+            <a href="/Instituciones">
                 <i class="bi bi-bank"></i>
                 Instituciones
             </a>
@@ -356,116 +370,94 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
 
-        const token = localStorage.getItem('accessToken');
+                const token = localStorage.getItem('accessToken');
 
-        if (!token) {
-        window.location.href = '/Login';
-        return;
-        }
+                if (!token) {
+                    window.location.href = '/Login';
+                    return;
+                }
 
-        const nombre =
-        localStorage.getItem('nombreCompleto') || 'Usuario';
+                const nombre =
+                    localStorage.getItem('nombreCompleto') || 'Usuario';
 
-        const tipo =
-        localStorage.getItem('usuarioTipo') || '';
+                const tipo =
+                    localStorage.getItem('usuarioTipo') || '';
 
-        document.getElementById('userName').textContent = nombre;
+                document.getElementById('userName').textContent = nombre;
 
-        document.getElementById('userRole').textContent =
-        tipo ? '(' + tipo + ')' : '';
+                document.getElementById('userRole').textContent =
+                    tipo ? '(' + tipo + ')' : '';
 
-        fetch('/api/config')
-        .then(response => {
+                fetch('/api/config')
+                    .then(response => {
 
-        if (!response.ok) {
-        throw new Error('No fue posible cargar la configuración.');
-        }
+                        if (!response.ok) {
+                            throw new Error('No fue posible cargar la configuración.');
+                        }
 
-        return response.json();
-        })
-        .then(config => {
-        window.serviceConfig = config;
-        })
-        .catch(() => {
+                        return response.json();
+                    })
+                    .then(config => {
+                        window.serviceConfig = config;
+                    })
+                    .catch(() => {
 
-        window.serviceConfig = {
-        UsuariosSRV4:
-        'https://tiusr22pl.cuc-carrera-ti.ac.cr/Usuarios',
+                        window.serviceConfig = {
+                            UsuariosSRV4: 'https://tiusr22pl.cuc-carrera-ti.ac.cr/Usuarios',
+                            TiposUsuarioSRV5: 'https://tiusr22pl.cuc-carrera-ti.ac.cr/TiposUsuario',
+                            TipoIdentificacionSRV6: 'https://tiusr22pl.cuc-carrera-ti.ac.cr/TiposIdentificacion',
+                            SRV3_Carreras: 'https://tiusr22pl.cuc-carrera-ti.ac.cr/Carreras',
+                            SRV4_Areas: 'https://tiusr22pl.cuc-carrera-ti.ac.cr/Areas',
+                            SRV2_Instituciones: 'https://tiusr22pl.cuc-carrera-ti.ac.cr/Instituciones',
+                            Roles: 'https://tiusr22pl.cuc-carrera-ti.ac.cr/RolesAPI',
+                            Bitacora: 'https://tiusr22pl.cuc-carrera-ti.ac.cr/BitacoraAPI'
+                        };
+                    });
+            });
 
-        TiposUsuarioSRV5:
-        'https://tiusr22pl.cuc-carrera-ti.ac.cr/TiposUsuario',
+            function toggleSidebar() {
+                document
+                    .getElementById('sidebar')
+                    .classList
+                    .toggle('open');
+            }
 
-        TipoIdentificacionSRV6:
-        'https://tiusr22pl.cuc-carrera-ti.ac.cr/TiposIdentificacion',
+            function cerrarSesion() {
 
-        SRV3_Carreras:
-        'https://tiusr22pl.cuc-carrera-ti.ac.cr/Carreras',
+                const confirmar =
+                    confirm('¿Está seguro de cerrar sesión?');
 
-        SRV4_Areas:
-        'https://tiusr22pl.cuc-carrera-ti.ac.cr/Areas',
+                if (!confirmar) {
+                    return;
+                }
 
-        SRV2_Instituciones:
-        'https://tiusr22pl.cuc-carrera-ti.ac.cr/Instituciones',
+                localStorage.clear();
+                window.location.href = '/Login';
+            }
 
-        Roles:
-        'https://tiusr22pl.cuc-carrera-ti.ac.cr/RolesAPI',
+            function abrirMicroservicio(url) {
+                const token =
+                    localStorage.getItem('accessToken');
+                if (!token) {
+                    window.location.href = '/Login';
+                    return;
+                }
+                window.location.href = url;
+            }
 
-        Bitacora:
-        'https://tiusr22pl.cuc-carrera-ti.ac.cr/BitacoraAPI'
-        };
-        });
-        });
-
-        function toggleSidebar() {
-        document
-        .getElementById('sidebar')
-        .classList
-        .toggle('open');
-        }
-
-        function cerrarSesion() {
-
-        const confirmar =
-        confirm('¿Está seguro de cerrar sesión?');
-
-        if (!confirmar) {
-        return;
-        }
-
-        localStorage.clear();
-        window.location.href = '/Login';
-        }
-
-        function abrirMicroservicio(url) {
-
-        const token =
-        localStorage.getItem('accessToken');
-
-        if (!token) {
-        window.location.href = '/Login';
-        return;
-        }
-
-        window.location.href = url;
-        }
-
-        document.addEventListener('click', function (event) {
-
-        const sidebar =
-        document.getElementById('sidebar');
-
-        const toggleBtn =
-        document.querySelector('.menu-toggle');
-
-        if (window.innerWidth <= 768 &&
-        sidebar &&
-        toggleBtn &&
-        !sidebar.contains(event.target) &&
-        !toggleBtn.contains(event.target)) {
-
-        sidebar.classList.remove('open');
-        }
-        });
+            document.addEventListener('click', function (event) {
+                const sidebar =
+                    document.getElementById('sidebar');
+                const toggleBtn =
+                    document.querySelector('.menu-toggle');
+                if (window.innerWidth <= 768 &&
+                    sidebar &&
+                    toggleBtn &&
+                    !sidebar.contains(event.target) &&
+                    !toggleBtn.contains(event.target)) {
+                    sidebar.classList.remove('open');
+                }
+            });
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)

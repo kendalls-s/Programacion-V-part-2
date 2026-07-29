@@ -1,0 +1,853 @@
+﻿@page
+@model CarnetDigitalWeb.Pages.Instituciones.IndexModel
+@using System.Text.Json
+@inject IConfiguration Configuration
+
+@{
+    ViewData["Title"] = "Administración de Instituciones";
+
+    var opcionesJson = new JsonSerializerOptions
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+    };
+
+    var institucionesJson = JsonSerializer.Serialize(
+        Model.Instituciones ?? new List<CarnetDigitalWeb.Models.Institucion>(),
+        opcionesJson
+    );
+
+    var institucionesBaseUrl =
+        (Configuration["Services:Instituciones"] ?? string.Empty).TrimEnd('/');
+
+    var institucionesApiUrl =
+        $"{institucionesBaseUrl}/api/Institucion";
+}
+
+<div class="page-header">
+    <h2><i class="bi bi-bank"></i> Lista de Instituciones</h2>
+    <div>
+        <button type="button" class="btn btn-primary" onclick="abrirModalCrear()">
+            <i class="bi bi-plus-circle"></i> Nueva Institución
+        </button>
+        <button type="button" class="btn btn-info" onclick="abrirModalBuscar()">
+            <i class="bi bi-search"></i> Buscar por ID
+        </button>
+    </div>
+</div>
+
+<div id="alertas"></div>
+
+<div id="loading" class="loading" style="display:none;">
+    <div class="spinner-border"></div>
+    <p>Cargando instituciones...</p>
+</div>
+
+<div id="listaInstituciones" class="grid-cards"></div>
+
+<!-- PAGINACIÓN -->
+<div id="paginacionContainer" style="display:none; margin-top:30px;">
+    <div class="paginacion-wrapper">
+        <div class="paginacion-info">
+            Mostrando <span id="inicioMostrar">0</span> - <span id="finMostrar">0</span>
+            de <span id="totalRegistros">0</span> instituciones
+        </div>
+        <div class="paginacion-botones">
+            <button type="button" class="btn-paginacion" id="btnAnterior" onclick="paginaAnterior()">
+                <i class="bi bi-chevron-left"></i> Anterior
+            </button>
+            <span class="paginacion-numero" id="numeroPagina">1</span>
+            <button type="button" class="btn-paginacion" id="btnSiguiente" onclick="paginaSiguiente()">
+                Siguiente <i class="bi bi-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL BUSCAR -->
+<div class="modal" id="modalBuscar">
+    <div class="modal-dialog" style="max-width:500px;">
+        <div class="modal-content">
+            <div class="modal-header modal-header-info">
+                <h5><i class="bi bi-search"></i> Buscar Institución por ID</h5>
+                <button type="button" class="btn-close" onclick="cerrarModalBuscar()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="buscarId">ID de la Institución</label>
+                    <input id="buscarId" type="number" class="form-control" min="1" placeholder="Ejemplo: 1">
+                </div>
+                <div id="buscarResultado" style="display:none; margin-top:15px;"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="cerrarModalBuscar()">Cancelar</button>
+                <button type="button" class="btn btn-info" onclick="buscarInstitucionPorId()">
+                    <i class="bi bi-search"></i> Buscar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL FORMULARIO -->
+<div class="modal" id="modalFormulario">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="tituloModal">Nueva Institución</h5>
+                <button type="button" class="btn-close" onclick="cerrarModalFormulario()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input id="idInstitucion" type="hidden" value="0">
+
+                <div class="form-group">
+                    <label for="nombre">Nombre *</label>
+                    <input id="nombre" class="form-control" maxlength="100" placeholder="Nombre de la institución">
+                    <div id="errNombre" class="invalid-feedback"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input id="email" type="email" class="form-control" placeholder="ejemplo@@cuc.ac.cr">
+                    <small style="color:#6c757d; font-size:12px;">Solo @@cuc.ac.cr o @@cuc.cr</small>
+                    <div id="errEmail" class="invalid-feedback"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono">Teléfono *</label>
+                    <input id="telefono" class="form-control" inputmode="numeric" placeholder="Solo números">
+                    <div id="errTelefono" class="invalid-feedback"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="dominios">Dominios *</label>
+                    <input id="dominios" class="form-control" placeholder="cuc.ac.cr, cuc.cr">
+                    <small style="color:#6c757d; font-size:12px;">Separados por coma. Ej: cuc.ac.cr, cuc.cr</small>
+                    <div id="errDominios" class="invalid-feedback"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="cerrarModalFormulario()">Cancelar</button>
+                <button type="button" id="btnGuardarInstitucion" class="btn btn-success" onclick="guardarInstitucion()">
+                    <i class="bi bi-save"></i> Guardar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL ELIMINAR -->
+<div class="modal" id="modalEliminar">
+    <div class="modal-dialog" style="max-width:500px;">
+        <div class="modal-content">
+            <div class="modal-header modal-header-danger">
+                <h5><i class="bi bi-exclamation-triangle"></i> Confirmar eliminación</h5>
+                <button type="button" class="btn-close" onclick="cerrarModalEliminar()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>¿Realmente desea eliminar la institución seleccionada?</p>
+                <p style="color:#6c757d;"><strong id="nombreEliminar"></strong></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="cerrarModalEliminar()">Cancelar</button>
+                <button type="button" id="btnEliminarInstitucion" class="btn btn-danger" onclick="eliminarInstitucion()">
+                    <i class="bi bi-trash"></i> Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const URL_API_INSTITUCION = @Html.Raw(JsonSerializer.Serialize(institucionesApiUrl));
+
+    window.institucionesIniciales =
+            @Html.Raw(institucionesJson);
+
+    let idEliminar = 0;
+    let paginaActual = 1;
+    const registrosPorPagina = 15;
+    let totalRegistros = 0;
+    let totalPaginas = 1;
+    let todasLasInstituciones = [];
+
+    document.addEventListener('DOMContentLoaded', function () {
+        try {
+            todasLasInstituciones = Array.isArray(window.institucionesIniciales)
+                ? window.institucionesIniciales
+                : [];
+
+            totalRegistros = todasLasInstituciones.length;
+            totalPaginas = Math.max(1, Math.ceil(totalRegistros / registrosPorPagina));
+            paginaActual = 1;
+
+            mostrarPagina();
+        } catch (error) {
+            console.error('Error al cargar las instituciones:', error);
+            todasLasInstituciones = [];
+            totalRegistros = 0;
+            totalPaginas = 1;
+            paginaActual = 1;
+            renderizarInstituciones([]);
+            actualizarPaginacion();
+            mostrarAlerta('Error al cargar las instituciones: ' + error.message, 'danger');
+        }
+    });
+
+    function obtenerToken() {
+        return localStorage.getItem('accessToken')
+            || localStorage.getItem('token')
+            || sessionStorage.getItem('accessToken')
+            || sessionStorage.getItem('token')
+            || '';
+    }
+
+    function construirHeaders(incluirContenidoJson = false) {
+        const headers = {};
+        const token = obtenerToken();
+
+        if (incluirContenidoJson) {
+            headers['Content-Type'] = 'application/json';
+        }
+
+        if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+        }
+
+        return headers;
+    }
+
+    function abrirModalCrear() {
+        document.getElementById('tituloModal').textContent = 'Nueva Institución';
+        document.getElementById('idInstitucion').value = '0';
+        document.getElementById('nombre').value = '';
+        document.getElementById('email').value = '';
+        document.getElementById('telefono').value = '';
+        document.getElementById('dominios').value = '';
+        limpiarErrores();
+        document.getElementById('modalFormulario').style.display = 'flex';
+    }
+
+    function cerrarModalFormulario() {
+        document.getElementById('modalFormulario').style.display = 'none';
+        limpiarErrores();
+    }
+
+    function abrirModalBuscar() {
+        document.getElementById('buscarId').value = '';
+        document.getElementById('buscarResultado').style.display = 'none';
+        document.getElementById('buscarResultado').innerHTML = '';
+        document.getElementById('modalBuscar').style.display = 'flex';
+    }
+
+    function cerrarModalBuscar() {
+        document.getElementById('modalBuscar').style.display = 'none';
+    }
+
+    function abrirModalEliminar(id, nombre) {
+        idEliminar = Number(id);
+        document.getElementById('nombreEliminar').textContent = nombre || '';
+        document.getElementById('modalEliminar').style.display = 'flex';
+    }
+
+    function cerrarModalEliminar() {
+        idEliminar = 0;
+        document.getElementById('modalEliminar').style.display = 'none';
+    }
+
+    function mostrarAlerta(mensaje, tipo) {
+        const div = document.getElementById('alertas');
+        div.innerHTML = `
+                <div class="alert alert-${tipo} alert-dismissible">
+                    ${escaparHtml(mensaje)}
+                    <button type="button"
+                            onclick="this.parentElement.remove()"
+                            style="float:right; background:none; border:none; font-size:20px; cursor:pointer;">
+                        &times;
+                    </button>
+                </div>
+            `;
+
+        setTimeout(() => {
+            div.innerHTML = '';
+        }, 4000);
+    }
+
+    function escaparHtml(valor) {
+        return String(valor ?? '')
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#039;');
+    }
+
+    function mostrarLoading(show) {
+        document.getElementById('loading').style.display = show ? 'block' : 'none';
+
+        if (show) {
+            document.getElementById('paginacionContainer').style.display = 'none';
+        } else {
+            actualizarPaginacion();
+        }
+    }
+
+    function actualizarPaginacion() {
+        const paginacionContainer = document.getElementById('paginacionContainer');
+
+        paginacionContainer.style.display =
+            totalRegistros > registrosPorPagina ? 'flex' : 'none';
+
+        const inicio = totalRegistros > 0
+            ? ((paginaActual - 1) * registrosPorPagina) + 1
+            : 0;
+
+        const fin = totalRegistros > 0
+            ? Math.min(paginaActual * registrosPorPagina, totalRegistros)
+            : 0;
+
+        document.getElementById('inicioMostrar').textContent = inicio;
+        document.getElementById('finMostrar').textContent = fin;
+        document.getElementById('totalRegistros').textContent = totalRegistros;
+        document.getElementById('numeroPagina').textContent = paginaActual;
+        document.getElementById('btnAnterior').disabled = paginaActual <= 1;
+        document.getElementById('btnSiguiente').disabled =
+            paginaActual >= totalPaginas || totalRegistros === 0;
+    }
+
+    function paginaAnterior() {
+        if (paginaActual > 1) {
+            paginaActual--;
+            mostrarPagina();
+        }
+    }
+
+    function paginaSiguiente() {
+        if (paginaActual < totalPaginas) {
+            paginaActual++;
+            mostrarPagina();
+        }
+    }
+
+    function mostrarPagina() {
+        totalRegistros = todasLasInstituciones.length;
+        totalPaginas = Math.max(1, Math.ceil(totalRegistros / registrosPorPagina));
+
+        if (paginaActual > totalPaginas) {
+            paginaActual = totalPaginas;
+        }
+
+        const inicio = (paginaActual - 1) * registrosPorPagina;
+        const fin = inicio + registrosPorPagina;
+
+        renderizarInstituciones(todasLasInstituciones.slice(inicio, fin));
+        actualizarPaginacion();
+    }
+
+    function renderizarInstituciones(instituciones) {
+        const container = document.getElementById('listaInstituciones');
+
+        if (!instituciones || instituciones.length === 0) {
+            container.innerHTML = todasLasInstituciones.length === 0
+                ? `
+                        <div class="empty-state">
+                            <i class="bi bi-bank" style="font-size:4rem; color:#dee2e6;"></i>
+                            <p>No hay instituciones registradas</p>
+                            <button type="button" class="btn btn-primary" onclick="abrirModalCrear()">
+                                <i class="bi bi-plus-circle"></i> Crear primera institución
+                            </button>
+                        </div>
+                    `
+                : `
+                        <div class="empty-state">
+                            <i class="bi bi-inbox" style="font-size:4rem; color:#dee2e6;"></i>
+                            <p>No hay instituciones en esta página</p>
+                        </div>
+                    `;
+            return;
+        }
+
+        let html = '';
+
+        instituciones.forEach(function (i) {
+            const id = Number(i.id ?? i.ID ?? i.Id ?? 0);
+            const nombre = i.nombre ?? i.Nombre ?? '';
+            const email = i.email ?? i.Email ?? '';
+            const telefono = i.telefono ?? i.Telefono ?? '';
+            const dominios = i.dominios ?? i.Dominios ?? '';
+            const activoRaw = i.activo ?? i.Activo ?? false;
+            const activo = activoRaw === true || activoRaw === 1 || activoRaw === '1' || activoRaw === 'true';
+
+            html += `
+                    <div class="card-bordered">
+                        <div class="card-bordered-header">
+                            <h3>${escaparHtml(nombre)}</h3>
+                            <span class="${activo ? 'badge-success' : 'badge-danger'}">
+                                ${activo ? 'Activo' : 'Inactivo'}
+                            </span>
+                        </div>
+                        <div class="card-bordered-body">
+                            <div class="info-row">
+                                <span class="label"><i class="bi bi-id-badge"></i> ID:</span>
+                                <span class="value">${id}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label"><i class="bi bi-envelope"></i> Email:</span>
+                                <span class="value">${escaparHtml(email)}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label"><i class="bi bi-phone"></i> Teléfono:</span>
+                                <span class="value">${escaparHtml(telefono)}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label"><i class="bi bi-globe"></i> Dominios:</span>
+                                <span class="value">${escaparHtml(dominios)}</span>
+                            </div>
+                        </div>
+                        <div class="card-bordered-footer">
+                            <button type="button"
+                                    class="btn btn-warning btn-sm"
+                                    onclick="editarInstitucion(${id})">
+                                <i class="bi bi-pencil"></i> Editar
+                            </button>
+                            <button type="button"
+                                    class="btn btn-danger btn-sm"
+                                    data-id="${id}"
+                                    data-nombre="${escaparHtml(nombre)}"
+                                    onclick="abrirModalEliminarDesdeBoton(this)">
+                                <i class="bi bi-trash"></i> Eliminar
+                            </button>
+                        </div>
+                    </div>
+                `;
+        });
+
+        container.innerHTML = html;
+    }
+
+    function abrirModalEliminarDesdeBoton(boton) {
+        abrirModalEliminar(
+            Number(boton.dataset.id),
+            boton.dataset.nombre
+        );
+    }
+
+    async function buscarInstitucionPorId() {
+        const id = Number(document.getElementById('buscarId').value.trim());
+
+        if (!Number.isInteger(id) || id <= 0) {
+            mostrarAlerta('Ingrese un ID válido mayor a 0', 'warning');
+            return;
+        }
+
+        const resultadoDiv = document.getElementById('buscarResultado');
+        resultadoDiv.style.display = 'block';
+
+        const institucion = todasLasInstituciones.find(
+            i => Number(i.id ?? i.ID ?? i.Id) === id
+        );
+
+        if (!institucion) {
+            resultadoDiv.innerHTML = `
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        No se encontró ninguna institución con ID ${id}
+                    </div>
+                `;
+            return;
+        }
+
+        const nombre = institucion.nombre ?? institucion.Nombre ?? '';
+        const email = institucion.email ?? institucion.Email ?? '';
+        const telefono = institucion.telefono ?? institucion.Telefono ?? '';
+        const dominios = institucion.dominios ?? institucion.Dominios ?? '';
+        const activoRaw = institucion.activo ?? institucion.Activo ?? false;
+        const activo = activoRaw === true || activoRaw === 1 || activoRaw === '1' || activoRaw === 'true';
+
+        resultadoDiv.innerHTML = `
+                <div style="background:#f8f9fa; padding:15px; border-radius:8px; border:1px solid #dee2e6;">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:14px;">
+                        <div><strong>ID:</strong> ${id}</div>
+                        <div><strong>Nombre:</strong> ${escaparHtml(nombre)}</div>
+                        <div><strong>Email:</strong> ${escaparHtml(email)}</div>
+                        <div><strong>Teléfono:</strong> ${escaparHtml(telefono)}</div>
+                        <div><strong>Dominios:</strong> ${escaparHtml(dominios)}</div>
+                        <div>
+                            <strong>Estado:</strong>
+                            <span class="${activo ? 'badge-success' : 'badge-danger'}">
+                                ${activo ? 'Activo' : 'Inactivo'}
+                            </span>
+                        </div>
+                    </div>
+                    <div style="margin-top:10px; display:flex; gap:8px;">
+                        <button type="button" class="btn btn-warning btn-sm" onclick="editarInstitucion(${id})">
+                            Editar
+                        </button>
+                        <button type="button"
+                                class="btn btn-danger btn-sm"
+                                data-id="${id}"
+                                data-nombre="${escaparHtml(nombre)}"
+                                onclick="abrirModalEliminarDesdeBoton(this)">
+                            Eliminar
+                        </button>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="cerrarModalBuscar()">
+                            Cerrar
+                        </button>
+                    </div>
+                </div>
+            `;
+    }
+
+    function limpiarErrores() {
+        document.querySelectorAll('.is-invalid')
+            .forEach(el => el.classList.remove('is-invalid'));
+
+        document.querySelectorAll('.invalid-feedback')
+            .forEach(el => el.textContent = '');
+    }
+
+    function mostrarError(campo, mensaje) {
+        const el = document.getElementById(campo);
+        const err = document.getElementById(
+            'err' + campo.charAt(0).toUpperCase() + campo.slice(1)
+        );
+
+        if (el) {
+            el.classList.add('is-invalid');
+        }
+
+        if (err) {
+            err.textContent = mensaje;
+        }
+    }
+
+    function validarFormulario() {
+        let valido = true;
+        limpiarErrores();
+
+        const nombre = document.getElementById('nombre').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const telefono = document.getElementById('telefono').value.trim();
+        const dominios = document.getElementById('dominios').value.trim();
+
+        if (!nombre) {
+            mostrarError('nombre', 'El nombre es requerido');
+            valido = false;
+        }
+
+        if (!email) {
+            mostrarError('email', 'El email es requerido');
+            valido = false;
+        } else {
+            const emailRegex = /^[^\s@@]+@@(cuc\.ac\.cr|cuc\.cr)$/i;
+
+            if (!emailRegex.test(email)) {
+                mostrarError('email', 'Solo se permiten correos @@cuc.ac.cr o @@cuc.cr');
+                valido = false;
+            }
+        }
+
+        if (!telefono) {
+            mostrarError('telefono', 'El teléfono es requerido');
+            valido = false;
+        } else if (!/^\d+$/.test(telefono)) {
+            mostrarError('telefono', 'Solo se permiten números');
+            valido = false;
+        }
+
+        if (!dominios) {
+            mostrarError('dominios', 'Los dominios son requeridos');
+            valido = false;
+        } else {
+            const dominiosValidos = ['cuc.ac.cr', 'cuc.cr'];
+            const dominiosArray = dominios
+                .split(',')
+                .map(d => d.trim().toLowerCase())
+                .filter(Boolean);
+
+            const todosValidos =
+                dominiosArray.length > 0 &&
+                dominiosArray.every(d => dominiosValidos.includes(d));
+
+            if (!todosValidos) {
+                mostrarError('dominios', 'Solo se permiten: cuc.ac.cr, cuc.cr');
+                valido = false;
+            }
+        }
+
+        return valido;
+    }
+
+    function obtenerDatosFormulario() {
+        return {
+            nombre: document.getElementById('nombre').value.trim(),
+            email: document.getElementById('email').value.trim(),
+            telefono: document.getElementById('telefono').value.trim(),
+            dominios: document.getElementById('dominios').value.trim()
+        };
+    }
+
+    async function obtenerMensajeError(response, mensajePredeterminado) {
+        try {
+            const contenido = await response.text();
+
+            if (!contenido) {
+                return mensajePredeterminado;
+            }
+
+            try {
+                const json = JSON.parse(contenido);
+
+                return json.error
+                    || json.mensaje
+                    || json.message
+                    || json.title
+                    || json.detail
+                    || mensajePredeterminado;
+            } catch {
+                return contenido;
+            }
+        } catch {
+            return mensajePredeterminado;
+        }
+    }
+
+    function manejarNoAutorizado(response) {
+        if (response.status !== 401) {
+            return false;
+        }
+
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('token');
+        sessionStorage.removeItem('accessToken');
+        sessionStorage.removeItem('token');
+
+        mostrarAlerta('La sesión expiró. Inicie sesión nuevamente.', 'warning');
+
+        setTimeout(() => {
+            window.location.href = '@Url.Page("/Login")';
+        }, 800);
+
+        return true;
+    }
+
+    async function guardarInstitucion() {
+        if (!validarFormulario()) {
+            return;
+        }
+
+        const id = Number(
+            document.getElementById('idInstitucion').value
+        );
+
+        const esEdicion = id > 0;
+
+        const institucionActual = todasLasInstituciones.find(
+            institucion =>
+                Number(
+                    institucion.id ??
+                    institucion.ID ??
+                    institucion.Id
+                ) === id
+        );
+
+        /*
+         * POST y PUT no reciben exactamente el mismo DTO.
+         *
+         * Para crear:
+         * CreateInstitucionRequest
+         *
+         * Para editar:
+         * UpdateInstitucionRequest, que exige ID.
+         */
+        const datos = esEdicion
+            ? {
+                ID: id,
+                Nombre: document.getElementById('nombre').value.trim(),
+                Email: document.getElementById('email').value.trim(),
+                Telefono: document.getElementById('telefono').value.trim(),
+                Dominios: document.getElementById('dominios').value.trim(),
+                Activo:
+                    institucionActual?.activo ??
+                    institucionActual?.Activo ??
+                    true
+            }
+            : {
+                Nombre: document.getElementById('nombre').value.trim(),
+                Email: document.getElementById('email').value.trim(),
+                Telefono: document.getElementById('telefono').value.trim(),
+                Dominios: document.getElementById('dominios').value.trim()
+            };
+
+        const url = esEdicion
+            ? `${URL_API_INSTITUCION}/${id}`
+            : URL_API_INSTITUCION;
+
+        const metodo = esEdicion ? 'PUT' : 'POST';
+
+        console.log('Método:', metodo);
+        console.log('URL:', url);
+        console.log('JSON enviado:', JSON.stringify(datos, null, 2));
+
+        const boton =
+            document.getElementById('btnGuardarInstitucion');
+
+        boton.disabled = true;
+
+        try {
+            const response = await fetch(url, {
+                method: metodo,
+                headers: construirHeaders(true),
+                body: JSON.stringify(datos)
+            });
+
+            const textoRespuesta = await response.text();
+
+            console.log('Estado HTTP:', response.status);
+            console.log('Respuesta del microservicio:', textoRespuesta);
+
+            if (response.status === 401) {
+                localStorage.removeItem('accessToken');
+                localStorage.removeItem('token');
+                sessionStorage.removeItem('accessToken');
+                sessionStorage.removeItem('token');
+
+                mostrarAlerta(
+                    'La sesión expiró. Inicie sesión nuevamente.',
+                    'warning'
+                );
+
+                setTimeout(() => {
+                    window.location.href = '@Url.Page("/Login")';
+                }, 800);
+
+                return;
+            }
+
+            if (!response.ok) {
+                let mensaje =
+                    `Error ${response.status} al guardar la institución`;
+
+                if (textoRespuesta) {
+                    try {
+                        const errorJson = JSON.parse(textoRespuesta);
+
+                        mensaje =
+                            errorJson.mensaje ??
+                            errorJson.message ??
+                            errorJson.detail ??
+                            errorJson.title ??
+                            mensaje;
+                    } catch {
+                        mensaje = textoRespuesta;
+                    }
+                }
+
+                mostrarAlerta(mensaje, 'danger');
+                return;
+            }
+
+            cerrarModalFormulario();
+
+            mostrarAlerta(
+                esEdicion
+                    ? 'Institución actualizada correctamente'
+                    : 'Institución creada correctamente',
+                'success'
+            );
+
+            setTimeout(() => {
+                window.location.reload();
+            }, 600);
+        } catch (error) {
+            console.error('Error al guardar:', error);
+
+            mostrarAlerta(
+                'Error de conexión: ' + error.message,
+                'danger'
+            );
+        } finally {
+            boton.disabled = false;
+        }
+    }
+
+    function editarInstitucion(id) {
+        const institucion = todasLasInstituciones.find(
+            i => Number(i.id ?? i.ID ?? i.Id) === Number(id)
+        );
+
+        if (!institucion) {
+            mostrarAlerta('Institución no encontrada', 'danger');
+            return;
+        }
+
+        cerrarModalBuscar();
+
+        document.getElementById('tituloModal').textContent = 'Editar Institución';
+        document.getElementById('idInstitucion').value = institucion.id ?? institucion.ID ?? institucion.Id ?? 0;
+        document.getElementById('nombre').value = institucion.nombre ?? institucion.Nombre ?? '';
+        document.getElementById('email').value = institucion.email ?? institucion.Email ?? '';
+        document.getElementById('telefono').value = institucion.telefono ?? institucion.Telefono ?? '';
+        document.getElementById('dominios').value = institucion.dominios ?? institucion.Dominios ?? '';
+
+        limpiarErrores();
+        document.getElementById('modalFormulario').style.display = 'flex';
+    }
+
+    async function eliminarInstitucion() {
+        if (!idEliminar || idEliminar <= 0) {
+            mostrarAlerta('No se seleccionó una institución válida', 'warning');
+            return;
+        }
+
+        const boton = document.getElementById('btnEliminarInstitucion');
+        boton.disabled = true;
+
+        try {
+            const response = await fetch(
+                `${URL_API_INSTITUCION}/${idEliminar}`,
+                {
+                    method: 'DELETE',
+                    headers: construirHeaders(false)
+                }
+            );
+
+            if (manejarNoAutorizado(response)) {
+                return;
+            }
+
+            if (!response.ok) {
+                const mensaje = await obtenerMensajeError(
+                    response,
+                    'Error al eliminar la institución'
+                );
+
+                mostrarAlerta(mensaje, 'danger');
+                return;
+            }
+
+            cerrarModalEliminar();
+            mostrarAlerta('Institución eliminada exitosamente', 'success');
+
+            setTimeout(() => window.location.reload(), 600);
+        } catch (error) {
+            console.error('Error al eliminar:', error);
+            mostrarAlerta('Error de conexión: ' + error.message, 'danger');
+        } finally {
+            boton.disabled = false;
+        }
+    }
+
+    window.addEventListener('click', function (event) {
+        if (event.target === document.getElementById('modalFormulario')) {
+            cerrarModalFormulario();
+        }
+
+        if (event.target === document.getElementById('modalBuscar')) {
+            cerrarModalBuscar();
+        }
+
+        if (event.target === document.getElementById('modalEliminar')) {
+            cerrarModalEliminar();
+        }
+    });
+</script>

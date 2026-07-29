@@ -1,0 +1,343 @@
+﻿@page
+@model CarnetDigitalWeb.Pages.Areas.IndexModel
+@using System.Text.Json
+
+@{
+    ViewData["Title"] = "Administración de Áreas";
+}
+
+<div class="page-header">
+    <h2>
+        <i class="bi bi-building"></i>
+        Lista de Áreas
+    </h2>
+
+    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button type="button"
+                class="btn btn-primary"
+                onclick="abrirModalCrear()">
+            <i class="bi bi-plus-circle"></i>
+            Nueva Área
+        </button>
+
+        <button type="button"
+                class="btn btn-info"
+                onclick="abrirModalBuscar()">
+            <i class="bi bi-search"></i>
+            Buscar por ID
+        </button>
+    </div>
+</div>
+
+<form id="formAntiforgery">
+    @Html.AntiForgeryToken()
+</form>
+
+<div id="alertas">
+    @if (!string.IsNullOrWhiteSpace(Model.MensajeError))
+    {
+        <div class="alert alert-danger alert-dismissible">
+            <i class="bi bi-exclamation-circle"></i>
+            @Model.MensajeError
+
+            <button type="button"
+                    class="btn-close"
+                    onclick="this.parentElement.remove()">
+                &times;
+            </button>
+        </div>
+    }
+</div>
+
+<div id="loading"
+     class="loading"
+     style="display:none;">
+
+    <div class="spinner-border"></div>
+
+    <p style="margin-top:10px;">
+        Cargando áreas...
+    </p>
+
+</div>
+
+<div id="listaAreas"
+     class="grid-cards">
+</div>
+
+<div id="paginacionContainer"
+     style="display:none; margin-top:30px;">
+
+    <div class="paginacion-wrapper">
+
+        <div class="paginacion-info">
+            Mostrando
+            <span id="inicioMostrar">0</span>
+            -
+            <span id="finMostrar">0</span>
+            de
+            <span id="totalRegistros">0</span>
+            áreas
+        </div>
+
+        <div class="paginacion-botones">
+
+            <button type="button"
+                    class="btn-paginacion"
+                    id="btnAnterior"
+                    onclick="paginaAnterior()">
+
+                <i class="bi bi-chevron-left"></i>
+                Anterior
+            </button>
+
+            <span class="paginacion-numero"
+                  id="numeroPagina">
+                1
+            </span>
+
+            <button type="button"
+                    class="btn-paginacion"
+                    id="btnSiguiente"
+                    onclick="paginaSiguiente()">
+
+                Siguiente
+                <i class="bi bi-chevron-right"></i>
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- MODAL BUSCAR -->
+<div class="modal" id="modalBuscar">
+
+    <div class="modal-dialog" style="max-width:500px;">
+
+        <div class="modal-content">
+
+            <div class="modal-header modal-header-info">
+
+                <h5>
+                    <i class="bi bi-search"></i>
+                    Buscar Área por ID
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        onclick="cerrarModalBuscar()">
+                    &times;
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <div class="form-group">
+
+                    <label>ID del Área</label>
+
+                    <input id="buscarId"
+                           type="number"
+                           class="form-control"
+                           min="1"
+                           placeholder="Ejemplo: 1" />
+
+                </div>
+
+                <div id="buscarResultado"
+                     style="display:none; margin-top:15px;">
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-secondary"
+                        onclick="cerrarModalBuscar()">
+                    Cancelar
+                </button>
+
+                <button type="button"
+                        class="btn btn-info"
+                        onclick="buscarAreaPorId()">
+
+                    <i class="bi bi-search"></i>
+                    Buscar
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- MODAL CREAR / EDITAR -->
+<div class="modal" id="modalFormulario">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 id="tituloModal">
+                    Nueva Área
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        onclick="cerrarModalFormulario()">
+                    &times;
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <input id="idArea"
+                       type="hidden"
+                       value="0" />
+
+                <div class="form-group">
+
+                    <label>Nombre *</label>
+
+                    <input id="nombre"
+                           class="form-control"
+                           maxlength="100"
+                           placeholder="Nombre del área" />
+
+                    <div id="errNombre"
+                         class="invalid-feedback">
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Institución *</label>
+
+                    <select id="institucion"
+                            class="form-select">
+                    </select>
+
+                    <div id="errInstitucion"
+                         class="invalid-feedback">
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-secondary"
+                        onclick="cerrarModalFormulario()">
+                    Cancelar
+                </button>
+
+                <button type="button"
+                        class="btn btn-success"
+                        onclick="guardarArea()">
+
+                    <i class="bi bi-save"></i>
+                    Guardar
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- MODAL ELIMINAR -->
+<div class="modal" id="modalEliminar">
+
+    <div class="modal-dialog"
+         style="max-width:500px;">
+
+        <div class="modal-content">
+
+            <div class="modal-header modal-header-danger">
+
+                <h5>
+
+                    <i class="bi bi-exclamation-triangle"></i>
+
+                    Confirmar eliminación
+
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        onclick="cerrarModalEliminar()">
+
+                    &times;
+
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <p>
+                    ¿Realmente desea eliminar el área seleccionada?
+                </p>
+
+                <p style="color:#6c757d;">
+
+                    <strong id="nombreEliminar"></strong>
+
+                </p>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-secondary"
+                        onclick="cerrarModalEliminar()">
+                    Cancelar
+                </button>
+
+                <button type="button"
+                        class="btn btn-danger"
+                        onclick="eliminarArea()">
+
+                    <i class="bi bi-trash"></i>
+                    Eliminar
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    window.areasIniciales =
+        @Html.Raw(JsonSerializer.Serialize(Model.Areas));
+
+    window.institucionesDisponibles =
+        @Html.Raw(JsonSerializer.Serialize(Model.Instituciones));
+</script>
+
+@section Scripts
+{
+    <script src="~/js/areas.js"
+            asp-append-version="true"></script>
+}

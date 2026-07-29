@@ -1,4 +1,4 @@
 wwwroot\css\siteusuarios.css
 wwwroot\js\usuarios.js
-D:\kenda\Downloads\last\Programacion-V-part-2\Microservicios\UsuariosSRV4\wwwroot\css\siteusuarios.css
-D:\kenda\Downloads\last\Programacion-V-part-2\Microservicios\UsuariosSRV4\wwwroot\js\usuarios.js
+C:\Users\maddy\source\repos\Parq1926\Programacion-V-part-2\Microservicios\UsuariosSRV4\wwwroot\js\usuarios.js
+C:\Users\maddy\source\repos\Parq1926\Programacion-V-part-2\Microservicios\UsuariosSRV4\wwwroot\css\siteusuarios.css

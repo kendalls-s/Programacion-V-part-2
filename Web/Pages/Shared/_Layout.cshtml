@@ -215,7 +215,6 @@
                 Parámetros
             </a>
 
-            <!-- ✅ NUEVO ÍCONO PARA TIPOS DE IDENTIFICACIÓN -->
             <a href="/TiposIdentificacion">
                 <i class="bi bi-person-vcard"></i>
                 Tipos de Identificación
@@ -236,31 +235,27 @@
                 Bitácora
             </a>
 
-            <!-- Usuarios -->
-            <a href="#"
-               onclick="abrirMicroservicio('https://tiusr22pl.cuc-carrera-ti.ac.cr/Usuarios'); return false;">
-                <i class="bi bi-people"></i>
-                Usuarios
-            </a>
-
-            <!-- Carreras -->
-            <a href="#"
-               onclick="abrirMicroservicio('https://tiusr22pl.cuc-carrera-ti.ac.cr/Carreras'); return false;">
+            <!-- ✅ CARRERAS - APUNTA A LA PÁGINA CORRECTA -->
+            <a href="/Carrera">
                 <i class="bi bi-mortarboard"></i>
                 Carreras
             </a>
 
-            <!-- Áreas -->
+            <!-- Áreas - Local -->
             <a href="/Areas">
                 <i class="bi bi-building"></i>
                 Áreas
             </a>
 
-            <!-- Instituciones -->
+            <!-- Instituciones - Local -->
             <a href="/Instituciones">
                 <i class="bi bi-bank"></i>
                 Instituciones
             </a>
+
+            <!-- ======================================== -->
+            <!-- ✅ CERRAR SESIÓN                         -->
+            <!-- ======================================== -->
 
             <a href="#"
                onclick="cerrarSesion(); return false;"
@@ -379,12 +374,11 @@
                     .catch(() => {
 
                         window.serviceConfig = {
-                            UsuariosSRV4: 'https://tiusr22pl.cuc-carrera-ti.ac.cr/Usuarios',
                             TiposUsuarioSRV5: 'https://tiusr22pl.cuc-carrera-ti.ac.cr/TiposUsuario',
                             TipoIdentificacionSRV6: 'https://tiusr22pl.cuc-carrera-ti.ac.cr/TiposIdentificacion',
-                            SRV3_Carreras: 'https://tiusr22pl.cuc-carrera-ti.ac.cr/Carreras',
-                            SRV4_Areas: 'https://tiusr22pl.cuc-carrera-ti.ac.cr/Areas',
-                            SRV2_Instituciones: 'https://tiusr22pl.cuc-carrera-ti.ac.cr/Instituciones',
+                            Carreras: 'https://tiusr22pl.cuc-carrera-ti.ac.cr/Carreras',
+                            Areas: 'https://tiusr22pl.cuc-carrera-ti.ac.cr/Areas',
+                            Instituciones: 'https://tiusr22pl.cuc-carrera-ti.ac.cr/Instituciones',
                             Roles: 'https://tiusr22pl.cuc-carrera-ti.ac.cr/RolesAPI',
                             Bitacora: 'https://tiusr22pl.cuc-carrera-ti.ac.cr/BitacoraAPI'
                         };

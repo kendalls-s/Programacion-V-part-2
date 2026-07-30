@@ -103,6 +103,13 @@ builder.Services.AddHttpClient("Instituciones", c =>
     c.DefaultRequestHeaders.Add("Accept", "application/json");
     c.Timeout = TimeSpan.FromSeconds(30);
 });
+//HttpClient para Carreras
+builder.Services.AddHttpClient("Carreras", c =>
+{
+    c.BaseAddress = new Uri(UrlServicio("Carreras", "carrerasAPI"));
+    c.DefaultRequestHeaders.Add("Accept", "application/json");
+    c.Timeout = TimeSpan.FromSeconds(30);
+});
 
 // HttpClient para SRV9 - Bitácora
 builder.Services.AddHttpClient("Bitacora", c =>
@@ -138,6 +145,7 @@ builder.Services.AddScoped<IRolService, RolService>();
 builder.Services.AddScoped<IBitacoraService, BitacoraService>();
 builder.Services.AddScoped<IAreaService, AreaService>();
 builder.Services.AddScoped<IInstitucionService, InstitucionService>();
+builder.Services.AddScoped<ICarreraService, CarreraService>();
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();

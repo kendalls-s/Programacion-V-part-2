@@ -1,18 +1,18 @@
 ﻿@page
-@model CarnetDigitalWeb.Pages.Areas.IndexModel
+@model CarnetDigitalWeb.Pages.Carrera.IndexModel
 @using System.Text.Json
 @inject IConfiguration Configuration
 
 @{
-    ViewData["Title"] = "Administración de Áreas";
+    ViewData["Title"] = "Administración de Carreras";
 
     var opcionesJson = new JsonSerializerOptions
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase
     };
 
-    var areasJson = JsonSerializer.Serialize(
-        Model.Areas ?? new List<CarnetDigitalWeb.Models.Area>(),
+    var carrerasJson = JsonSerializer.Serialize(
+        Model.Carreras ?? new List<CarnetDigitalWeb.Models.Carrera>(),
         opcionesJson
     );
 
@@ -21,18 +21,18 @@
         opcionesJson
     );
 
-    var areasBaseUrl =
-        (Configuration["Services:Areas"] ?? string.Empty).TrimEnd('/');
+    var carrerasBaseUrl =
+        (Configuration["Services:Carreras"] ?? string.Empty).TrimEnd('/');
 
-    var areasApiUrl =
-        $"{areasBaseUrl}/api/Area";
+    var carrerasApiUrl =
+        $"{carrerasBaseUrl}/api/Carrera";
 }
 
 <div class="page-header">
-    <h2><i class="bi bi-building"></i> Lista de Áreas</h2>
+    <h2><i class="bi bi-mortarboard"></i> Lista de Carreras</h2>
     <div>
         <button type="button" class="btn btn-primary" onclick="abrirModalCrear()">
-            <i class="bi bi-plus-circle"></i> Nueva Área
+            <i class="bi bi-plus-circle"></i> Nueva Carrera
         </button>
         <button type="button" class="btn btn-info" onclick="abrirModalBuscar()">
             <i class="bi bi-search"></i> Buscar por ID
@@ -44,17 +44,17 @@
 
 <div id="loading" class="loading" style="display:none;">
     <div class="spinner-border"></div>
-    <p>Cargando áreas...</p>
+    <p>Cargando carreras...</p>
 </div>
 
-<div id="listaAreas" class="grid-cards"></div>
+<div id="listaCarreras" class="grid-cards"></div>
 
 <!-- PAGINACIÓN -->
 <div id="paginacionContainer" style="display:none; margin-top:30px;">
     <div class="paginacion-wrapper">
         <div class="paginacion-info">
             Mostrando <span id="inicioMostrar">0</span> - <span id="finMostrar">0</span>
-            de <span id="totalRegistros">0</span> áreas
+            de <span id="totalRegistros">0</span> carreras
         </div>
         <div class="paginacion-botones">
             <button type="button" class="btn-paginacion" id="btnAnterior" onclick="paginaAnterior()">
@@ -73,19 +73,19 @@
     <div class="modal-dialog" style="max-width:500px;">
         <div class="modal-content">
             <div class="modal-header modal-header-info">
-                <h5><i class="bi bi-search"></i> Buscar Área por ID</h5>
+                <h5><i class="bi bi-search"></i> Buscar Carrera por ID</h5>
                 <button type="button" class="btn-close" onclick="cerrarModalBuscar()">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="buscarId">ID del Área</label>
+                    <label for="buscarId">ID de la Carrera</label>
                     <input id="buscarId" type="number" class="form-control" min="1" placeholder="Ejemplo: 1">
                 </div>
                 <div id="buscarResultado" style="display:none; margin-top:15px;"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" onclick="cerrarModalBuscar()">Cancelar</button>
-                <button type="button" class="btn btn-info" onclick="buscarAreaPorId()">
+                <button type="button" class="btn btn-info" onclick="buscarCarreraPorId()">
                     <i class="bi bi-search"></i> Buscar
                 </button>
             </div>
@@ -98,16 +98,35 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 id="tituloModal">Nueva Área</h5>
+                <h5 id="tituloModal">Nueva Carrera</h5>
                 <button type="button" class="btn-close" onclick="cerrarModalFormulario()">&times;</button>
             </div>
             <div class="modal-body">
-                <input id="idArea" type="hidden" value="0">
+                <input id="idCarrera" type="hidden" value="0">
 
                 <div class="form-group">
                     <label for="nombre">Nombre *</label>
-                    <input id="nombre" class="form-control" maxlength="100" placeholder="Nombre del área">
+                    <input id="nombre" class="form-control" maxlength="100" placeholder="Nombre de la carrera">
                     <div id="errNombre" class="invalid-feedback"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="director">Director *</label>
+                    <input id="director" class="form-control" maxlength="100" placeholder="Nombre del director">
+                    <div id="errDirector" class="invalid-feedback"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input id="email" type="email" class="form-control" placeholder="ejemplo@@cuc.ac.cr">
+                    <small style="color:#6c757d; font-size:12px;">Solo @@cuc.ac.cr o @@cuc.cr</small>
+                    <div id="errEmail" class="invalid-feedback"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono">Teléfono *</label>
+                    <input id="telefono" class="form-control" inputmode="numeric" placeholder="Solo números">
+                    <div id="errTelefono" class="invalid-feedback"></div>
                 </div>
 
                 <div class="form-group">
@@ -120,7 +139,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" onclick="cerrarModalFormulario()">Cancelar</button>
-                <button type="button" id="btnGuardarArea" class="btn btn-success" onclick="guardarArea()">
+                <button type="button" id="btnGuardarCarrera" class="btn btn-success" onclick="guardarCarrera()">
                     <i class="bi bi-save"></i> Guardar
                 </button>
             </div>
@@ -137,12 +156,12 @@
                 <button type="button" class="btn-close" onclick="cerrarModalEliminar()">&times;</button>
             </div>
             <div class="modal-body">
-                <p>¿Realmente desea eliminar el área seleccionada?</p>
+                <p>¿Realmente desea eliminar la carrera seleccionada?</p>
                 <p style="color:#6c757d;"><strong id="nombreEliminar"></strong></p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" onclick="cerrarModalEliminar()">Cancelar</button>
-                <button type="button" id="btnEliminarArea" class="btn btn-danger" onclick="eliminarArea()">
+                <button type="button" id="btnEliminarCarrera" class="btn btn-danger" onclick="eliminarCarrera()">
                     <i class="bi bi-trash"></i> Eliminar
                 </button>
             </div>
@@ -151,10 +170,10 @@
 </div>
 
 <script>
-    const URL_API_AREA = @Html.Raw(JsonSerializer.Serialize(areasApiUrl));
+    const URL_API_CARRERA = @Html.Raw(JsonSerializer.Serialize(carrerasApiUrl));
 
-    window.areasIniciales =
-            @Html.Raw(areasJson);
+    window.carrerasIniciales =
+            @Html.Raw(carrerasJson);
 
     window.institucionesDisponibles =
             @Html.Raw(institucionesJson);
@@ -164,7 +183,7 @@
     const registrosPorPagina = 15;
     let totalRegistros = 0;
     let totalPaginas = 1;
-    let todasLasAreas = [];
+    let todasLasCarreras = [];
     let institucionesCargadas = [];
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -172,24 +191,24 @@
             // Cargar instituciones en el select
             cargarInstitucionesEnSelect();
 
-            todasLasAreas = Array.isArray(window.areasIniciales)
-                ? window.areasIniciales
+            todasLasCarreras = Array.isArray(window.carrerasIniciales)
+                ? window.carrerasIniciales
                 : [];
 
-            totalRegistros = todasLasAreas.length;
+            totalRegistros = todasLasCarreras.length;
             totalPaginas = Math.max(1, Math.ceil(totalRegistros / registrosPorPagina));
             paginaActual = 1;
 
             mostrarPagina();
         } catch (error) {
-            console.error('Error al cargar las áreas:', error);
-            todasLasAreas = [];
+            console.error('Error al cargar las carreras:', error);
+            todasLasCarreras = [];
             totalRegistros = 0;
             totalPaginas = 1;
             paginaActual = 1;
-            renderizarAreas([]);
+            renderizarCarreras([]);
             actualizarPaginacion();
-            mostrarAlerta('Error al cargar las áreas: ' + error.message, 'danger');
+            mostrarAlerta('Error al cargar las carreras: ' + error.message, 'danger');
         }
     });
 
@@ -240,9 +259,12 @@
     }
 
     function abrirModalCrear() {
-        document.getElementById('tituloModal').textContent = 'Nueva Área';
-        document.getElementById('idArea').value = '0';
+        document.getElementById('tituloModal').textContent = 'Nueva Carrera';
+        document.getElementById('idCarrera').value = '0';
         document.getElementById('nombre').value = '';
+        document.getElementById('director').value = '';
+        document.getElementById('email').value = '';
+        document.getElementById('telefono').value = '';
         document.getElementById('institucion').value = '';
         limpiarErrores();
         document.getElementById('modalFormulario').style.display = 'flex';
@@ -350,7 +372,7 @@
     }
 
     function mostrarPagina() {
-        totalRegistros = todasLasAreas.length;
+        totalRegistros = todasLasCarreras.length;
         totalPaginas = Math.max(1, Math.ceil(totalRegistros / registrosPorPagina));
 
         if (paginaActual > totalPaginas) {
@@ -360,28 +382,28 @@
         const inicio = (paginaActual - 1) * registrosPorPagina;
         const fin = inicio + registrosPorPagina;
 
-        renderizarAreas(todasLasAreas.slice(inicio, fin));
+        renderizarCarreras(todasLasCarreras.slice(inicio, fin));
         actualizarPaginacion();
     }
 
-    function renderizarAreas(areas) {
-        const container = document.getElementById('listaAreas');
+    function renderizarCarreras(carreras) {
+        const container = document.getElementById('listaCarreras');
 
-        if (!areas || areas.length === 0) {
-            container.innerHTML = todasLasAreas.length === 0
+        if (!carreras || carreras.length === 0) {
+            container.innerHTML = todasLasCarreras.length === 0
                 ? `
                             <div class="empty-state">
-                                <i class="bi bi-building" style="font-size:4rem; color:#dee2e6;"></i>
-                                <p>No hay áreas registradas</p>
+                                <i class="bi bi-mortarboard" style="font-size:4rem; color:#dee2e6;"></i>
+                                <p>No hay carreras registradas</p>
                                 <button type="button" class="btn btn-primary" onclick="abrirModalCrear()">
-                                    <i class="bi bi-plus-circle"></i> Crear primera área
+                                    <i class="bi bi-plus-circle"></i> Crear primera carrera
                                 </button>
                             </div>
                         `
                 : `
                             <div class="empty-state">
                                 <i class="bi bi-inbox" style="font-size:4rem; color:#dee2e6;"></i>
-                                <p>No hay áreas en esta página</p>
+                                <p>No hay carreras en esta página</p>
                             </div>
                         `;
             return;
@@ -389,12 +411,14 @@
 
         let html = '';
 
-        areas.forEach(function(a) {
-            const id = Number(a.id ?? a.ID ?? a.Id ?? 0);
-            const nombre = a.nombre ?? a.Nombre ?? '';
-            const institucionNombre = a.institucionNombre ?? a.InstitucionNombre ?? '';
-            const institucionID = a.institucionID ?? a.InstitucionID ?? 0;
-            const activoRaw = a.activo ?? a.Activo ?? false;
+        carreras.forEach(function(c) {
+            const id = Number(c.id ?? c.ID ?? c.Id ?? 0);
+            const nombre = c.nombre ?? c.Nombre ?? '';
+            const director = c.director ?? c.Director ?? '';
+            const email = c.email ?? c.Email ?? '';
+            const telefono = c.telefono ?? c.Telefono ?? '';
+            const institucionNombre = c.institucionNombre ?? c.InstitucionNombre ?? '';
+            const activoRaw = c.activo ?? c.Activo ?? false;
             const activo = activoRaw === true || activoRaw === 1 || activoRaw === '1' || activoRaw === 'true';
 
             html += `
@@ -411,18 +435,26 @@
                                     <span class="value">${id}</span>
                                 </div>
                                 <div class="info-row">
-                                    <span class="label"><i class="bi bi-building"></i> Institución:</span>
-                                    <span class="value">${escaparHtml(institucionNombre)}</span>
+                                    <span class="label"><i class="bi bi-person-badge"></i> Director:</span>
+                                    <span class="value">${escaparHtml(director)}</span>
                                 </div>
                                 <div class="info-row">
-                                    <span class="label"><i class="bi bi-hash"></i> ID Institución:</span>
-                                    <span class="value">${institucionID}</span>
+                                    <span class="label"><i class="bi bi-envelope"></i> Email:</span>
+                                    <span class="value">${escaparHtml(email)}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label"><i class="bi bi-phone"></i> Teléfono:</span>
+                                    <span class="value">${escaparHtml(telefono)}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label"><i class="bi bi-building"></i> Institución:</span>
+                                    <span class="value">${escaparHtml(institucionNombre)}</span>
                                 </div>
                             </div>
                             <div class="card-bordered-footer">
                                 <button type="button"
                                         class="btn btn-warning btn-sm"
-                                        onclick="editarArea(${id})">
+                                        onclick="editarCarrera(${id})">
                                     <i class="bi bi-pencil"></i> Editar
                                 </button>
                                 <button type="button"
@@ -447,7 +479,7 @@
         );
     }
 
-    async function buscarAreaPorId() {
+    async function buscarCarreraPorId() {
         const id = Number(document.getElementById('buscarId').value.trim());
 
         if (!Number.isInteger(id) || id <= 0) {
@@ -458,24 +490,26 @@
         const resultadoDiv = document.getElementById('buscarResultado');
         resultadoDiv.style.display = 'block';
 
-        const area = todasLasAreas.find(
+        const carrera = todasLasCarreras.find(
             i => Number(i.id ?? i.ID ?? i.Id) === id
         );
 
-        if (!area) {
+        if (!carrera) {
             resultadoDiv.innerHTML = `
                         <div class="alert alert-warning">
                             <i class="bi bi-exclamation-triangle"></i>
-                            No se encontró ningún área con ID ${id}
+                            No se encontró ninguna carrera con ID ${id}
                         </div>
                     `;
             return;
         }
 
-        const nombre = area.nombre ?? area.Nombre ?? '';
-        const institucionNombre = area.institucionNombre ?? area.InstitucionNombre ?? '';
-        const institucionID = area.institucionID ?? area.InstitucionID ?? 0;
-        const activoRaw = area.activo ?? area.Activo ?? false;
+        const nombre = carrera.nombre ?? carrera.Nombre ?? '';
+        const director = carrera.director ?? carrera.Director ?? '';
+        const email = carrera.email ?? carrera.Email ?? '';
+        const telefono = carrera.telefono ?? carrera.Telefono ?? '';
+        const institucionNombre = carrera.institucionNombre ?? carrera.InstitucionNombre ?? '';
+        const activoRaw = carrera.activo ?? carrera.Activo ?? false;
         const activo = activoRaw === true || activoRaw === 1 || activoRaw === '1' || activoRaw === 'true';
 
         resultadoDiv.innerHTML = `
@@ -483,8 +517,10 @@
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:14px;">
                             <div><strong>ID:</strong> ${id}</div>
                             <div><strong>Nombre:</strong> ${escaparHtml(nombre)}</div>
+                            <div><strong>Director:</strong> ${escaparHtml(director)}</div>
+                            <div><strong>Email:</strong> ${escaparHtml(email)}</div>
+                            <div><strong>Teléfono:</strong> ${escaparHtml(telefono)}</div>
                             <div><strong>Institución:</strong> ${escaparHtml(institucionNombre)}</div>
-                            <div><strong>ID Institución:</strong> ${institucionID}</div>
                             <div>
                                 <strong>Estado:</strong>
                                 <span class="${activo ? 'badge-success' : 'badge-danger'}">
@@ -493,7 +529,7 @@
                             </div>
                         </div>
                         <div style="margin-top:10px; display:flex; gap:8px;">
-                            <button type="button" class="btn btn-warning btn-sm" onclick="editarArea(${id})">
+                            <button type="button" class="btn btn-warning btn-sm" onclick="editarCarrera(${id})">
                                 Editar
                             </button>
                             <button type="button"
@@ -539,10 +575,38 @@
         limpiarErrores();
 
         const nombre = document.getElementById('nombre').value.trim();
+        const director = document.getElementById('director').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const telefono = document.getElementById('telefono').value.trim();
         const institucion = document.getElementById('institucion').value;
 
         if (!nombre) {
             mostrarError('nombre', 'El nombre es requerido');
+            valido = false;
+        }
+
+        if (!director) {
+            mostrarError('director', 'El director es requerido');
+            valido = false;
+        }
+
+        if (!email) {
+            mostrarError('email', 'El email es requerido');
+            valido = false;
+        } else {
+            const emailRegex = /^[^\s@@]+@@(cuc\.ac\.cr|cuc\.cr)$/i;
+
+            if (!emailRegex.test(email)) {
+                mostrarError('email', 'Solo se permiten correos @@cuc.ac.cr o @@cuc.cr');
+                valido = false;
+            }
+        }
+
+        if (!telefono) {
+            mostrarError('telefono', 'El teléfono es requerido');
+            valido = false;
+        } else if (!/^\d+$/.test(telefono)) {
+            mostrarError('telefono', 'Solo se permiten números');
             valido = false;
         }
 
@@ -559,6 +623,9 @@
     function obtenerDatosFormulario() {
         return {
             nombre: document.getElementById('nombre').value.trim(),
+            director: document.getElementById('director').value.trim(),
+            email: document.getElementById('email').value.trim(),
+            telefono: document.getElementById('telefono').value.trim(),
             institucionID: Number(document.getElementById('institucion').value) || 0
         };
     }
@@ -607,19 +674,22 @@
         return true;
     }
 
-    async function guardarArea() {
+    async function guardarCarrera() {
         if (!validarFormulario()) {
             return;
         }
 
         const id = Number(
-            document.getElementById('idArea').value
+            document.getElementById('idCarrera').value
         );
 
         const esEdicion = id > 0;
 
         const datos = {
             nombre: document.getElementById('nombre').value.trim(),
+            director: document.getElementById('director').value.trim(),
+            email: document.getElementById('email').value.trim(),
+            telefono: document.getElementById('telefono').value.trim(),
             institucionID: Number(document.getElementById('institucion').value) || 0
         };
 
@@ -628,8 +698,8 @@
         }
 
         const url = esEdicion
-            ? `${URL_API_AREA}/${id}`
-            : URL_API_AREA;
+            ? `${URL_API_CARRERA}/${id}`
+            : URL_API_CARRERA;
 
         const metodo = esEdicion ? 'PUT' : 'POST';
 
@@ -638,7 +708,7 @@
         console.log('JSON enviado:', JSON.stringify(datos, null, 2));
 
         const boton =
-            document.getElementById('btnGuardarArea');
+            document.getElementById('btnGuardarCarrera');
 
         boton.disabled = true;
 
@@ -674,7 +744,7 @@
 
             if (!response.ok) {
                 let mensaje =
-                    `Error ${response.status} al guardar el área`;
+                    `Error ${response.status} al guardar la carrera`;
 
                 if (textoRespuesta) {
                     try {
@@ -699,8 +769,8 @@
 
             mostrarAlerta(
                 esEdicion
-                    ? 'Área actualizada correctamente'
-                    : 'Área creada correctamente',
+                    ? 'Carrera actualizada correctamente'
+                    : 'Carrera creada correctamente',
                 'success'
             );
 
@@ -719,39 +789,42 @@
         }
     }
 
-    function editarArea(id) {
-        const area = todasLasAreas.find(
+    function editarCarrera(id) {
+        const carrera = todasLasCarreras.find(
             i => Number(i.id ?? i.ID ?? i.Id) === Number(id)
         );
 
-        if (!area) {
-            mostrarAlerta('Área no encontrada', 'danger');
+        if (!carrera) {
+            mostrarAlerta('Carrera no encontrada', 'danger');
             return;
         }
 
         cerrarModalBuscar();
 
-        document.getElementById('tituloModal').textContent = 'Editar Área';
-        document.getElementById('idArea').value = area.id ?? area.ID ?? area.Id ?? 0;
-        document.getElementById('nombre').value = area.nombre ?? area.Nombre ?? '';
-        document.getElementById('institucion').value = area.institucionID ?? area.InstitucionID ?? 0;
+        document.getElementById('tituloModal').textContent = 'Editar Carrera';
+        document.getElementById('idCarrera').value = carrera.id ?? carrera.ID ?? carrera.Id ?? 0;
+        document.getElementById('nombre').value = carrera.nombre ?? carrera.Nombre ?? '';
+        document.getElementById('director').value = carrera.director ?? carrera.Director ?? '';
+        document.getElementById('email').value = carrera.email ?? carrera.Email ?? '';
+        document.getElementById('telefono').value = carrera.telefono ?? carrera.Telefono ?? '';
+        document.getElementById('institucion').value = carrera.institucionID ?? carrera.InstitucionID ?? 0;
 
         limpiarErrores();
         document.getElementById('modalFormulario').style.display = 'flex';
     }
 
-    async function eliminarArea() {
+    async function eliminarCarrera() {
         if (!idEliminar || idEliminar <= 0) {
-            mostrarAlerta('No se seleccionó un área válida', 'warning');
+            mostrarAlerta('No se seleccionó una carrera válida', 'warning');
             return;
         }
 
-        const boton = document.getElementById('btnEliminarArea');
+        const boton = document.getElementById('btnEliminarCarrera');
         boton.disabled = true;
 
         try {
             const response = await fetch(
-                `${URL_API_AREA}/${idEliminar}`,
+                `${URL_API_CARRERA}/${idEliminar}`,
                 {
                     method: 'DELETE',
                     headers: construirHeaders(false)
@@ -765,7 +838,7 @@
             if (!response.ok) {
                 const mensaje = await obtenerMensajeError(
                     response,
-                    'Error al eliminar el área'
+                    'Error al eliminar la carrera'
                 );
 
                 mostrarAlerta(mensaje, 'danger');
@@ -773,7 +846,7 @@
             }
 
             cerrarModalEliminar();
-            mostrarAlerta('Área eliminada exitosamente', 'success');
+            mostrarAlerta('Carrera eliminada exitosamente', 'success');
 
             setTimeout(() => window.location.reload(), 600);
         } catch (error) {

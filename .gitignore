@@ -1,0 +1,71 @@
+# ---------------------------------------------
+# .gitignore para proyectos .NET / Visual Studio
+# ---------------------------------------------
+
+# Carpetas de compilación
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+[Dd]ebug/
+[Rr]elease/
+[Ll]og/
+[Ll]ogs/
+x64/
+x86/
+build/
+bld/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+
+# Carpeta de Visual Studio (cachés, config de usuario, índices de Copilot)
+.vs/
+.vscode/
+
+# Archivos específicos del usuario / IDE
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.userprefs
+*.rsuser
+
+# Resultados de compilación y símbolos
+*.dll
+*.exe
+*.pdb
+*.cache
+*.deps.json
+*.runtimeconfig.json
+*.staticwebassets.*.json
+
+# Archivos generados por NuGet
+*.nupkg
+*.snupkg
+project.assets.json
+project.nuget.cache
+*.nuget.g.props
+*.nuget.g.targets
+*.nuget.dgspec.json
+
+# Publicación
+[Pp]ublish/
+PublishScripts/
+*.pubxml.user
+PubTmp/
+
+# Bases de datos y archivos locales
+*.mdf
+*.ldf
+*.ndf
+
+# Archivos temporales del sistema operativo
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+
+# Otros temporales
+*.tmp
+*.temp
+*.log
+*.bak

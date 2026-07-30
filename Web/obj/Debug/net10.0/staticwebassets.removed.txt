@@ -1,5 +1,0 @@
-C:\Git\Programacion-V-part-2\Web\wwwroot\css\crud.css
-C:\Git\Programacion-V-part-2\Web\wwwroot\js\bitacora.js
-C:\Git\Programacion-V-part-2\Web\wwwroot\js\roles.js
-C:\Git\Programacion-V-part-2\Web\wwwroot\js\tiposidentificacion.js
-C:\Git\Programacion-V-part-2\Web\wwwroot\js\tiposusuario.js

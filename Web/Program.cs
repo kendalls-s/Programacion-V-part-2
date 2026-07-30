@@ -124,6 +124,19 @@ builder.Services.AddHttpClient("CarnetQR", c =>
     c.Timeout = TimeSpan.FromSeconds(30);
 });
 
+// HttpClient para AutoRegistro
+builder.Services.AddHttpClient("AutoRegistro", c =>
+{
+    c.BaseAddress = new Uri(
+        UrlServicio("AutoRegistro", "AutoRegistroAPI"));
+
+    c.DefaultRequestHeaders.Add(
+        "Accept",
+        "application/json");
+
+    c.Timeout = TimeSpan.FromSeconds(30);
+});
+
 // Servicios
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IEstadoUsuarioService, EstadoUsuarioService>();
@@ -135,6 +148,7 @@ builder.Services.AddScoped<IBitacoraService, BitacoraService>();
 builder.Services.AddScoped<IAreaService, AreaService>();
 builder.Services.AddScoped<IInstitucionService, InstitucionService>();
 builder.Services.AddScoped<ICarreraService, CarreraService>();
+builder.Services.AddScoped<IAutoRegistroService,AutoRegistroService>();
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();

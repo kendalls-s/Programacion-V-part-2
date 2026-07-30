@@ -1,0 +1,626 @@
+﻿@page "/AutoRegistro"
+@model CarnetDigitalWeb.Pages.AutoRegistroModel
+@{
+    Layout = null;
+    ViewData["Title"] = "Crear cuenta";
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+
+    <title>Crear cuenta - Carnet Digital</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+    <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            :root {
+                --primary-color: #003366;
+                --primary-dark: #001a33;
+                --primary-light: #1a5a9b;
+                --bg-gray: #f0f2f5;
+                --border-color: #e0e0e0;
+                --text-color: #333333;
+                --text-muted: #6c757d;
+                --white: #ffffff;
+                --danger: #dc3545;
+                --success: #28a745;
+            }
+
+            body {
+                min-height: 100vh;
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+                background: var(--bg-gray);
+                color: var(--text-color);
+            }
+
+            .registro-page {
+                min-height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                padding: 36px 20px;
+            }
+
+            .registro-container {
+                width: 100%;
+                max-width: 1000px;
+                background: var(--white);
+                border-radius: 12px;
+                overflow: hidden;
+                box-shadow: 0 4px 20px rgba(0, 51, 102, 0.12);
+            }
+
+            .registro-header {
+                background: var(--primary-color);
+                color: var(--white);
+                padding: 24px 30px;
+            }
+
+            .registro-header-content {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+            }
+
+            .registro-logo {
+                width: 48px;
+                height: 48px;
+                flex-shrink: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: #ffd700;
+                color: var(--primary-color);
+                border-radius: 10px;
+                font-size: 20px;
+                font-weight: 700;
+            }
+
+            .registro-header h1 {
+                margin-bottom: 4px;
+                font-size: 26px;
+                font-weight: 600;
+            }
+
+            .registro-header p {
+                color: rgba(255, 255, 255, 0.82);
+                font-size: 14px;
+            }
+
+            .registro-body {
+                padding: 30px;
+            }
+
+            .mensaje {
+                display: none;
+                margin-bottom: 22px;
+                padding: 13px 16px;
+                border: 1px solid transparent;
+                border-radius: 8px;
+                font-size: 14px;
+            }
+
+                .mensaje.error {
+                    display: block;
+                    color: #721c24;
+                    background: #f8d7da;
+                    border-color: #f5c6cb;
+                }
+
+                .mensaje.exito {
+                    display: block;
+                    color: #155724;
+                    background: #d4edda;
+                    border-color: #c3e6cb;
+                }
+
+            .form-section {
+                margin-bottom: 30px;
+            }
+
+                .form-section:last-of-type {
+                    margin-bottom: 20px;
+                }
+
+            .section-title {
+                display: flex;
+                align-items: center;
+                gap: 9px;
+                margin-bottom: 20px;
+                padding-bottom: 10px;
+                color: var(--primary-color);
+                border-bottom: 1px solid var(--border-color);
+                font-size: 18px;
+                font-weight: 600;
+            }
+
+            .form-grid {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                column-gap: 22px;
+            }
+
+            .form-group {
+                margin-bottom: 20px;
+            }
+
+                .form-group.full-width {
+                    grid-column: 1 / -1;
+                }
+
+                .form-group label {
+                    display: block;
+                    margin-bottom: 6px;
+                    color: var(--text-color);
+                    font-size: 14px;
+                    font-weight: 500;
+                }
+
+            .required {
+                color: var(--danger);
+            }
+
+            .form-control {
+                width: 100%;
+                min-height: 43px;
+                padding: 10px 13px;
+                background: var(--white);
+                color: var(--text-color);
+                border: 1px solid #ced4da;
+                border-radius: 8px;
+                outline: none;
+                font-family: inherit;
+                font-size: 14px;
+                transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            }
+
+                .form-control:focus {
+                    border-color: var(--primary-color);
+                    box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.1);
+                }
+
+                .form-control:disabled {
+                    cursor: not-allowed;
+                    background: #e9ecef;
+                    color: #6c757d;
+                }
+
+            select.form-control {
+                cursor: pointer;
+            }
+
+            .form-help {
+                display: block;
+                margin-top: 5px;
+                color: var(--text-muted);
+                font-size: 12px;
+            }
+
+            .conditional-section {
+                display: none;
+            }
+
+            .password-wrapper {
+                position: relative;
+            }
+
+                .password-wrapper .form-control {
+                    padding-right: 45px;
+                }
+
+            .toggle-password {
+                position: absolute;
+                top: 50%;
+                right: 13px;
+                transform: translateY(-50%);
+                border: none;
+                background: transparent;
+                color: #6c757d;
+                cursor: pointer;
+                font-size: 16px;
+            }
+
+            .registro-actions {
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+                gap: 10px;
+                padding-top: 22px;
+                border-top: 1px solid var(--border-color);
+            }
+
+            .btn {
+                min-height: 42px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                padding: 9px 18px;
+                border: none;
+                border-radius: 6px;
+                font-family: inherit;
+                font-size: 14px;
+                font-weight: 500;
+                text-decoration: none;
+                cursor: pointer;
+                transition: background 0.2s ease, opacity 0.2s ease;
+            }
+
+            .btn-primary {
+                background: var(--primary-color);
+                color: var(--white);
+            }
+
+                .btn-primary:hover {
+                    background: var(--primary-dark);
+                }
+
+            .btn-secondary {
+                background: #6c757d;
+                color: var(--white);
+            }
+
+                .btn-secondary:hover {
+                    background: #5a6268;
+                }
+
+            .btn:disabled {
+                cursor: not-allowed;
+                opacity: 0.65;
+            }
+
+            .spinner {
+                display: none;
+                width: 16px;
+                height: 16px;
+                border: 2px solid rgba(255, 255, 255, 0.45);
+                border-top-color: var(--white);
+                border-radius: 50%;
+                animation: girar 0.75s linear infinite;
+            }
+
+            @@keyframes girar {
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+
+            @@media (max-width: 768px) {
+                .registro-page {
+                    padding: 18px 12px;
+                }
+
+                .registro-header,
+                .registro-body {
+                    padding-left: 20px;
+                    padding-right: 20px;
+                }
+
+                .registro-header-content {
+                    align-items: flex-start;
+                }
+
+                .registro-header h1 {
+                    font-size: 22px;
+                }
+
+                .form-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .form-group.full-width {
+                    grid-column: auto;
+                }
+
+                .registro-actions {
+                    flex-direction: column-reverse;
+                }
+
+                    .registro-actions .btn {
+                        width: 100%;
+                    }
+            }
+
+            @@media (max-width: 480px) {
+                .registro-logo {
+                    width: 42px;
+                    height: 42px;
+                    font-size: 17px;
+                }
+
+                .registro-body {
+                    padding-top: 24px;
+                    padding-bottom: 24px;
+                }
+            }
+    </style>
+</head>
+
+<body>
+    <main class="registro-page">
+        <section class="registro-container">
+            <header class="registro-header">
+                <div class="registro-header-content">
+                    <div class="registro-logo">CD</div>
+
+                    <div>
+                        <h1>Crear una cuenta</h1>
+                        <p>
+                            Complete el formulario para registrarse en
+                            Carnet Digital.
+                        </p>
+                    </div>
+                </div>
+            </header>
+
+            <div class="registro-body">
+                <div id="mensajeRegistro"
+                     class="mensaje"
+                     role="alert">
+                </div>
+
+                <form id="formAutoRegistro">
+                    @Html.AntiForgeryToken()
+                    <section class="form-section">
+                        <h2 class="section-title">
+                            <i class="fa-solid fa-user"></i>
+                            Información personal
+                        </h2>
+
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label for="nombreCompleto">
+                                    Nombre completo
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input type="text"
+                                       id="nombreCompleto"
+                                       class="form-control"
+                                       autocomplete="name"
+                                       maxlength="150"
+                                       required />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="tipoIdentificacionId">
+                                    Tipo de identificación
+                                    <span class="required">*</span>
+                                </label>
+
+                                <select id="tipoIdentificacionId"
+                                        class="form-control"
+                                        required>
+                                    <option value="">
+                                        Seleccione una opción
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="numeroIdentificacion">
+                                    Número de identificación
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input type="text"
+                                       id="numeroIdentificacion"
+                                       class="form-control"
+                                       maxlength="30"
+                                       required />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="tipoUsuarioId">
+                                    Tipo de usuario
+                                    <span class="required">*</span>
+                                </label>
+
+                                <select id="tipoUsuarioId"
+                                        class="form-control"
+                                        required>
+                                    <option value="">
+                                        Seleccione una opción
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="rolId">
+                                    Rol
+                                    <span class="required">*</span>
+                                </label>
+
+                                <select id="rolId"
+                                        class="form-control"
+                                        required>
+                                    <option value="">
+                                        Seleccione una opción
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="form-section">
+                        <h2 class="section-title">
+                            <i class="fa-solid fa-building-columns"></i>
+                            Información institucional
+                        </h2>
+
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label for="instituciones">
+                                    Institución
+                                    <span class="required">*</span>
+                                </label>
+
+                                <select id="instituciones"
+                                        class="form-control"
+                                        required>
+                                    <option value="">
+                                        Seleccione una institución
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div id="grupoCarreras"
+                                 class="form-group full-width conditional-section">
+                                <label for="carrerasAsociadas">
+                                    Carrera
+                                    <span class="required">*</span>
+                                </label>
+
+                                <select id="carrerasAsociadas"
+                                        class="form-control">
+                                    <option value="">
+                                        Seleccione una carrera
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div id="grupoAreas"
+                                 class="form-group full-width conditional-section">
+                                <label for="areasAsociadas">
+                                    Área
+                                    <span class="required">*</span>
+                                </label>
+
+                                <select id="areasAsociadas"
+                                        class="form-control">
+                                    <option value="">
+                                        Seleccione un área
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="form-section">
+                        <h2 class="section-title">
+                            <i class="fa-solid fa-address-card"></i>
+                            Datos de contacto y acceso
+                        </h2>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="email">
+                                    Correo electrónico
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input type="email"
+                                       id="email"
+                                       class="form-control"
+                                       autocomplete="email"
+                                       maxlength="150"
+                                       required />
+
+                                <small class="form-help">
+                                    Utilice el correo asociado a su institución.
+                                </small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="telefono">
+                                    Teléfono
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input type="tel"
+                                       id="telefono"
+                                       class="form-control"
+                                       autocomplete="tel"
+                                       maxlength="20"
+                                       required />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="contrasena">
+                                    Contraseña
+                                    <span class="required">*</span>
+                                </label>
+
+                                <div class="password-wrapper">
+                                    <input type="password"
+                                           id="contrasena"
+                                           class="form-control"
+                                           autocomplete="new-password"
+                                           required />
+
+                                    <button type="button"
+                                            class="toggle-password"
+                                            data-target="contrasena"
+                                            aria-label="Mostrar contraseña">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="confirmarContrasena">
+                                    Confirmar contraseña
+                                    <span class="required">*</span>
+                                </label>
+
+                                <div class="password-wrapper">
+                                    <input type="password"
+                                           id="confirmarContrasena"
+                                           class="form-control"
+                                           autocomplete="new-password"
+                                           required />
+
+                                    <button type="button"
+                                            class="toggle-password"
+                                            data-target="confirmarContrasena"
+                                            aria-label="Mostrar contraseña">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <div class="registro-actions">
+                        <a href="/Login"
+                           class="btn btn-secondary">
+                            <i class="fa-solid fa-arrow-left"></i>
+                            Volver al inicio de sesión
+                        </a>
+
+                        <button type="submit"
+                                id="btnRegistrar"
+                                class="btn btn-primary">
+                            <span id="spinnerRegistro"
+                                  class="spinner">
+                            </span>
+
+                            <i id="iconoRegistro"
+                               class="fa-solid fa-user-plus">
+                            </i>
+
+                            <span id="textoRegistro">
+                                Crear cuenta
+                            </span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+<script src="~/js/autoregistro.js"
+        asp-append-version="true"></script>
+</body>
+</html>

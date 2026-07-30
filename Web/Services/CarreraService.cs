@@ -111,7 +111,7 @@ namespace CarnetDigitalWeb.Services
                 var resultado = await respuesta.Content
                     .ReadFromJsonAsync<ApiResponse<Models.Carrera>>();
 
-                return (true, resultado?.Message ?? "Carrera creada exitosamente",
+                return (true, resultado?.Mensaje ?? "Carrera creada exitosamente",
                     resultado?.Data?.ID);
             }
             catch (Exception ex)
@@ -140,7 +140,7 @@ namespace CarnetDigitalWeb.Services
                 var resultado = await respuesta.Content
                     .ReadFromJsonAsync<ApiResponse<object>>();
 
-                return (true, resultado?.Message ?? "Carrera actualizada exitosamente");
+                return (true, resultado?.Mensaje ?? "Carrera actualizada exitosamente");
             }
             catch (Exception ex)
             {
@@ -167,7 +167,7 @@ namespace CarnetDigitalWeb.Services
                 var resultado = await respuesta.Content
                     .ReadFromJsonAsync<ApiResponse<object>>();
 
-                return (true, resultado?.Message ?? "Carrera eliminada exitosamente");
+                return (true, resultado?.Mensaje ?? "Carrera eliminada exitosamente");
             }
             catch (Exception ex)
             {

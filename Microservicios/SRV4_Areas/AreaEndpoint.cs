@@ -45,22 +45,12 @@ public static class AreaEndpoint
         });
 
         // ==========================================
-        // GET POR ID
+        // GET POR ID - PÚBLICO
         // ==========================================
         group.MapGet("/{id:int}", async (
             int id,
-            IAreaService service,
-            ITokenValidator validator,
-            HttpContext context) =>
+            IAreaService service) =>
         {
-            string token =
-                ObtenerToken(context);
-
-            if (!await validator.ValidateAsync(token))
-            {
-                return Results.Unauthorized();
-            }
-
             try
             {
                 AreaTrabajo? area =
@@ -156,7 +146,6 @@ public static class AreaEndpoint
                         Area = creada
                     });
 
-                // ✅ CORREGIDO: Incluir token
                 await bitacora.RegistrarAsync(
                     token,
                     usuario,
@@ -260,7 +249,6 @@ public static class AreaEndpoint
                         Nuevo = actualizada
                     });
 
-                // ✅ CORREGIDO: Incluir token
                 await bitacora.RegistrarAsync(
                     token,
                     usuario,
@@ -343,7 +331,6 @@ public static class AreaEndpoint
                         Eliminado = area
                     });
 
-                // ✅ CORREGIDO: Incluir token
                 await bitacora.RegistrarAsync(
                     token,
                     usuario,

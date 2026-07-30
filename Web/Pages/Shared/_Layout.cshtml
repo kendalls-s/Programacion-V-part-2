@@ -436,26 +436,33 @@
             }
 
             function abrirMicroservicio(url) {
-                const token =
+
+                const token =
                     localStorage.getItem('accessToken');
-                if (!token) {
+
+                if (!token) {
                     window.location.href = '/Login';
                     return;
                 }
-                window.location.href = url;
+
+                window.location.href = url;
             }
 
             document.addEventListener('click', function (event) {
-                const sidebar =
+
+                const sidebar =
                     document.getElementById('sidebar');
-                const toggleBtn =
+
+                const toggleBtn =
                     document.querySelector('.menu-toggle');
-                if (window.innerWidth <= 768 &&
+
+                if (window.innerWidth <= 768 &&
                     sidebar &&
                     toggleBtn &&
                     !sidebar.contains(event.target) &&
                     !toggleBtn.contains(event.target)) {
-                    sidebar.classList.remove('open');
+
+                    sidebar.classList.remove('open');
                 }
             });
     </script>

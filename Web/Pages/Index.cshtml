@@ -1,13 +1,53 @@
 @page
+@model CarnetDigitalWeb.Pages.IndexModel
 @{
-    Layout = null;
+    ViewData["Title"] = "Bienvenida";
 }
-<!DOCTYPE html>
-<html>
-<head>
-    <meta http-equiv="refresh" content="0;url=/Login" />
-</head>
-<body>
-    <p>Redirigiendo...</p>
-</body>
-</html>
+
+<div class="welcome-hero">
+    <div class="welcome-logo">CUC</div>
+    <h2 class="welcome-title">
+        Bienvenido, <span id="welcomeNombre">Usuario</span>
+    </h2>
+    <p class="welcome-subtitle">
+        Utilice el menú lateral para acceder a los módulos del Carnet Digital.
+    </p>
+</div>
+
+<style>
+    .welcome-hero {
+        text-align: center;
+        padding: 64px 20px;
+    }
+
+    .welcome-logo {
+        width: 80px;
+        height: 80px;
+        background: var(--primary-color, #003366);
+        color: #ffd700;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        font-weight: bold;
+        margin: 0 auto 20px;
+    }
+
+    .welcome-title {
+        color: var(--primary-color, #003366);
+        margin: 0 0 8px;
+    }
+
+    .welcome-subtitle {
+        color: #6c757d;
+        margin: 0;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var nombre = localStorage.getItem('nombreCompleto') || 'Usuario';
+        document.getElementById('welcomeNombre').textContent = nombre;
+    });
+</script>

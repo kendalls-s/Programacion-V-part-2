@@ -237,7 +237,7 @@ app.MapGet("/", async context =>
     var token = context.Session.GetString("Token");
     if (!string.IsNullOrEmpty(token))
     {
-        context.Response.Redirect("/EstadoUsuario");
+        context.Response.Redirect("/Index");
         return;
     }
     context.Response.Redirect("/Login");

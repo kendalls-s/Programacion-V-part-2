@@ -18,10 +18,10 @@ namespace TipoIdentificacionSRV6.Data
 
             modelBuilder.Entity<TipoIdentificacion>(entity =>
             {
-                entity.ToTable("TIPOIDENTIFICACION", "PameRojas");
+                entity.ToTable("TipoIdentificacion", "dbo");  // ✅ Cambiar a dbo
                 entity.HasKey(e => e.Id);
-                entity.Property(e => e.Id).HasColumnName("ID");
-                entity.Property(e => e.Nombre).HasColumnName("NOMBRE").IsRequired().HasMaxLength(50);
+                entity.Property(e => e.Id).HasColumnName("Id");
+                entity.Property(e => e.Nombre).HasColumnName("Nombre").HasMaxLength(100);
             });
         }
     }

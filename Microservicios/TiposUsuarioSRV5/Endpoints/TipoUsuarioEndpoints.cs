@@ -1,8 +1,6 @@
-using Microsoft.EntityFrameworkCore;
-using TiposUsuarioSRV5.Data;
+using Microsoft.AspNetCore.Mvc;
 using TiposUsuarioSRV5.DTOs;
-using TiposUsuarioSRV5.Entities;
-using TiposUsuarioSRV5.Security;
+using TiposUsuarioSRV5.Services;
 
 namespace TiposUsuarioSRV5.Endpoints
 {
@@ -10,118 +8,99 @@ namespace TiposUsuarioSRV5.Endpoints
     {
         public static void MapTipoUsuarioEndpoints(this WebApplication app)
         {
-            // Todas las operaciones de /tiposusuario requieren un token válido (validado contra LoginSRV1 /validate)
-            var group = app.MapGroup("/tiposusuario")
-                .AddEndpointFilter<TokenValidationFilter>();
+            var group = app.MapGroup("/api/TipoUsuario");
 
-            // GET: /tiposusuario -> obtener todos
-            group.MapGet("/", GetTiposUsuario);
-
-            // GET: /tiposusuario/{id} -> obtener por llave primaria
-            group.MapGet("/{id:int}", GetTipoUsuarioById);
-
-            // POST: /tiposusuario -> crear
-            group.MapPost("/", CreateTipoUsuario);
-
-            // PUT: /tiposusuario/{id} -> modificar
-            group.MapPut("/{id:int}", UpdateTipoUsuario);
-
-            // DELETE: /tiposusuario/{id} -> eliminar
-            group.MapDelete("/{id:int}", DeleteTipoUsuario);
+            // ✅ GET: /api/TipoUsuario (para combo box y lista)
+            group.MapGet("/", GetAllAsync);
+            group.MapGet("/{id}", GetByIdAsync);
+            group.MapPost("/", CreateAsync);
+            group.MapPut("/{id}", UpdateAsync);
+            group.MapDelete("/{id}", DeleteAsync);
         }
 
-        // ========================================
-        // HANDLERS
-        // ========================================
-
-        private static async Task<IResult> GetTiposUsuario(ApplicationDbContext db)
+        // ✅ GET: /api/TipoUsuario - DEVUELVE LISTA PARA COMBO BOX
+        private static async Task<IResult> GetAllAsync(ITipoUsuarioService service)
         {
-            var tipos = await db.TiposUsuario
-                .OrderBy(t => t.Nombre)
-                .Select(t => new TipoUsuarioDto
+            try
+            {
+                var (ok, error, data) = await service.GetAllAsync();
+                if (!ok) return Results.BadRequest(new { error });
+                return Results.Ok(data);  // ✅ Devuelve [{id, nombre}, ...]
+            }
+            catch (Exception ex)
+            {
+                return Results.BadRequest(new { error = ex.Message });
+            }
+        }
+
+        // ✅ GET: /api/TipoUsuario/{id}
+        private static async Task<IResult> GetByIdAsync(int id, ITipoUsuarioService service)
+        {
+            try
+            {
+                var (ok, error, data) = await service.GetByIdAsync(id);
+                if (!ok) return Results.NotFound(new { error });
+                return Results.Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return Results.BadRequest(new { error = ex.Message });
+            }
+        }
+
+        // ✅ POST: /api/TipoUsuario
+        private static async Task<IResult> CreateAsync([FromBody] TipoUsuarioCreateDto dto, ITipoUsuarioService service)
+        {
+            try
+            {
+                var (ok, error, data) = await service.CreateAsync(dto);
+                if (!ok) return Results.BadRequest(new { error });
+                return Results.Created($"/api/TipoUsuario/{data.Id}", data);
+            }
+            catch (Exception ex)
+            {
+                return Results.BadRequest(new { error = ex.Message });
+            }
+        }
+
+        // ✅ PUT: /api/TipoUsuario/{id}
+        // ✅ PUT: /api/TipoUsuario/{id}
+        private static async Task<IResult> UpdateAsync(
+            int id,
+            [FromBody] TipoUsuarioUpdateDto dto,
+            ITipoUsuarioService service)
+        {
+            try
+            {
+                // ✅ Validar que el ID de la URL coincida con el ID del DTO
+                if (id != dto.Id)
                 {
-                    Id = t.Id,
-                    Nombre = t.Nombre
-                })
-                .ToListAsync();
+                    return Results.BadRequest(new { error = "El ID no coincide" });
+                }
 
-            return Results.Ok(tipos);
+                var (ok, error, data) = await service.UpdateAsync(id, dto);
+                if (!ok) return Results.BadRequest(new { error });
+                return Results.Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return Results.BadRequest(new { error = ex.Message });
+            }
         }
 
-        private static async Task<IResult> GetTipoUsuarioById(int id, ApplicationDbContext db)
+        // ✅ DELETE: /api/TipoUsuario/{id}
+        private static async Task<IResult> DeleteAsync(int id, ITipoUsuarioService service)
         {
-            var tipo = await db.TiposUsuario.FindAsync(id);
-            if (tipo == null)
-                return Results.NotFound(new { message = "Tipo de usuario no encontrado" });
-
-            return Results.Ok(new TipoUsuarioDto
+            try
             {
-                Id = tipo.Id,
-                Nombre = tipo.Nombre
-            });
-        }
-
-        private static async Task<IResult> CreateTipoUsuario(TipoUsuarioCreateDto dto, ApplicationDbContext db)
-        {
-            if (string.IsNullOrWhiteSpace(dto.Nombre))
-                return Results.BadRequest(new { message = "El nombre es requerido y no puede estar en blanco" });
-
-            var nombre = dto.Nombre.Trim();
-
-            var exists = await db.TiposUsuario.AnyAsync(t => t.Nombre == nombre);
-            if (exists)
-                return Results.Conflict(new { message = "Ya existe un tipo de usuario con ese nombre" });
-
-            var tipo = new TipoUsuario
+                var (ok, error) = await service.DeleteAsync(id);
+                if (!ok) return Results.BadRequest(new { error });
+                return Results.Ok(new { message = "Tipo de usuario eliminado correctamente" });
+            }
+            catch (Exception ex)
             {
-                Nombre = nombre
-            };
-
-            db.TiposUsuario.Add(tipo);
-            await db.SaveChangesAsync();
-
-            return Results.Created($"/tiposusuario/{tipo.Id}", new TipoUsuarioDto
-            {
-                Id = tipo.Id,
-                Nombre = tipo.Nombre
-            });
-        }
-
-        private static async Task<IResult> UpdateTipoUsuario(int id, TipoUsuarioUpdateDto dto, ApplicationDbContext db)
-        {
-            var tipo = await db.TiposUsuario.FindAsync(id);
-            if (tipo == null)
-                return Results.NotFound(new { message = "Tipo de usuario no encontrado" });
-
-            if (string.IsNullOrWhiteSpace(dto.Nombre))
-                return Results.BadRequest(new { message = "El nombre es requerido y no puede estar en blanco" });
-
-            var nombre = dto.Nombre.Trim();
-
-            var exists = await db.TiposUsuario.AnyAsync(t => t.Nombre == nombre && t.Id != id);
-            if (exists)
-                return Results.Conflict(new { message = "Ya existe otro tipo de usuario con ese nombre" });
-
-            tipo.Nombre = nombre;
-            await db.SaveChangesAsync();
-
-            return Results.Ok(new TipoUsuarioDto
-            {
-                Id = tipo.Id,
-                Nombre = tipo.Nombre
-            });
-        }
-
-        private static async Task<IResult> DeleteTipoUsuario(int id, ApplicationDbContext db)
-        {
-            var tipo = await db.TiposUsuario.FindAsync(id);
-            if (tipo == null)
-                return Results.NotFound(new { message = "Tipo de usuario no encontrado" });
-
-            db.TiposUsuario.Remove(tipo);
-            await db.SaveChangesAsync();
-
-            return Results.NoContent();
+                return Results.BadRequest(new { error = ex.Message });
+            }
         }
     }
 }

@@ -85,7 +85,7 @@ namespace CarnetDigitalWeb.Services
             var resultado =
                 await respuesta.Content.ReadFromJsonAsync<ApiResponse<Institucion>>();
 
-            return (true, resultado?.Message ?? "Institución creada exitosamente", resultado?.Data?.ID);
+            return (true, resultado?.Mensaje ?? "Institución creada exitosamente", resultado?.Data?.ID);
         }
 
         public async Task<(bool success, string message)> UpdateAsync(InstitucionUpdateRequest request)
@@ -103,7 +103,7 @@ namespace CarnetDigitalWeb.Services
             var resultado =
                 await respuesta.Content.ReadFromJsonAsync<ApiResponse<object>>();
 
-            return (true, resultado?.Message ?? "Institución actualizada exitosamente");
+            return (true, resultado?.Mensaje ?? "Institución actualizada exitosamente");
         }
 
         public async Task<(bool success, string message)> DeleteAsync(int id)
@@ -121,7 +121,7 @@ namespace CarnetDigitalWeb.Services
             var resultado =
                 await respuesta.Content.ReadFromJsonAsync<ApiResponse<object>>();
 
-            return (true, resultado?.Message ?? "Institución eliminada exitosamente");
+            return (true, resultado?.Mensaje ?? "Institución eliminada exitosamente");
         }
     }
 }

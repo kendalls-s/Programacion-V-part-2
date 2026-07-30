@@ -6,8 +6,8 @@ namespace CarnetDigitalWeb.Services
     {
         Task<List<TipoIdentificacion>> GetAllAsync();
         Task<TipoIdentificacion?> GetByIdAsync(int id);
-        Task<bool> CreateAsync(TipoIdentificacionCreateDto dto);
-        Task<bool> UpdateAsync(TipoIdentificacionUpdateDto dto);
+        Task<TipoIdentificacion?> CreateAsync(TipoIdentificacion tipo);
+        Task<bool> UpdateAsync(TipoIdentificacion tipo);
         Task<bool> DeleteAsync(int id);
     }
 }

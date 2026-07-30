@@ -16,7 +16,7 @@
         public bool Activo { get; set; }
         public bool Bloqueado { get; set; }
         public int IntentosFallidos { get; set; }
-        public int TipoUsuarioId { get; set; }
-        public int RolId { get; set; }
+        public int? TipoUsuarioId { get; set; }
+        public int? RolId { get; set; }
     }
 }

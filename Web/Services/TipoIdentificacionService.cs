@@ -1,5 +1,4 @@
-﻿using System.Text;
-using System.Text.Json;
+﻿using System.Text.Json;
 using CarnetDigitalWeb.Models;
 
 namespace CarnetDigitalWeb.Services
@@ -20,12 +19,14 @@ namespace CarnetDigitalWeb.Services
             _logger = logger;
         }
 
+        // ✅ GET ALL
         public async Task<List<TipoIdentificacion>> GetAllAsync()
         {
             try
             {
                 var client = _httpClientFactory.CreateClient("TipoIdentificacion");
-                var token = GetToken();
+
+                var token = _httpContextAccessor.HttpContext?.Session.GetString("Token");
 
                 if (!string.IsNullOrEmpty(token))
                 {
@@ -35,30 +36,62 @@ namespace CarnetDigitalWeb.Services
 
                 var response = await client.GetAsync("api/TipoIdentificacion");
 
-                if (response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)
                 {
-                    var json = await response.Content.ReadAsStringAsync();
-                    return JsonSerializer.Deserialize<List<TipoIdentificacion>>(json, new JsonSerializerOptions
+                    _logger.LogWarning($"Error al obtener tipos de identificación: {response.StatusCode}");
+                    return new List<TipoIdentificacion>();
+                }
+
+                var json = await response.Content.ReadAsStringAsync();
+                _logger.LogInformation($"Respuesta de TipoIdentificacion: {json}");
+
+                // Intentar deserializar como objeto con "data"
+                try
+                {
+                    var result = JsonSerializer.Deserialize<ApiResponse<List<TipoIdentificacion>>>(json, new JsonSerializerOptions
                     {
                         PropertyNameCaseInsensitive = true
-                    }) ?? new List<TipoIdentificacion>();
+                    });
+
+                    if (result != null && result.Data != null)
+                    {
+                        return result.Data;
+                    }
                 }
+                catch { }
+
+                // Intentar deserializar directamente como lista
+                try
+                {
+                    var list = JsonSerializer.Deserialize<List<TipoIdentificacion>>(json, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+
+                    if (list != null)
+                    {
+                        return list;
+                    }
+                }
+                catch { }
 
                 return new List<TipoIdentificacion>();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error en GetAllAsync");
+                _logger.LogError(ex, "Error en GetAllAsync de TipoIdentificacion");
                 return new List<TipoIdentificacion>();
             }
         }
 
+        // ✅ GET BY ID
         public async Task<TipoIdentificacion?> GetByIdAsync(int id)
         {
             try
             {
                 var client = _httpClientFactory.CreateClient("TipoIdentificacion");
-                var token = GetToken();
+
+                var token = _httpContextAccessor.HttpContext?.Session.GetString("Token");
 
                 if (!string.IsNullOrEmpty(token))
                 {
@@ -68,30 +101,62 @@ namespace CarnetDigitalWeb.Services
 
                 var response = await client.GetAsync($"api/TipoIdentificacion/{id}");
 
-                if (response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)
                 {
-                    var json = await response.Content.ReadAsStringAsync();
-                    return JsonSerializer.Deserialize<TipoIdentificacion>(json, new JsonSerializerOptions
+                    _logger.LogWarning($"Error al obtener tipo de identificación {id}: {response.StatusCode}");
+                    return null;
+                }
+
+                var json = await response.Content.ReadAsStringAsync();
+                _logger.LogInformation($"Respuesta de TipoIdentificacion/{id}: {json}");
+
+                // Intentar deserializar como objeto con "data"
+                try
+                {
+                    var result = JsonSerializer.Deserialize<ApiResponse<TipoIdentificacion>>(json, new JsonSerializerOptions
                     {
                         PropertyNameCaseInsensitive = true
                     });
+
+                    if (result != null && result.Data != null)
+                    {
+                        return result.Data;
+                    }
                 }
+                catch { }
+
+                // Intentar deserializar directamente como objeto
+                try
+                {
+                    var item = JsonSerializer.Deserialize<TipoIdentificacion>(json, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+
+                    if (item != null)
+                    {
+                        return item;
+                    }
+                }
+                catch { }
 
                 return null;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Error en GetByIdAsync({id})");
+                _logger.LogError(ex, $"Error en GetByIdAsync de TipoIdentificacion: {id}");
                 return null;
             }
         }
 
-        public async Task<bool> CreateAsync(TipoIdentificacionCreateDto dto)
+        // ✅ CREATE
+        public async Task<TipoIdentificacion?> CreateAsync(TipoIdentificacion tipo)
         {
             try
             {
                 var client = _httpClientFactory.CreateClient("TipoIdentificacion");
-                var token = GetToken();
+
+                var token = _httpContextAccessor.HttpContext?.Session.GetString("Token");
 
                 if (!string.IsNullOrEmpty(token))
                 {
@@ -99,25 +164,42 @@ namespace CarnetDigitalWeb.Services
                         new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
                 }
 
-                var json = JsonSerializer.Serialize(dto);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                var json = JsonSerializer.Serialize(new { nombre = tipo.Nombre });
+                var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
-                var response = await client.PostAsync("api/TipoIdentificacion", content);
-                return response.IsSuccessStatusCode;
+                var response = await client.PostAsync("api/TipoIdentificacion/", content);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogWarning($"Error al crear tipo de identificación: {response.StatusCode}");
+                    return null;
+                }
+
+                var responseJson = await response.Content.ReadAsStringAsync();
+                _logger.LogInformation($"Respuesta de creación: {responseJson}");
+
+                var result = JsonSerializer.Deserialize<ApiResponse<TipoIdentificacion>>(responseJson, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                return result?.Data;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error en CreateAsync");
-                return false;
+                _logger.LogError(ex, "Error en CreateAsync de TipoIdentificacion");
+                return null;
             }
         }
 
-        public async Task<bool> UpdateAsync(TipoIdentificacionUpdateDto dto)
+        // ✅ UPDATE
+        public async Task<bool> UpdateAsync(TipoIdentificacion tipo)
         {
             try
             {
                 var client = _httpClientFactory.CreateClient("TipoIdentificacion");
-                var token = GetToken();
+
+                var token = _httpContextAccessor.HttpContext?.Session.GetString("Token");
 
                 if (!string.IsNullOrEmpty(token))
                 {
@@ -125,25 +207,34 @@ namespace CarnetDigitalWeb.Services
                         new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
                 }
 
-                var json = JsonSerializer.Serialize(dto);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                var json = JsonSerializer.Serialize(new { nombre = tipo.Nombre });
+                var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
-                var response = await client.PutAsync($"api/TipoIdentificacion/{dto.Id}", content);
-                return response.IsSuccessStatusCode;
+                var response = await client.PutAsync($"api/TipoIdentificacion/{tipo.Id}", content);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogWarning($"Error al actualizar tipo de identificación {tipo.Id}: {response.StatusCode}");
+                    return false;
+                }
+
+                return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error en UpdateAsync");
+                _logger.LogError(ex, $"Error en UpdateAsync de TipoIdentificacion: {tipo.Id}");
                 return false;
             }
         }
 
+        // ✅ DELETE
         public async Task<bool> DeleteAsync(int id)
         {
             try
             {
                 var client = _httpClientFactory.CreateClient("TipoIdentificacion");
-                var token = GetToken();
+
+                var token = _httpContextAccessor.HttpContext?.Session.GetString("Token");
 
                 if (!string.IsNullOrEmpty(token))
                 {
@@ -152,39 +243,27 @@ namespace CarnetDigitalWeb.Services
                 }
 
                 var response = await client.DeleteAsync($"api/TipoIdentificacion/{id}");
-                return response.IsSuccessStatusCode;
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogWarning($"Error al eliminar tipo de identificación {id}: {response.StatusCode}");
+                    return false;
+                }
+
+                return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Error en DeleteAsync({id})");
+                _logger.LogError(ex, $"Error en DeleteAsync de TipoIdentificacion: {id}");
                 return false;
             }
         }
+    }
 
-        private string? GetToken()
-        {
-            // ✅ Obtener token de la sesión o de los headers
-            var context = _httpContextAccessor.HttpContext;
-            if (context == null) return null;
-
-            // Intentar obtener de la sesión
-            var sessionToken = context.Session.GetString("Token");
-            if (!string.IsNullOrEmpty(sessionToken))
-            {
-                return sessionToken;
-            }
-
-            // Intentar obtener del header Authorization
-            if (context.Request.Headers.TryGetValue("Authorization", out var authHeader))
-            {
-                var auth = authHeader.ToString();
-                if (auth.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
-                {
-                    return auth.Substring("Bearer ".Length).Trim();
-                }
-            }
-
-            return null;
-        }
+    public class ApiResponse<T>
+    {
+        public int Codigo { get; set; }
+        public string Mensaje { get; set; } = string.Empty;
+        public T? Data { get; set; }
     }
 }

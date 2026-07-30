@@ -1,127 +1,340 @@
-using Microsoft.EntityFrameworkCore;
-using TipoIdentificacionSRV6.Data;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text.Json;
+using TipoIdentificacionSRV6.Auth;
 using TipoIdentificacionSRV6.DTOs;
-using TipoIdentificacionSRV6.Entities;
-using TipoIdentificacionSRV6.Security;
+using TipoIdentificacionSRV6.Services;
 
-namespace TipoIdentificacionSRV6.Endpoints
+namespace TipoIdentificacionSRV6.Endpoints;
+
+public static class TipoIdentificacionEndpoints
 {
-    public static class TipoIdentificacionEndpoints
+    public static void MapTipoIdentificacionEndpoints(this IEndpointRouteBuilder routes)
     {
-        public static void MapTipoIdentificacionEndpoints(this WebApplication app)
+        var group = routes
+            .MapGroup("/api/TipoIdentificacion")
+            .WithTags("TipoIdentificacion");
+
+        // ==========================================
+        // ✅ GET TODOS - SIN TOKEN
+        // ==========================================
+        group.MapGet("/", async (ITipoIdentificacionService service) =>
         {
-            // Todas las operaciones de /tiposidentificacion requieren un token válido (validado contra LoginSRV1 /validate)
-            var group = app.MapGroup("/tiposidentificacion")
-                .AddEndpointFilter<TokenValidationFilter>();
+            var tipos = await service.ObtenerTodosAsync();
 
-            // GET: /tiposidentificacion -> obtener todos
-            group.MapGet("/", GetTiposIdentificacion);
+            return Results.Ok(new
+            {
+                codigo = 200,
+                mensaje = "OK",
+                data = tipos
+            });
+        });
 
-            // GET: /tiposidentificacion/{id} -> obtener por llave primaria
-            group.MapGet("/{id:int}", GetTipoIdentificacionById);
-
-            // POST: /tiposidentificacion -> crear
-            group.MapPost("/", CreateTipoIdentificacion);
-
-            // PUT: /tiposidentificacion/{id} -> modificar
-            group.MapPut("/{id:int}", UpdateTipoIdentificacion);
-
-            // DELETE: /tiposidentificacion/{id} -> eliminar
-            group.MapDelete("/{id:int}", DeleteTipoIdentificacion);
-        }
-
-        // ========================================
-        // HANDLERS
-        // ========================================
-
-        private static async Task<IResult> GetTiposIdentificacion(ApplicationDbContext db)
+        // ==========================================
+        // ✅ GET POR ID - SIN TOKEN
+        // ==========================================
+        group.MapGet("/{id:int}", async (int id, ITipoIdentificacionService service) =>
         {
-            var tipos = await db.TiposIdentificacion
-                .OrderBy(t => t.Nombre)
-                .Select(t => new TipoIdentificacionDto
+            var tipo = await service.ObtenerPorIdAsync(id);
+
+            if (tipo == null)
+            {
+                return Results.NotFound(new
                 {
-                    Id = t.Id,
-                    Nombre = t.Nombre
-                })
-                .ToListAsync();
+                    codigo = 404,
+                    mensaje = "Tipo de identificación no encontrado"
+                });
+            }
 
-            return Results.Ok(tipos);
-        }
-
-        private static async Task<IResult> GetTipoIdentificacionById(int id, ApplicationDbContext db)
-        {
-            var tipo = await db.TiposIdentificacion.FindAsync(id);
-            if (tipo == null)
-                return Results.NotFound(new { message = "Tipo de identificación no encontrado" });
-
-            return Results.Ok(new TipoIdentificacionDto
+            return Results.Ok(new
             {
-                Id = tipo.Id,
-                Nombre = tipo.Nombre
+                codigo = 200,
+                mensaje = "OK",
+                data = tipo
             });
-        }
+        });
 
-        private static async Task<IResult> CreateTipoIdentificacion(TipoIdentificacionCreateDto dto, ApplicationDbContext db)
+        // ==========================================
+        // ✅ POST - CON TOKEN Y BITÁCORA
+        // ==========================================
+        group.MapPost("/", async (
+            TipoIdentificacionCreateDto request,
+            ITipoIdentificacionService service,
+            IBitacoraClient bitacora,
+            ITokenValidator validator,
+            HttpContext context) =>
         {
-            if (string.IsNullOrWhiteSpace(dto.Nombre))
-                return Results.BadRequest(new { message = "El nombre es requerido y no puede estar en blanco" });
+            var token = ObtenerToken(context);
 
-            var nombre = dto.Nombre.Trim();
-
-            var exists = await db.TiposIdentificacion.AnyAsync(t => t.Nombre == nombre);
-            if (exists)
-                return Results.Conflict(new { message = "Ya existe un tipo de identificación con ese nombre" });
-
-            var tipo = new TipoIdentificacion
+            if (!await validator.ValidateAsync(token))
             {
-                Nombre = nombre
-            };
+                return Results.Unauthorized();
+            }
 
-            db.TiposIdentificacion.Add(tipo);
-            await db.SaveChangesAsync();
+            var resultado = await service.CrearAsync(request);
 
-            return Results.Created($"/tiposidentificacion/{tipo.Id}", new TipoIdentificacionDto
+            if (!resultado.ok)
             {
-                Id = tipo.Id,
-                Nombre = tipo.Nombre
+                return Results.BadRequest(new
+                {
+                    codigo = 400,
+                    mensaje = resultado.error
+                });
+            }
+
+            var creado = await service.ObtenerPorIdAsync(resultado.id);
+
+            var usuario = ObtenerUsuarioDesdeToken(token);
+
+            var detalleJson = JsonSerializer.Serialize(new
+            {
+                Accion = "CREACION",
+                TipoIdentificacion = creado
             });
-        }
 
-        private static async Task<IResult> UpdateTipoIdentificacion(int id, TipoIdentificacionUpdateDto dto, ApplicationDbContext db)
-        {
-            var tipo = await db.TiposIdentificacion.FindAsync(id);
-            if (tipo == null)
-                return Results.NotFound(new { message = "Tipo de identificación no encontrado" });
+            var registroBitacora = await bitacora.RegistrarAsync(
+                token,
+                usuario,
+                $"Creó el tipo de identificación {request.Nombre}",
+                detalleJson
+            );
 
-            if (string.IsNullOrWhiteSpace(dto.Nombre))
-                return Results.BadRequest(new { message = "El nombre es requerido y no puede estar en blanco" });
-
-            var nombre = dto.Nombre.Trim();
-
-            var exists = await db.TiposIdentificacion.AnyAsync(t => t.Nombre == nombre && t.Id != id);
-            if (exists)
-                return Results.Conflict(new { message = "Ya existe otro tipo de identificación con ese nombre" });
-
-            tipo.Nombre = nombre;
-            await db.SaveChangesAsync();
-
-            return Results.Ok(new TipoIdentificacionDto
+            if (!registroBitacora)
             {
-                Id = tipo.Id,
-                Nombre = tipo.Nombre
-            });
-        }
+                Console.WriteLine("El tipo de identificación se creó, pero no se pudo registrar la bitácora.");
+            }
 
-        private static async Task<IResult> DeleteTipoIdentificacion(int id, ApplicationDbContext db)
+            return Results.Created(
+                $"/api/TipoIdentificacion/{resultado.id}",
+                new
+                {
+                    codigo = 201,
+                    mensaje = "Tipo de identificación creado correctamente",
+                    data = creado
+                });
+        });
+
+        // ==========================================
+        // ✅ PUT - CON TOKEN Y BITÁCORA
+        // ==========================================
+        group.MapPut("/{id:int}", async (
+            int id,
+            TipoIdentificacionUpdateDto request,
+            ITipoIdentificacionService service,
+            IBitacoraClient bitacora,
+            ITokenValidator validator,
+            HttpContext context) =>
         {
-            var tipo = await db.TiposIdentificacion.FindAsync(id);
+            var token = ObtenerToken(context);
+
+            if (!await validator.ValidateAsync(token))
+            {
+                return Results.Unauthorized();
+            }
+
+            var anterior = await service.ObtenerPorIdAsync(id);
+
+            if (anterior == null)
+            {
+                return Results.NotFound(new
+                {
+                    codigo = 404,
+                    mensaje = "Tipo de identificación no encontrado"
+                });
+            }
+
+            var resultado = await service.ActualizarAsync(id, request);
+
+            if (!resultado.ok)
+            {
+                return Results.BadRequest(new
+                {
+                    codigo = 400,
+                    mensaje = resultado.error
+                });
+            }
+
+            var actualizado = await service.ObtenerPorIdAsync(id);
+
+            var usuario = ObtenerUsuarioDesdeToken(token);
+
+            var detalleJson = JsonSerializer.Serialize(new
+            {
+                Accion = "ACTUALIZACION",
+                Anterior = anterior,
+                Nuevo = actualizado
+            });
+
+            var registroBitacora = await bitacora.RegistrarAsync(
+                token,
+                usuario,
+                $"Modificó el tipo de identificación {request.Nombre}",
+                detalleJson
+            );
+
+            if (!registroBitacora)
+            {
+                Console.WriteLine("El tipo de identificación se modificó, pero no se pudo registrar la bitácora.");
+            }
+
+            return Results.Ok(new
+            {
+                codigo = 200,
+                mensaje = "Tipo de identificación actualizado correctamente",
+                data = actualizado
+            });
+        });
+
+        // ==========================================
+        // ✅ DELETE - CON TOKEN Y BITÁCORA
+        // ==========================================
+        group.MapDelete("/{id:int}", async (
+            int id,
+            ITipoIdentificacionService service,
+            IBitacoraClient bitacora,
+            ITokenValidator validator,
+            HttpContext context) =>
+        {
+            var token = ObtenerToken(context);
+
+            if (!await validator.ValidateAsync(token))
+            {
+                return Results.Unauthorized();
+            }
+
+            var tipo = await service.ObtenerPorIdAsync(id);
+
             if (tipo == null)
-                return Results.NotFound(new { message = "Tipo de identificación no encontrado" });
+            {
+                return Results.NotFound(new
+                {
+                    codigo = 404,
+                    mensaje = "Tipo de identificación no encontrado"
+                });
+            }
 
-            db.TiposIdentificacion.Remove(tipo);
-            await db.SaveChangesAsync();
+            var resultado = await service.EliminarAsync(id);
 
-            return Results.NoContent();
+            if (!resultado.ok)
+            {
+                return Results.BadRequest(new
+                {
+                    codigo = 400,
+                    mensaje = resultado.error
+                });
+            }
+
+            var usuario = ObtenerUsuarioDesdeToken(token);
+
+            var detalleJson = JsonSerializer.Serialize(new
+            {
+                Accion = "ELIMINACION",
+                Eliminado = tipo
+            });
+
+            var registroBitacora = await bitacora.RegistrarAsync(
+                token,
+                usuario,
+                $"Eliminó el tipo de identificación {tipo.Nombre}",
+                detalleJson
+            );
+
+            if (!registroBitacora)
+            {
+                Console.WriteLine("El tipo de identificación se eliminó, pero no se pudo registrar la bitácora.");
+            }
+
+            return Results.Ok(new
+            {
+                codigo = 200,
+                mensaje = "Tipo de identificación eliminado correctamente"
+            });
+        });
+
+        // ==========================================
+        // ✅ EXISTS - SIN TOKEN
+        // ==========================================
+        group.MapGet("/exists/{id:int}", async (int id, ITipoIdentificacionService service) =>
+        {
+            var exists = await service.ExisteAsync(id);
+            return Results.Ok(new { exists });
+        });
+
+        // ==========================================
+        // ✅ EXISTS POR NOMBRE - SIN TOKEN
+        // ==========================================
+        group.MapGet("/exists/nombre/{nombre}", async (string nombre, int? excludeId, ITipoIdentificacionService service) =>
+        {
+            var exists = await service.ExisteNombreAsync(nombre, excludeId);
+            return Results.Ok(new { exists });
+        });
+    }
+
+    // ==========================================
+    // ✅ OBTENER TOKEN DEL HEADER
+    // ==========================================
+    private static string ObtenerToken(HttpContext context)
+    {
+        var header = context.Request.Headers.Authorization.ToString();
+
+        if (string.IsNullOrWhiteSpace(header))
+        {
+            return string.Empty;
         }
+
+        const string prefijo = "Bearer ";
+
+        if (!header.StartsWith(prefijo, StringComparison.OrdinalIgnoreCase))
+        {
+            return string.Empty;
+        }
+
+        return header[prefijo.Length..].Trim();
+    }
+
+    // ==========================================
+    // ✅ OBTENER USUARIO DESDE EL JWT
+    // ==========================================
+    private static string ObtenerUsuarioDesdeToken(string token)
+    {
+        if (string.IsNullOrWhiteSpace(token))
+        {
+            return "Usuario desconocido";
+        }
+
+        try
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jwt = handler.ReadJwtToken(token);
+
+            var usuario =
+                BuscarClaim(jwt, "nombreCompleto") ??
+                BuscarClaim(jwt, "NombreCompleto") ??
+                BuscarClaim(jwt, "nombre") ??
+                BuscarClaim(jwt, "name") ??
+                BuscarClaim(jwt, "unique_name") ??
+                BuscarClaim(jwt, ClaimTypes.Name) ??
+                BuscarClaim(jwt, "email") ??
+                BuscarClaim(jwt, ClaimTypes.Email) ??
+                BuscarClaim(jwt, "sub") ??
+                BuscarClaim(jwt, ClaimTypes.NameIdentifier);
+
+            return string.IsNullOrWhiteSpace(usuario)
+                ? "Usuario desconocido"
+                : usuario;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"No se pudo leer el usuario del token: {ex.Message}");
+            return "Usuario desconocido";
+        }
+    }
+
+    private static string? BuscarClaim(JwtSecurityToken token, string tipo)
+    {
+        return token.Claims
+            .FirstOrDefault(claim =>
+                string.Equals(claim.Type, tipo, StringComparison.OrdinalIgnoreCase))
+            ?.Value;
     }
 }

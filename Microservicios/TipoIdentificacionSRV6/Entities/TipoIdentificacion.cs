@@ -3,14 +3,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TipoIdentificacionSRV6.Entities
 {
-    [Table("TIPOIDENTIFICACION", Schema = "PameRojas")]
+    [Table("TipoIdentificacion", Schema = "dbo")]  // ✅ Cambiar a dbo
     public class TipoIdentificacion
     {
         [Key]
-        [Column("ID")]
+        [Column("Id")]
         public int Id { get; set; }
 
-        [Column("NOMBRE")]
+        [Column("Nombre")]
+        [MaxLength(100)]
         public string Nombre { get; set; } = string.Empty;
     }
 }

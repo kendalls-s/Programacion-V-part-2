@@ -24,8 +24,9 @@ namespace CarnetDigitalWeb.Services
         {
             try
             {
-                var client = _httpClientFactory.CreateClient("TipoUsuario");
-                var token = GetToken();
+                var client = _httpClientFactory.CreateClient("TiposUsuario");
+
+                var token = _httpContextAccessor.HttpContext?.Session.GetString("Token");
 
                 if (!string.IsNullOrEmpty(token))
                 {
@@ -35,20 +36,63 @@ namespace CarnetDigitalWeb.Services
 
                 var response = await client.GetAsync("api/TipoUsuario");
 
-                if (response.IsSuccessStatusCode)
+                var json = await response.Content.ReadAsStringAsync();
+                _logger.LogInformation($"=== RESPUESTA DE TIPOS USUARIO ===");
+                _logger.LogInformation($"Status: {response.StatusCode}");
+                _logger.LogInformation($"JSON: {json}");
+
+                if (!response.IsSuccessStatusCode)
                 {
-                    var json = await response.Content.ReadAsStringAsync();
-                    return JsonSerializer.Deserialize<List<TipoUsuario>>(json, new JsonSerializerOptions
+                    _logger.LogWarning($"Error al obtener tipos de usuario: {response.StatusCode}");
+                    return new List<TipoUsuario>();
+                }
+
+                // ✅ Deserializar usando la estructura de la respuesta
+                try
+                {
+                    var options = new JsonSerializerOptions
                     {
                         PropertyNameCaseInsensitive = true
-                    }) ?? new List<TipoUsuario>();
+                    };
+
+                    // ✅ Usar la estructura que devuelve el microservicio
+                    var result = JsonSerializer.Deserialize<ApiResponse<List<TipoUsuario>>>(json, options);
+
+                    if (result != null && result.Data != null)
+                    {
+                        _logger.LogInformation($"✅ Se encontraron {result.Data.Count} tipos de usuario");
+                        return result.Data;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error al deserializar como ApiResponse");
+                }
+
+                // ✅ Si falla, intentar deserializar como lista directamente
+                try
+                {
+                    var list = JsonSerializer.Deserialize<List<TipoUsuario>>(json, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+
+                    if (list != null)
+                    {
+                        _logger.LogInformation($"✅ Se encontraron {list.Count} tipos (lista directa)");
+                        return list;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error al deserializar como lista");
                 }
 
                 return new List<TipoUsuario>();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error en GetAllAsync");
+                _logger.LogError(ex, "Error en GetAllAsync de TipoUsuario");
                 return new List<TipoUsuario>();
             }
         }
@@ -57,8 +101,9 @@ namespace CarnetDigitalWeb.Services
         {
             try
             {
-                var client = _httpClientFactory.CreateClient("TipoUsuario");
-                var token = GetToken();
+                var client = _httpClientFactory.CreateClient("TiposUsuario");
+
+                var token = _httpContextAccessor.HttpContext?.Session.GetString("Token");
 
                 if (!string.IsNullOrEmpty(token))
                 {
@@ -68,30 +113,59 @@ namespace CarnetDigitalWeb.Services
 
                 var response = await client.GetAsync($"api/TipoUsuario/{id}");
 
-                if (response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)
                 {
-                    var json = await response.Content.ReadAsStringAsync();
-                    return JsonSerializer.Deserialize<TipoUsuario>(json, new JsonSerializerOptions
+                    _logger.LogWarning($"Error al obtener tipo de usuario {id}: {response.StatusCode}");
+                    return null;
+                }
+
+                var json = await response.Content.ReadAsStringAsync();
+                _logger.LogInformation($"Respuesta de TipoUsuario/{id}: {json}");
+
+                try
+                {
+                    var result = JsonSerializer.Deserialize<ApiResponse<TipoUsuario>>(json, new JsonSerializerOptions
                     {
                         PropertyNameCaseInsensitive = true
                     });
+
+                    if (result != null && result.Data != null)
+                    {
+                        return result.Data;
+                    }
                 }
+                catch { }
+
+                try
+                {
+                    var item = JsonSerializer.Deserialize<TipoUsuario>(json, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+
+                    if (item != null)
+                    {
+                        return item;
+                    }
+                }
+                catch { }
 
                 return null;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Error en GetByIdAsync({id})");
+                _logger.LogError(ex, $"Error en GetByIdAsync de TipoUsuario: {id}");
                 return null;
             }
         }
 
-        public async Task<bool> CreateAsync(TipoUsuarioCreateDto dto)
+        public async Task<TipoUsuario?> CreateAsync(TipoUsuario tipo)
         {
             try
             {
-                var client = _httpClientFactory.CreateClient("TipoUsuario");
-                var token = GetToken();
+                var client = _httpClientFactory.CreateClient("TiposUsuario");
+
+                var token = _httpContextAccessor.HttpContext?.Session.GetString("Token");
 
                 if (!string.IsNullOrEmpty(token))
                 {
@@ -99,25 +173,41 @@ namespace CarnetDigitalWeb.Services
                         new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
                 }
 
-                var json = JsonSerializer.Serialize(dto);
+                var json = JsonSerializer.Serialize(new { Nombre = tipo.Nombre });
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var response = await client.PostAsync("api/TipoUsuario", content);
-                return response.IsSuccessStatusCode;
+                var response = await client.PostAsync("api/TipoUsuario/", content);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogWarning($"Error al crear tipo de usuario: {response.StatusCode}");
+                    return null;
+                }
+
+                var responseJson = await response.Content.ReadAsStringAsync();
+                _logger.LogInformation($"Respuesta de creación: {responseJson}");
+
+                var result = JsonSerializer.Deserialize<ApiResponse<TipoUsuario>>(responseJson, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                return result?.Data;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error en CreateAsync");
-                return false;
+                _logger.LogError(ex, "Error en CreateAsync de TipoUsuario");
+                return null;
             }
         }
 
-        public async Task<bool> UpdateAsync(TipoUsuarioUpdateDto dto)
+        public async Task<bool> UpdateAsync(TipoUsuario tipo)
         {
             try
             {
-                var client = _httpClientFactory.CreateClient("TipoUsuario");
-                var token = GetToken();
+                var client = _httpClientFactory.CreateClient("TiposUsuario");
+
+                var token = _httpContextAccessor.HttpContext?.Session.GetString("Token");
 
                 if (!string.IsNullOrEmpty(token))
                 {
@@ -125,15 +215,22 @@ namespace CarnetDigitalWeb.Services
                         new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
                 }
 
-                var json = JsonSerializer.Serialize(dto);
+                var json = JsonSerializer.Serialize(new { Nombre = tipo.Nombre });
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var response = await client.PutAsync($"api/TipoUsuario/{dto.Id}", content);
-                return response.IsSuccessStatusCode;
+                var response = await client.PutAsync($"api/TipoUsuario/{tipo.Id}", content);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogWarning($"Error al actualizar tipo de usuario {tipo.Id}: {response.StatusCode}");
+                    return false;
+                }
+
+                return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error en UpdateAsync");
+                _logger.LogError(ex, $"Error en UpdateAsync de TipoUsuario: {tipo.Id}");
                 return false;
             }
         }
@@ -142,8 +239,9 @@ namespace CarnetDigitalWeb.Services
         {
             try
             {
-                var client = _httpClientFactory.CreateClient("TipoUsuario");
-                var token = GetToken();
+                var client = _httpClientFactory.CreateClient("TiposUsuario");
+
+                var token = _httpContextAccessor.HttpContext?.Session.GetString("Token");
 
                 if (!string.IsNullOrEmpty(token))
                 {
@@ -152,30 +250,20 @@ namespace CarnetDigitalWeb.Services
                 }
 
                 var response = await client.DeleteAsync($"api/TipoUsuario/{id}");
-                return response.IsSuccessStatusCode;
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogWarning($"Error al eliminar tipo de usuario {id}: {response.StatusCode}");
+                    return false;
+                }
+
+                return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Error en DeleteAsync({id})");
+                _logger.LogError(ex, $"Error en DeleteAsync de TipoUsuario: {id}");
                 return false;
             }
-        }
-
-        private string? GetToken()
-        {
-            var context = _httpContextAccessor.HttpContext;
-            if (context == null) return null;
-
-            if (context.Request.Headers.TryGetValue("Authorization", out var authHeader))
-            {
-                var auth = authHeader.ToString();
-                if (auth.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
-                {
-                    return auth.Substring("Bearer ".Length).Trim();
-                }
-            }
-
-            return null;
         }
     }
 }

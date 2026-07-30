@@ -1,0 +1,82 @@
+# ---------------------------------------------
+# .gitignore para solución .NET / Visual Studio
+# ---------------------------------------------
+
+# Salida de compilación
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+[Dd]ebug/
+[Rr]elease/
+[Dd]ebugPublic/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+build/
+bld/
+[Ll]og/
+[Ll]ogs/
+
+# Carpeta y caché de Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# Resultados de MSBuild / Roslyn
+project.lock.json
+project.fragment.lock.json
+artifacts/
+*.binlog
+
+# Archivos de IDE (Rider / VS Code)
+.idea/
+*.sln.iml
+.vscode/
+
+# Archivos de publicación (mantener los perfiles .pubxml versionados,
+# ignorar solo los ajustes locales del usuario)
+*.pubxml.user
+PublishScripts/
+publish/
+
+# NuGet
+*.nupkg
+*.snupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+*.nuget.props
+*.nuget.targets
+
+# Resultados de test y cobertura
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.coverage
+*.coveragexml
+coverage*.json
+coverage*.xml
+coverage*.info
+TestResults/
+
+# Archivos temporales del sistema operativo
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+*~
+*.tmp
+*.bak
+*.swp
+
+# Archivos de configuración local con secretos
+appsettings.*.local.json
+secrets.json
+*.env
+
+# Empaquetados / respaldos que no deben versionarse
+Web.zip

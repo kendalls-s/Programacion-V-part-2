@@ -1078,3 +1078,112 @@ body {
     max-height: 220px;
     overflow-y: auto;
 }
+
+/* ========================================
+   AUTOREGISTRO
+======================================== */
+
+.autoregistro-page {
+    min-height: 100vh;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    background: var(--bg-gray);
+}
+
+.autoregistro-card {
+    width: 100%;
+    max-width: 980px;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.autoregistro-header {
+    background: var(--primary-color);
+    color: white;
+    padding: 24px 30px;
+}
+
+.autoregistro-logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.autoregistro-header h1 {
+    margin: 0 0 5px;
+    font-size: 26px;
+}
+
+.autoregistro-header p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.autoregistro-body {
+    padding: 30px;
+}
+
+.form-section {
+    margin-bottom: 30px;
+}
+
+.form-section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--primary-color);
+    font-size: 18px;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.autoregistro-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 20px;
+}
+
+.autoregistro-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+    .autoregistro-actions .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        text-decoration: none;
+    }
+
+@media (max-width: 768px) {
+    .autoregistro-page {
+        padding: 20px 12px;
+    }
+
+    .autoregistro-header,
+    .autoregistro-body {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .autoregistro-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .autoregistro-actions {
+        flex-direction: column-reverse;
+    }
+
+        .autoregistro-actions .btn {
+            width: 100%;
+        }
+}

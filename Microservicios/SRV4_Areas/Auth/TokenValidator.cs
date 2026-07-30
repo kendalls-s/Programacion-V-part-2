@@ -38,14 +38,20 @@
             {
                 string url =
                     $"{baseUrl.TrimEnd('/')}" +
-                    "/api/auth/validate" +
-                    $"?token={Uri.EscapeDataString(token.Trim())}";
+                    "/api/auth/validate";
 
                 Console.WriteLine(
                     $"Validando token en: {url}");
 
+                using HttpRequestMessage requestMessage =
+                    new HttpRequestMessage(HttpMethod.Get, url);
+
+                requestMessage.Headers.TryAddWithoutValidation(
+                    "Authorization",
+                    $"Bearer {token.Trim()}");
+
                 HttpResponseMessage response =
-                    await _httpClient.GetAsync(url);
+                    await _httpClient.SendAsync(requestMessage);
 
                 string contenido =
                     await response.Content.ReadAsStringAsync();

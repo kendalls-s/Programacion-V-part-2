@@ -37,11 +37,14 @@ public class TokenValidator : ITokenValidator
 
         try
         {
-            string url = $"{baseUrl.TrimEnd('/')}/api/auth/validate?token={Uri.EscapeDataString(token.Trim())}";
+            string url = $"{baseUrl.TrimEnd('/')}/api/auth/validate";
 
             _logger.LogInformation("Validando token en: {Url}", url);
 
-            HttpResponseMessage response = await _httpClient.GetAsync(url);
+            using HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Get, url);
+            requestMessage.Headers.TryAddWithoutValidation("Authorization", $"Bearer {token.Trim()}");
+
+            HttpResponseMessage response = await _httpClient.SendAsync(requestMessage);
             string contenido = await response.Content.ReadAsStringAsync();
 
             _logger.LogInformation("VALIDATE STATUS: {StatusCode} {Status}",

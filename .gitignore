@@ -48,7 +48,6 @@ artifacts/
 # Resultados de MSBuild / Roslyn
 project.lock.json
 project.fragment.lock.json
-
 # Archivos generados por NuGet
 *.nupkg
 *.snupkg
@@ -69,6 +68,15 @@ project.nuget.cache
 PublishScripts/
 *.pubxml.user
 PubTmp/
+
+# Archivos de IDE (Rider / VS Code)
+.idea/
+*.sln.iml
+.vscode/
+
+# Artefactos de compilación
+artifacts/
+*.binlog
 
 # Resultados de test y cobertura
 [Tt]est[Rr]esult*/

@@ -37,15 +37,22 @@
             try
             {
                 var url =
-                    $"{baseUrl.TrimEnd('/')}" +
-                    $"/api/auth/validate" +
-                    $"?token={Uri.EscapeDataString(token.Trim())}";
+                    $"{baseUrl.TrimEnd('/')}/api/auth/validate";
 
                 Console.WriteLine(
                     $"Validando token en: {url}");
 
+                // El endpoint validate de LoginSRV1 lee el token del header
+                // Authorization (Bearer), NO del query string.
+                using var solicitud =
+                    new HttpRequestMessage(HttpMethod.Get, url);
+
+                solicitud.Headers.Authorization =
+                    new System.Net.Http.Headers.AuthenticationHeaderValue(
+                        "Bearer", token.Trim());
+
                 var response =
-                    await _httpClient.GetAsync(url);
+                    await _httpClient.SendAsync(solicitud);
 
                 var contenido =
                     await response.Content

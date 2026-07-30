@@ -4,6 +4,21 @@
 
 @{
     ViewData["Title"] = "Administración de Roles";
+
+    var opcionesJson = new JsonSerializerOptions
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+    };
+
+    var rolesJson = JsonSerializer.Serialize(
+        Model.Roles,
+        opcionesJson
+    );
+
+    var pantallasJson = JsonSerializer.Serialize(
+        Model.PantallasDisponibles,
+        opcionesJson
+    );
 }
 
 <div class="page-header">
@@ -16,6 +31,7 @@
         <button type="button"
                 class="btn btn-primary"
                 onclick="abrirModalCrear()">
+
             <i class="bi bi-plus-circle"></i>
             Nuevo Rol
         </button>
@@ -23,6 +39,7 @@
         <button type="button"
                 class="btn btn-info"
                 onclick="abrirModalBuscar()">
+
             <i class="bi bi-search"></i>
             Buscar por ID
         </button>
@@ -38,6 +55,7 @@
     {
         <div class="alert alert-danger alert-dismissible">
             <i class="bi bi-exclamation-circle"></i>
+
             @Model.MensajeError
 
             <button type="button"
@@ -135,6 +153,7 @@
             <div class="modal-body">
 
                 <div class="form-group">
+
                     <label for="buscarId">
                         ID del rol
                     </label>
@@ -144,6 +163,7 @@
                            class="form-control"
                            min="1"
                            placeholder="Ejemplo: 1" />
+
                 </div>
 
                 <div id="buscarResultado"
@@ -227,17 +247,15 @@
                     </label>
 
                     <div id="listaPantallasFormulario"
-                         style="
-                            border: 1px solid #ced4da;
-                            border-radius: 8px;
-                            padding: 12px;
-                            max-height: 300px;
-                            overflow-y: auto;">
+                         class="pantallas-selector">
 
-                        @if (Model.PantallasDisponibles.Count == 0)
+                        @if (Model.PantallasDisponibles == null
+                            || Model.PantallasDisponibles.Count == 0)
                         {
                             <div class="alert alert-danger"
                                  style="margin: 0;">
+
+                                <i class="bi bi-exclamation-circle"></i>
                                 No se encontraron pantallas disponibles.
                             </div>
                         }
@@ -245,37 +263,26 @@
                         {
                             @foreach (var pantalla in Model.PantallasDisponibles)
                             {
-                                <label style="
-                                    display: flex;
-                                    align-items: flex-start;
-                                    gap: 10px;
-                                    padding: 10px;
-                                    margin-bottom: 7px;
-                                    border: 1px solid #e0e0e0;
-                                    border-radius: 8px;
-                                    cursor: pointer;">
+                                <label class="pantalla-item">
 
                                     <input type="checkbox"
                                            class="pantalla-checkbox"
-                                           value="@pantalla.Id"
-                                           style="margin-top: 4px;" />
+                                           value="@pantalla.Id" />
 
-                                    <span>
-                                        <strong style="color: #003366;">
+                                    <span class="pantalla-contenido">
+
+                                        <strong>
                                             @pantalla.Nombre
                                         </strong>
 
                                         @if (!string.IsNullOrWhiteSpace(
                                             pantalla.Descripcion))
                                         {
-                                            <small style="
-                                                display: block;
-                                                color: #6c757d;
-                                                margin-top: 2px;">
-
+                                            <small>
                                                 @pantalla.Descripcion
                                             </small>
                                         }
+
                                     </span>
 
                                 </label>
@@ -301,6 +308,7 @@
                 </button>
 
                 <button type="button"
+                        id="btnGuardarRol"
                         class="btn btn-success"
                         onclick="guardarRol()">
 
@@ -341,7 +349,7 @@
             <div class="modal-body">
 
                 <p>
-                    ¿Realmente desea eliminar el elemento seleccionado?
+                    ¿Realmente desea eliminar el rol seleccionado?
                 </p>
 
                 <p style="
@@ -363,6 +371,7 @@
                 </button>
 
                 <button type="button"
+                        id="btnEliminarRol"
                         class="btn btn-danger"
                         onclick="eliminarRol()">
 
@@ -378,13 +387,14 @@
 
 <script>
     window.rolesIniciales =
-        @Html.Raw(JsonSerializer.Serialize(Model.Roles));
+        @Html.Raw(rolesJson);
 
     window.pantallasDisponibles =
-        @Html.Raw(JsonSerializer.Serialize(Model.PantallasDisponibles));
+        @Html.Raw(pantallasJson);
 </script>
 
 @section Scripts {
     <script src="~/js/roles.js"
             asp-append-version="true"></script>
 }
+

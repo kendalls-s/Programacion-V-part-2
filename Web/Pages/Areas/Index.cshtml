@@ -1,343 +1,800 @@
 ﻿@page
 @model CarnetDigitalWeb.Pages.Areas.IndexModel
 @using System.Text.Json
+@inject IConfiguration Configuration
 
 @{
     ViewData["Title"] = "Administración de Áreas";
+
+    var opcionesJson = new JsonSerializerOptions
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+    };
+
+    var areasJson = JsonSerializer.Serialize(
+        Model.Areas ?? new List<CarnetDigitalWeb.Models.Area>(),
+        opcionesJson
+    );
+
+    var institucionesJson = JsonSerializer.Serialize(
+        Model.Instituciones ?? new List<CarnetDigitalWeb.Models.Institucion>(),
+        opcionesJson
+    );
+
+    var areasBaseUrl =
+        (Configuration["Services:Areas"] ?? string.Empty).TrimEnd('/');
+
+    var areasApiUrl =
+        $"{areasBaseUrl}/api/Area";
 }
 
 <div class="page-header">
-    <h2>
-        <i class="bi bi-building"></i>
-        Lista de Áreas
-    </h2>
-
-    <div style="display:flex; gap:8px; flex-wrap:wrap;">
-        <button type="button"
-                class="btn btn-primary"
-                onclick="abrirModalCrear()">
-            <i class="bi bi-plus-circle"></i>
-            Nueva Área
+    <h2><i class="bi bi-building"></i> Lista de Áreas</h2>
+    <div>
+        <button type="button" class="btn btn-primary" onclick="abrirModalCrear()">
+            <i class="bi bi-plus-circle"></i> Nueva Área
         </button>
-
-        <button type="button"
-                class="btn btn-info"
-                onclick="abrirModalBuscar()">
-            <i class="bi bi-search"></i>
-            Buscar por ID
+        <button type="button" class="btn btn-info" onclick="abrirModalBuscar()">
+            <i class="bi bi-search"></i> Buscar por ID
         </button>
     </div>
 </div>
 
-<form id="formAntiforgery">
-    @Html.AntiForgeryToken()
-</form>
+<div id="alertas"></div>
 
-<div id="alertas">
-    @if (!string.IsNullOrWhiteSpace(Model.MensajeError))
-    {
-        <div class="alert alert-danger alert-dismissible">
-            <i class="bi bi-exclamation-circle"></i>
-            @Model.MensajeError
-
-            <button type="button"
-                    class="btn-close"
-                    onclick="this.parentElement.remove()">
-                &times;
-            </button>
-        </div>
-    }
-</div>
-
-<div id="loading"
-     class="loading"
-     style="display:none;">
-
+<div id="loading" class="loading" style="display:none;">
     <div class="spinner-border"></div>
-
-    <p style="margin-top:10px;">
-        Cargando áreas...
-    </p>
-
+    <p>Cargando áreas...</p>
 </div>
 
-<div id="listaAreas"
-     class="grid-cards">
-</div>
+<div id="listaAreas" class="grid-cards"></div>
 
-<div id="paginacionContainer"
-     style="display:none; margin-top:30px;">
-
+<!-- PAGINACIÓN -->
+<div id="paginacionContainer" style="display:none; margin-top:30px;">
     <div class="paginacion-wrapper">
-
         <div class="paginacion-info">
-            Mostrando
-            <span id="inicioMostrar">0</span>
-            -
-            <span id="finMostrar">0</span>
-            de
-            <span id="totalRegistros">0</span>
-            áreas
+            Mostrando <span id="inicioMostrar">0</span> - <span id="finMostrar">0</span>
+            de <span id="totalRegistros">0</span> áreas
         </div>
-
         <div class="paginacion-botones">
-
-            <button type="button"
-                    class="btn-paginacion"
-                    id="btnAnterior"
-                    onclick="paginaAnterior()">
-
-                <i class="bi bi-chevron-left"></i>
-                Anterior
+            <button type="button" class="btn-paginacion" id="btnAnterior" onclick="paginaAnterior()">
+                <i class="bi bi-chevron-left"></i> Anterior
             </button>
-
-            <span class="paginacion-numero"
-                  id="numeroPagina">
-                1
-            </span>
-
-            <button type="button"
-                    class="btn-paginacion"
-                    id="btnSiguiente"
-                    onclick="paginaSiguiente()">
-
-                Siguiente
-                <i class="bi bi-chevron-right"></i>
+            <span class="paginacion-numero" id="numeroPagina">1</span>
+            <button type="button" class="btn-paginacion" id="btnSiguiente" onclick="paginaSiguiente()">
+                Siguiente <i class="bi bi-chevron-right"></i>
             </button>
-
         </div>
-
     </div>
-
 </div>
 
 <!-- MODAL BUSCAR -->
 <div class="modal" id="modalBuscar">
-
     <div class="modal-dialog" style="max-width:500px;">
-
         <div class="modal-content">
-
             <div class="modal-header modal-header-info">
-
-                <h5>
-                    <i class="bi bi-search"></i>
-                    Buscar Área por ID
-                </h5>
-
-                <button type="button"
-                        class="btn-close"
-                        onclick="cerrarModalBuscar()">
-                    &times;
-                </button>
-
+                <h5><i class="bi bi-search"></i> Buscar Área por ID</h5>
+                <button type="button" class="btn-close" onclick="cerrarModalBuscar()">&times;</button>
             </div>
-
             <div class="modal-body">
-
                 <div class="form-group">
-
-                    <label>ID del Área</label>
-
-                    <input id="buscarId"
-                           type="number"
-                           class="form-control"
-                           min="1"
-                           placeholder="Ejemplo: 1" />
-
+                    <label for="buscarId">ID del Área</label>
+                    <input id="buscarId" type="number" class="form-control" min="1" placeholder="Ejemplo: 1">
                 </div>
-
-                <div id="buscarResultado"
-                     style="display:none; margin-top:15px;">
-                </div>
-
+                <div id="buscarResultado" style="display:none; margin-top:15px;"></div>
             </div>
-
             <div class="modal-footer">
-
-                <button type="button"
-                        class="btn btn-secondary"
-                        onclick="cerrarModalBuscar()">
-                    Cancelar
+                <button type="button" class="btn btn-secondary" onclick="cerrarModalBuscar()">Cancelar</button>
+                <button type="button" class="btn btn-info" onclick="buscarAreaPorId()">
+                    <i class="bi bi-search"></i> Buscar
                 </button>
-
-                <button type="button"
-                        class="btn btn-info"
-                        onclick="buscarAreaPorId()">
-
-                    <i class="bi bi-search"></i>
-                    Buscar
-
-                </button>
-
             </div>
-
         </div>
-
     </div>
-
 </div>
 
-<!-- MODAL CREAR / EDITAR -->
+<!-- MODAL FORMULARIO -->
 <div class="modal" id="modalFormulario">
-
     <div class="modal-dialog">
-
         <div class="modal-content">
-
             <div class="modal-header">
-
-                <h5 id="tituloModal">
-                    Nueva Área
-                </h5>
-
-                <button type="button"
-                        class="btn-close"
-                        onclick="cerrarModalFormulario()">
-                    &times;
-                </button>
-
+                <h5 id="tituloModal">Nueva Área</h5>
+                <button type="button" class="btn-close" onclick="cerrarModalFormulario()">&times;</button>
             </div>
-
             <div class="modal-body">
-
-                <input id="idArea"
-                       type="hidden"
-                       value="0" />
+                <input id="idArea" type="hidden" value="0">
 
                 <div class="form-group">
-
-                    <label>Nombre *</label>
-
-                    <input id="nombre"
-                           class="form-control"
-                           maxlength="100"
-                           placeholder="Nombre del área" />
-
-                    <div id="errNombre"
-                         class="invalid-feedback">
-                    </div>
-
+                    <label for="nombre">Nombre *</label>
+                    <input id="nombre" class="form-control" maxlength="100" placeholder="Nombre del área">
+                    <div id="errNombre" class="invalid-feedback"></div>
                 </div>
 
                 <div class="form-group">
-
-                    <label>Institución *</label>
-
-                    <select id="institucion"
-                            class="form-select">
+                    <label for="institucion">Institución *</label>
+                    <select id="institucion" class="form-select">
+                        <option value="">Seleccione una institución...</option>
                     </select>
-
-                    <div id="errInstitucion"
-                         class="invalid-feedback">
-                    </div>
-
+                    <div id="errInstitucion" class="invalid-feedback"></div>
                 </div>
-
             </div>
-
             <div class="modal-footer">
-
-                <button type="button"
-                        class="btn btn-secondary"
-                        onclick="cerrarModalFormulario()">
-                    Cancelar
+                <button type="button" class="btn btn-secondary" onclick="cerrarModalFormulario()">Cancelar</button>
+                <button type="button" id="btnGuardarArea" class="btn btn-success" onclick="guardarArea()">
+                    <i class="bi bi-save"></i> Guardar
                 </button>
-
-                <button type="button"
-                        class="btn btn-success"
-                        onclick="guardarArea()">
-
-                    <i class="bi bi-save"></i>
-                    Guardar
-
-                </button>
-
             </div>
-
         </div>
-
     </div>
-
 </div>
 
 <!-- MODAL ELIMINAR -->
 <div class="modal" id="modalEliminar">
-
-    <div class="modal-dialog"
-         style="max-width:500px;">
-
+    <div class="modal-dialog" style="max-width:500px;">
         <div class="modal-content">
-
             <div class="modal-header modal-header-danger">
-
-                <h5>
-
-                    <i class="bi bi-exclamation-triangle"></i>
-
-                    Confirmar eliminación
-
-                </h5>
-
-                <button type="button"
-                        class="btn-close"
-                        onclick="cerrarModalEliminar()">
-
-                    &times;
-
-                </button>
-
+                <h5><i class="bi bi-exclamation-triangle"></i> Confirmar eliminación</h5>
+                <button type="button" class="btn-close" onclick="cerrarModalEliminar()">&times;</button>
             </div>
-
             <div class="modal-body">
-
-                <p>
-                    ¿Realmente desea eliminar el área seleccionada?
-                </p>
-
-                <p style="color:#6c757d;">
-
-                    <strong id="nombreEliminar"></strong>
-
-                </p>
-
+                <p>¿Realmente desea eliminar el área seleccionada?</p>
+                <p style="color:#6c757d;"><strong id="nombreEliminar"></strong></p>
             </div>
-
             <div class="modal-footer">
-
-                <button type="button"
-                        class="btn btn-secondary"
-                        onclick="cerrarModalEliminar()">
-                    Cancelar
+                <button type="button" class="btn btn-secondary" onclick="cerrarModalEliminar()">Cancelar</button>
+                <button type="button" id="btnEliminarArea" class="btn btn-danger" onclick="eliminarArea()">
+                    <i class="bi bi-trash"></i> Eliminar
                 </button>
-
-                <button type="button"
-                        class="btn btn-danger"
-                        onclick="eliminarArea()">
-
-                    <i class="bi bi-trash"></i>
-                    Eliminar
-
-                </button>
-
             </div>
-
         </div>
-
     </div>
-
 </div>
 
 <script>
+    const URL_API_AREA = @Html.Raw(JsonSerializer.Serialize(areasApiUrl));
+
     window.areasIniciales =
-        @Html.Raw(JsonSerializer.Serialize(Model.Areas));
+            @Html.Raw(areasJson);
 
     window.institucionesDisponibles =
-        @Html.Raw(JsonSerializer.Serialize(Model.Instituciones));
-</script>
+            @Html.Raw(institucionesJson);
 
-@section Scripts
-{
-    <script src="~/js/areas.js"
-            asp-append-version="true"></script>
-}
+    let idEliminar = 0;
+    let paginaActual = 1;
+    const registrosPorPagina = 15;
+    let totalRegistros = 0;
+    let totalPaginas = 1;
+    let todasLasAreas = [];
+    let institucionesCargadas = [];
+
+    document.addEventListener('DOMContentLoaded', function() {
+        try {
+            // Cargar instituciones en el select
+            cargarInstitucionesEnSelect();
+
+            todasLasAreas = Array.isArray(window.areasIniciales)
+                ? window.areasIniciales
+                : [];
+
+            totalRegistros = todasLasAreas.length;
+            totalPaginas = Math.max(1, Math.ceil(totalRegistros / registrosPorPagina));
+            paginaActual = 1;
+
+            mostrarPagina();
+        } catch (error) {
+            console.error('Error al cargar las áreas:', error);
+            todasLasAreas = [];
+            totalRegistros = 0;
+            totalPaginas = 1;
+            paginaActual = 1;
+            renderizarAreas([]);
+            actualizarPaginacion();
+            mostrarAlerta('Error al cargar las áreas: ' + error.message, 'danger');
+        }
+    });
+
+    function cargarInstitucionesEnSelect() {
+        const select = document.getElementById('institucion');
+        if (!select) return;
+
+        institucionesCargadas = Array.isArray(window.institucionesDisponibles)
+            ? window.institucionesDisponibles
+            : [];
+
+        select.innerHTML = '<option value="">Seleccione una institución...</option>';
+
+        if (institucionesCargadas && institucionesCargadas.length > 0) {
+            institucionesCargadas.forEach(function(inst) {
+                const option = document.createElement('option');
+                const id = inst.id ?? inst.ID ?? inst.Id ?? 0;
+                option.value = id;
+                option.textContent = `${inst.nombre ?? inst.Nombre ?? ''} (ID: ${id})`;
+                select.appendChild(option);
+            });
+        } else {
+            select.innerHTML = '<option value="">No hay instituciones disponibles</option>';
+        }
+    }
+
+    function obtenerToken() {
+        return localStorage.getItem('accessToken')
+            || localStorage.getItem('token')
+            || sessionStorage.getItem('accessToken')
+            || sessionStorage.getItem('token')
+            || '';
+    }
+
+    function construirHeaders(incluirContenidoJson = false) {
+        const headers = {};
+        const token = obtenerToken();
+
+        if (incluirContenidoJson) {
+            headers['Content-Type'] = 'application/json';
+        }
+
+        if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+        }
+
+        return headers;
+    }
+
+    function abrirModalCrear() {
+        document.getElementById('tituloModal').textContent = 'Nueva Área';
+        document.getElementById('idArea').value = '0';
+        document.getElementById('nombre').value = '';
+        document.getElementById('institucion').value = '';
+        limpiarErrores();
+        document.getElementById('modalFormulario').style.display = 'flex';
+    }
+
+    function cerrarModalFormulario() {
+        document.getElementById('modalFormulario').style.display = 'none';
+        limpiarErrores();
+    }
+
+    function abrirModalBuscar() {
+        document.getElementById('buscarId').value = '';
+        document.getElementById('buscarResultado').style.display = 'none';
+        document.getElementById('buscarResultado').innerHTML = '';
+        document.getElementById('modalBuscar').style.display = 'flex';
+    }
+
+    function cerrarModalBuscar() {
+        document.getElementById('modalBuscar').style.display = 'none';
+    }
+
+    function abrirModalEliminar(id, nombre) {
+        idEliminar = Number(id);
+        document.getElementById('nombreEliminar').textContent = nombre || '';
+        document.getElementById('modalEliminar').style.display = 'flex';
+    }
+
+    function cerrarModalEliminar() {
+        idEliminar = 0;
+        document.getElementById('modalEliminar').style.display = 'none';
+    }
+
+    function mostrarAlerta(mensaje, tipo) {
+        const div = document.getElementById('alertas');
+        div.innerHTML = `
+                    <div class="alert alert-${tipo} alert-dismissible">
+                        ${escaparHtml(mensaje)}
+                        <button type="button"
+                                onclick="this.parentElement.remove()"
+                                style="float:right; background:none; border:none; font-size:20px; cursor:pointer;">
+                            &times;
+                        </button>
+                    </div>
+                `;
+
+        setTimeout(() => {
+            div.innerHTML = '';
+        }, 4000);
+    }
+
+    function escaparHtml(valor) {
+        return String(valor ?? '')
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#039;');
+    }
+
+    function mostrarLoading(show) {
+        document.getElementById('loading').style.display = show ? 'block' : 'none';
+
+        if (show) {
+            document.getElementById('paginacionContainer').style.display = 'none';
+        } else {
+            actualizarPaginacion();
+        }
+    }
+
+    function actualizarPaginacion() {
+        const paginacionContainer = document.getElementById('paginacionContainer');
+
+        paginacionContainer.style.display =
+            totalRegistros > registrosPorPagina ? 'flex' : 'none';
+
+        const inicio = totalRegistros > 0
+            ? ((paginaActual - 1) * registrosPorPagina) + 1
+            : 0;
+
+        const fin = totalRegistros > 0
+            ? Math.min(paginaActual * registrosPorPagina, totalRegistros)
+            : 0;
+
+        document.getElementById('inicioMostrar').textContent = inicio;
+        document.getElementById('finMostrar').textContent = fin;
+        document.getElementById('totalRegistros').textContent = totalRegistros;
+        document.getElementById('numeroPagina').textContent = paginaActual;
+        document.getElementById('btnAnterior').disabled = paginaActual <= 1;
+        document.getElementById('btnSiguiente').disabled =
+            paginaActual >= totalPaginas || totalRegistros === 0;
+    }
+
+    function paginaAnterior() {
+        if (paginaActual > 1) {
+            paginaActual--;
+            mostrarPagina();
+        }
+    }
+
+    function paginaSiguiente() {
+        if (paginaActual < totalPaginas) {
+            paginaActual++;
+            mostrarPagina();
+        }
+    }
+
+    function mostrarPagina() {
+        totalRegistros = todasLasAreas.length;
+        totalPaginas = Math.max(1, Math.ceil(totalRegistros / registrosPorPagina));
+
+        if (paginaActual > totalPaginas) {
+            paginaActual = totalPaginas;
+        }
+
+        const inicio = (paginaActual - 1) * registrosPorPagina;
+        const fin = inicio + registrosPorPagina;
+
+        renderizarAreas(todasLasAreas.slice(inicio, fin));
+        actualizarPaginacion();
+    }
+
+    function renderizarAreas(areas) {
+        const container = document.getElementById('listaAreas');
+
+        if (!areas || areas.length === 0) {
+            container.innerHTML = todasLasAreas.length === 0
+                ? `
+                            <div class="empty-state">
+                                <i class="bi bi-building" style="font-size:4rem; color:#dee2e6;"></i>
+                                <p>No hay áreas registradas</p>
+                                <button type="button" class="btn btn-primary" onclick="abrirModalCrear()">
+                                    <i class="bi bi-plus-circle"></i> Crear primera área
+                                </button>
+                            </div>
+                        `
+                : `
+                            <div class="empty-state">
+                                <i class="bi bi-inbox" style="font-size:4rem; color:#dee2e6;"></i>
+                                <p>No hay áreas en esta página</p>
+                            </div>
+                        `;
+            return;
+        }
+
+        let html = '';
+
+        areas.forEach(function(a) {
+            const id = Number(a.id ?? a.ID ?? a.Id ?? 0);
+            const nombre = a.nombre ?? a.Nombre ?? '';
+            const institucionNombre = a.institucionNombre ?? a.InstitucionNombre ?? '';
+            const institucionID = a.institucionID ?? a.InstitucionID ?? 0;
+            const activoRaw = a.activo ?? a.Activo ?? false;
+            const activo = activoRaw === true || activoRaw === 1 || activoRaw === '1' || activoRaw === 'true';
+
+            html += `
+                        <div class="card-bordered">
+                            <div class="card-bordered-header">
+                                <h3>${escaparHtml(nombre)}</h3>
+                                <span class="${activo ? 'badge-success' : 'badge-danger'}">
+                                    ${activo ? 'Activo' : 'Inactivo'}
+                                </span>
+                            </div>
+                            <div class="card-bordered-body">
+                                <div class="info-row">
+                                    <span class="label"><i class="bi bi-id-badge"></i> ID:</span>
+                                    <span class="value">${id}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label"><i class="bi bi-building"></i> Institución:</span>
+                                    <span class="value">${escaparHtml(institucionNombre)}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label"><i class="bi bi-hash"></i> ID Institución:</span>
+                                    <span class="value">${institucionID}</span>
+                                </div>
+                            </div>
+                            <div class="card-bordered-footer">
+                                <button type="button"
+                                        class="btn btn-warning btn-sm"
+                                        onclick="editarArea(${id})">
+                                    <i class="bi bi-pencil"></i> Editar
+                                </button>
+                                <button type="button"
+                                        class="btn btn-danger btn-sm"
+                                        data-id="${id}"
+                                        data-nombre="${escaparHtml(nombre)}"
+                                        onclick="abrirModalEliminarDesdeBoton(this)">
+                                    <i class="bi bi-trash"></i> Eliminar
+                                </button>
+                            </div>
+                        </div>
+                    `;
+        });
+
+        container.innerHTML = html;
+    }
+
+    function abrirModalEliminarDesdeBoton(boton) {
+        abrirModalEliminar(
+            Number(boton.dataset.id),
+            boton.dataset.nombre
+        );
+    }
+
+    async function buscarAreaPorId() {
+        const id = Number(document.getElementById('buscarId').value.trim());
+
+        if (!Number.isInteger(id) || id <= 0) {
+            mostrarAlerta('Ingrese un ID válido mayor a 0', 'warning');
+            return;
+        }
+
+        const resultadoDiv = document.getElementById('buscarResultado');
+        resultadoDiv.style.display = 'block';
+
+        const area = todasLasAreas.find(
+            i => Number(i.id ?? i.ID ?? i.Id) === id
+        );
+
+        if (!area) {
+            resultadoDiv.innerHTML = `
+                        <div class="alert alert-warning">
+                            <i class="bi bi-exclamation-triangle"></i>
+                            No se encontró ningún área con ID ${id}
+                        </div>
+                    `;
+            return;
+        }
+
+        const nombre = area.nombre ?? area.Nombre ?? '';
+        const institucionNombre = area.institucionNombre ?? area.InstitucionNombre ?? '';
+        const institucionID = area.institucionID ?? area.InstitucionID ?? 0;
+        const activoRaw = area.activo ?? area.Activo ?? false;
+        const activo = activoRaw === true || activoRaw === 1 || activoRaw === '1' || activoRaw === 'true';
+
+        resultadoDiv.innerHTML = `
+                    <div style="background:#f8f9fa; padding:15px; border-radius:8px; border:1px solid #dee2e6;">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:14px;">
+                            <div><strong>ID:</strong> ${id}</div>
+                            <div><strong>Nombre:</strong> ${escaparHtml(nombre)}</div>
+                            <div><strong>Institución:</strong> ${escaparHtml(institucionNombre)}</div>
+                            <div><strong>ID Institución:</strong> ${institucionID}</div>
+                            <div>
+                                <strong>Estado:</strong>
+                                <span class="${activo ? 'badge-success' : 'badge-danger'}">
+                                    ${activo ? 'Activo' : 'Inactivo'}
+                                </span>
+                            </div>
+                        </div>
+                        <div style="margin-top:10px; display:flex; gap:8px;">
+                            <button type="button" class="btn btn-warning btn-sm" onclick="editarArea(${id})">
+                                Editar
+                            </button>
+                            <button type="button"
+                                    class="btn btn-danger btn-sm"
+                                    data-id="${id}"
+                                    data-nombre="${escaparHtml(nombre)}"
+                                    onclick="abrirModalEliminarDesdeBoton(this)">
+                                Eliminar
+                            </button>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="cerrarModalBuscar()">
+                                Cerrar
+                            </button>
+                        </div>
+                    </div>
+                `;
+    }
+
+    function limpiarErrores() {
+        document.querySelectorAll('.is-invalid')
+            .forEach(el => el.classList.remove('is-invalid'));
+
+        document.querySelectorAll('.invalid-feedback')
+            .forEach(el => el.textContent = '');
+    }
+
+    function mostrarError(campo, mensaje) {
+        const el = document.getElementById(campo);
+        const err = document.getElementById(
+            'err' + campo.charAt(0).toUpperCase() + campo.slice(1)
+        );
+
+        if (el) {
+            el.classList.add('is-invalid');
+        }
+
+        if (err) {
+            err.textContent = mensaje;
+        }
+    }
+
+    function validarFormulario() {
+        let valido = true;
+        limpiarErrores();
+
+        const nombre = document.getElementById('nombre').value.trim();
+        const institucion = document.getElementById('institucion').value;
+
+        if (!nombre) {
+            mostrarError('nombre', 'El nombre es requerido');
+            valido = false;
+        }
+
+        if (!institucion || Number(institucion) <= 0) {
+            const select = document.getElementById('institucion');
+            select.classList.add('is-invalid');
+            document.getElementById('errInstitucion').textContent = 'Debe seleccionar una institución';
+            valido = false;
+        }
+
+        return valido;
+    }
+
+    function obtenerDatosFormulario() {
+        return {
+            nombre: document.getElementById('nombre').value.trim(),
+            institucionID: Number(document.getElementById('institucion').value) || 0
+        };
+    }
+
+    async function obtenerMensajeError(response, mensajePredeterminado) {
+        try {
+            const contenido = await response.text();
+
+            if (!contenido) {
+                return mensajePredeterminado;
+            }
+
+            try {
+                const json = JSON.parse(contenido);
+
+                return json.error
+                    || json.mensaje
+                    || json.message
+                    || json.title
+                    || json.detail
+                    || mensajePredeterminado;
+            } catch {
+                return contenido;
+            }
+        } catch {
+            return mensajePredeterminado;
+        }
+    }
+
+    function manejarNoAutorizado(response) {
+        if (response.status !== 401) {
+            return false;
+        }
+
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('token');
+        sessionStorage.removeItem('accessToken');
+        sessionStorage.removeItem('token');
+
+        mostrarAlerta('La sesión expiró. Inicie sesión nuevamente.', 'warning');
+
+        setTimeout(() => {
+            window.location.href = '@Url.Page("/Login")';
+        }, 800);
+
+        return true;
+    }
+
+    async function guardarArea() {
+        if (!validarFormulario()) {
+            return;
+        }
+
+        const id = Number(
+            document.getElementById('idArea').value
+        );
+
+        const esEdicion = id > 0;
+
+        const datos = {
+            nombre: document.getElementById('nombre').value.trim(),
+            institucionID: Number(document.getElementById('institucion').value) || 0
+        };
+
+        if (esEdicion) {
+            datos.ID = id;
+        }
+
+        const url = esEdicion
+            ? `${URL_API_AREA}/${id}`
+            : URL_API_AREA;
+
+        const metodo = esEdicion ? 'PUT' : 'POST';
+
+        console.log('Método:', metodo);
+        console.log('URL:', url);
+        console.log('JSON enviado:', JSON.stringify(datos, null, 2));
+
+        const boton =
+            document.getElementById('btnGuardarArea');
+
+        boton.disabled = true;
+
+        try {
+            const response = await fetch(url, {
+                method: metodo,
+                headers: construirHeaders(true),
+                body: JSON.stringify(datos)
+            });
+
+            const textoRespuesta = await response.text();
+
+            console.log('Estado HTTP:', response.status);
+            console.log('Respuesta del microservicio:', textoRespuesta);
+
+            if (response.status === 401) {
+                localStorage.removeItem('accessToken');
+                localStorage.removeItem('token');
+                sessionStorage.removeItem('accessToken');
+                sessionStorage.removeItem('token');
+
+                mostrarAlerta(
+                    'La sesión expiró. Inicie sesión nuevamente.',
+                    'warning'
+                );
+
+                setTimeout(() => {
+                    window.location.href = '@Url.Page("/Login")';
+                }, 800);
+
+                return;
+            }
+
+            if (!response.ok) {
+                let mensaje =
+                    `Error ${response.status} al guardar el área`;
+
+                if (textoRespuesta) {
+                    try {
+                        const errorJson = JSON.parse(textoRespuesta);
+
+                        mensaje =
+                            errorJson.mensaje ??
+                            errorJson.message ??
+                            errorJson.detail ??
+                            errorJson.title ??
+                            mensaje;
+                    } catch {
+                        mensaje = textoRespuesta;
+                    }
+                }
+
+                mostrarAlerta(mensaje, 'danger');
+                return;
+            }
+
+            cerrarModalFormulario();
+
+            mostrarAlerta(
+                esEdicion
+                    ? 'Área actualizada correctamente'
+                    : 'Área creada correctamente',
+                'success'
+            );
+
+            setTimeout(() => {
+                window.location.reload();
+            }, 600);
+        } catch (error) {
+            console.error('Error al guardar:', error);
+
+            mostrarAlerta(
+                'Error de conexión: ' + error.message,
+                'danger'
+            );
+        } finally {
+            boton.disabled = false;
+        }
+    }
+
+    function editarArea(id) {
+        const area = todasLasAreas.find(
+            i => Number(i.id ?? i.ID ?? i.Id) === Number(id)
+        );
+
+        if (!area) {
+            mostrarAlerta('Área no encontrada', 'danger');
+            return;
+        }
+
+        cerrarModalBuscar();
+
+        document.getElementById('tituloModal').textContent = 'Editar Área';
+        document.getElementById('idArea').value = area.id ?? area.ID ?? area.Id ?? 0;
+        document.getElementById('nombre').value = area.nombre ?? area.Nombre ?? '';
+        document.getElementById('institucion').value = area.institucionID ?? area.InstitucionID ?? 0;
+
+        limpiarErrores();
+        document.getElementById('modalFormulario').style.display = 'flex';
+    }
+
+    async function eliminarArea() {
+        if (!idEliminar || idEliminar <= 0) {
+            mostrarAlerta('No se seleccionó un área válida', 'warning');
+            return;
+        }
+
+        const boton = document.getElementById('btnEliminarArea');
+        boton.disabled = true;
+
+        try {
+            const response = await fetch(
+                `${URL_API_AREA}/${idEliminar}`,
+                {
+                    method: 'DELETE',
+                    headers: construirHeaders(false)
+                }
+            );
+
+            if (manejarNoAutorizado(response)) {
+                return;
+            }
+
+            if (!response.ok) {
+                const mensaje = await obtenerMensajeError(
+                    response,
+                    'Error al eliminar el área'
+                );
+
+                mostrarAlerta(mensaje, 'danger');
+                return;
+            }
+
+            cerrarModalEliminar();
+            mostrarAlerta('Área eliminada exitosamente', 'success');
+
+            setTimeout(() => window.location.reload(), 600);
+        } catch (error) {
+            console.error('Error al eliminar:', error);
+            mostrarAlerta('Error de conexión: ' + error.message, 'danger');
+        } finally {
+            boton.disabled = false;
+        }
+    }
+
+    window.addEventListener('click', function(event) {
+        if (event.target === document.getElementById('modalFormulario')) {
+            cerrarModalFormulario();
+        }
+
+        if (event.target === document.getElementById('modalBuscar')) {
+            cerrarModalBuscar();
+        }
+
+        if (event.target === document.getElementById('modalEliminar')) {
+            cerrarModalEliminar();
+        }
+    });
+</script>

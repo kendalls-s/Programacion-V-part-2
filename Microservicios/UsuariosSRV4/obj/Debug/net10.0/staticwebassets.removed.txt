@@ -1,2 +1,0 @@
-C:\Git\Programacion-V-part-2\Microservicios\UsuariosSRV4\wwwroot\css\siteusuarios.css
-C:\Git\Programacion-V-part-2\Microservicios\UsuariosSRV4\wwwroot\js\usuarios.js

@@ -707,7 +707,7 @@ async function buscarRolPorId() {
     try {
         const response =
             await fetch(
-                `/Roles?handler=Buscar&id=${encodeURIComponent(id)}`
+                `${window.appBase}/Roles?handler=Buscar&id=${encodeURIComponent(id)}`
             );
 
         const data =
@@ -1018,8 +1018,8 @@ async function guardarRol() {
 
     const url =
         esEdicion
-            ? `/Roles?handler=Editar&id=${encodeURIComponent(id)}`
-            : '/Roles?handler=Crear';
+            ? `${window.appBase}/Roles?handler=Editar&id=${encodeURIComponent(id)}`
+            : window.appBase + '/Roles?handler=Crear';
 
     try {
         mostrarLoading(true);
@@ -1105,7 +1105,7 @@ async function editarRol(id) {
 
         const response =
             await fetch(
-                `/Roles?handler=Buscar&id=${encodeURIComponent(id)}`
+                `${window.appBase}/Roles?handler=Buscar&id=${encodeURIComponent(id)}`
             );
 
         const data =
@@ -1239,7 +1239,7 @@ async function eliminarRol() {
 
         const response =
             await fetch(
-                `/Roles?handler=Eliminar&id=${encodeURIComponent(idEliminar)}`,
+                `${window.appBase}/Roles?handler=Eliminar&id=${encodeURIComponent(idEliminar)}`,
                 {
                     method: 'POST',
                     headers: getHeaders()

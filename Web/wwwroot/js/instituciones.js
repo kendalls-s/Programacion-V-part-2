@@ -1,7 +1,7 @@
 ﻿// ========================================
 // CONFIGURACIÓN
 // ========================================
-const API_URL = window.location.origin + '/institucion';
+const API_URL = window.location.origin + (window.appBase || '') + '/institucion';
 let idEliminar = 0;
 let paginaActual = 1;
 const registrosPorPagina = 15;

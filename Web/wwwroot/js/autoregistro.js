@@ -68,7 +68,7 @@
 
     async function cargarTiposIdentificacion() {
         const datos = await obtenerCatalogo(
-            "/AutoRegistro?handler=TiposIdentificacion"
+            window.appBase + "/AutoRegistro?handler=TiposIdentificacion"
         );
 
         llenarSelect(
@@ -80,7 +80,7 @@
 
     async function cargarTiposUsuario() {
         const datos = await obtenerCatalogo(
-            "/AutoRegistro?handler=TiposUsuario"
+            window.appBase + "/AutoRegistro?handler=TiposUsuario"
         );
 
         llenarSelect(
@@ -92,7 +92,7 @@
 
     async function cargarRoles() {
         const datos = await obtenerCatalogo(
-            "/AutoRegistro?handler=Roles"
+            window.appBase + "/AutoRegistro?handler=Roles"
         );
 
         llenarSelect(
@@ -104,7 +104,7 @@
 
     async function cargarInstituciones() {
         const datos = await obtenerCatalogo(
-            "/AutoRegistro?handler=Instituciones"
+            window.appBase + "/AutoRegistro?handler=Instituciones"
         );
 
         llenarSelect(
@@ -130,10 +130,10 @@
         try {
             const [datosCarreras, datosAreas] = await Promise.all([
                 obtenerCatalogo(
-                    `/AutoRegistro?handler=Carreras&institucionId=${institucionId}`
+                    `${window.appBase}/AutoRegistro?handler=Carreras&institucionId=${institucionId}`
                 ),
                 obtenerCatalogo(
-                    `/AutoRegistro?handler=Areas&institucionId=${institucionId}`
+                    `${window.appBase}/AutoRegistro?handler=Areas&institucionId=${institucionId}`
                 )
             ]);
 
@@ -247,7 +247,7 @@
 
         try {
             const response = await fetch(
-                "/AutoRegistro?handler=Registrar",
+                window.appBase + "/AutoRegistro?handler=Registrar",
                 {
                     method: "POST",
                     headers: {
@@ -285,7 +285,7 @@
             areas.required = false;
 
             setTimeout(() => {
-                window.location.href = "/Login";
+                window.location.href = window.appBase + "/Login";
             }, 3000);
         } catch (error) {
             mostrarMensaje(

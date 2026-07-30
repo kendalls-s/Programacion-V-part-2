@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (!storedToken) {
         localStorage.setItem('redirectMessage', 'Por favor inicie sesión para utilizar el sistema');
-        window.location.href = '/Login';
+        window.location.href = (window.appBase || '') + '/Login';
         return;
     }
 
@@ -38,7 +38,7 @@ function getHeaders() {
     if (!token) {
         mostrarAlerta('No hay sesión activa. Redirigiendo...', 'warning');
         setTimeout(function () {
-            window.location.href = '/Login';
+            window.location.href = (window.appBase || '') + '/Login';
         }, 1500);
         return null;
     }
@@ -56,7 +56,7 @@ function handleUnauthorized(response) {
         localStorage.removeItem('usuarioTipo');
         localStorage.removeItem('usuarioId');
         localStorage.setItem('redirectMessage', 'Su sesión ha expirado. Por favor inicie sesión nuevamente.');
-        window.location.href = '/Login';
+        window.location.href = (window.appBase || '') + '/Login';
         return true;
     }
     return false;

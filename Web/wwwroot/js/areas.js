@@ -10,12 +10,12 @@ let totalPaginas = 1;
 let idEliminar = 0;
 
 // URLs usando los handlers de Razor Pages
-const API_URL_GET_ALL = '/Areas?handler=GetAll';
-const API_URL_INSTITUCIONES = '/Areas?handler=Instituciones';
-const API_URL_BUSCAR = '/Areas?handler=Buscar';
-const API_URL_CREAR = '/Areas?handler=Crear';
-const API_URL_EDITAR = '/Areas?handler=Editar';
-const API_URL_ELIMINAR = '/Areas?handler=Eliminar';
+const API_URL_GET_ALL = (window.appBase || '') + '/Areas?handler=GetAll';
+const API_URL_INSTITUCIONES = (window.appBase || '') + '/Areas?handler=Instituciones';
+const API_URL_BUSCAR = (window.appBase || '') + '/Areas?handler=Buscar';
+const API_URL_CREAR = (window.appBase || '') + '/Areas?handler=Crear';
+const API_URL_EDITAR = (window.appBase || '') + '/Areas?handler=Editar';
+const API_URL_ELIMINAR = (window.appBase || '') + '/Areas?handler=Eliminar';
 
 // ========================================
 // MODALES

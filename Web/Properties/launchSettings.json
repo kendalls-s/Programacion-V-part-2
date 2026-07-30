@@ -3,6 +3,7 @@
     "CarnetDigitalWeb": {
       "commandName": "Project",
       "launchBrowser": true,
+      "launchUrl": "CarnetWeb",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

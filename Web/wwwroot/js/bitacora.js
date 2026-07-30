@@ -221,7 +221,7 @@ async function cargarBitacoraConFiltros() {
         }
 
         const url =
-            `/Bitacora?handler=Filtros&${parametros.toString()}`;
+            `${window.appBase}/Bitacora?handler=Filtros&${parametros.toString()}`;
 
         const response = await fetch(
             url,
@@ -259,7 +259,7 @@ async function cargarBitacoraConFiltros() {
         }
 
         if (response.status === 401) {
-            window.location.href = '/Login';
+            window.location.href = window.appBase + '/Login';
             return;
         }
 

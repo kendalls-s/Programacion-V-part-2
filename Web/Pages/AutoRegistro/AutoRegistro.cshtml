@@ -593,7 +593,7 @@
                     </section>
 
                     <div class="registro-actions">
-                        <a href="/Login"
+                        <a href="~/Login"
                            class="btn btn-secondary">
                             <i class="fa-solid fa-arrow-left"></i>
                             Volver al inicio de sesión
@@ -620,6 +620,10 @@
         </section>
     </main>
 
+<script>
+    // Ruta base de la app (ej: "/CarnetWeb"). Se resuelve en el servidor.
+    window.appBase = '@Url.Content("~/")'.replace(/\/+$/, '');
+</script>
 <script src="~/js/autoregistro.js"
         asp-append-version="true"></script>
 </body>

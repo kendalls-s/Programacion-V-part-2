@@ -10,12 +10,12 @@ let totalPaginas = 1;
 let idEliminar = 0;
 
 // URLs usando los handlers de Razor Pages
-const API_URL_GET_ALL = '/Carrera?handler=GetAll';
-const API_URL_INSTITUCIONES = '/Carrera?handler=Instituciones';
-const API_URL_BUSCAR = '/Carrera?handler=Buscar';
-const API_URL_CREAR = '/Carrera?handler=Crear';
-const API_URL_EDITAR = '/Carrera?handler=Editar';
-const API_URL_ELIMINAR = '/Carrera?handler=Eliminar';
+const API_URL_GET_ALL = (window.appBase || '') + '/Carrera?handler=GetAll';
+const API_URL_INSTITUCIONES = (window.appBase || '') + '/Carrera?handler=Instituciones';
+const API_URL_BUSCAR = (window.appBase || '') + '/Carrera?handler=Buscar';
+const API_URL_CREAR = (window.appBase || '') + '/Carrera?handler=Crear';
+const API_URL_EDITAR = (window.appBase || '') + '/Carrera?handler=Editar';
+const API_URL_ELIMINAR = (window.appBase || '') + '/Carrera?handler=Eliminar';
 
 // ========================================
 // MODALES

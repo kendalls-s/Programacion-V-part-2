@@ -153,6 +153,18 @@ builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
+// ========================================
+// Ruta base de la aplicación web.
+// Con esto la app se sirve bajo /CarnetWeb
+// (ej: https://tiusr22pl.cuc-carrera-ti.ac.cr/CarnetWeb/Login).
+// Se puede sobreescribir con la clave "PathBase" en appsettings.
+// ========================================
+var pathBase = builder.Configuration["PathBase"] ?? "/CarnetWeb";
+if (!string.IsNullOrWhiteSpace(pathBase))
+{
+    app.UsePathBase(pathBase);
+}
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
@@ -253,13 +265,14 @@ app.MapGet("/api/tipos-usuario", async (IHttpClientFactory httpClientFactory) =>
 
 app.MapGet("/", async context =>
 {
+    var basePath = context.Request.PathBase.Value ?? string.Empty;
     var token = context.Session.GetString("Token");
     if (!string.IsNullOrEmpty(token))
     {
-        context.Response.Redirect("/Index");
+        context.Response.Redirect($"{basePath}/Index");
         return;
     }
-    context.Response.Redirect("/Login");
+    context.Response.Redirect($"{basePath}/Login");
     await Task.CompletedTask;
 });
 

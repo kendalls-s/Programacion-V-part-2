@@ -36,40 +36,18 @@ namespace CarnetDigitalWeb.Services
 
                 var response = await client.GetAsync("api/TipoUsuario");
 
-                var json = await response.Content.ReadAsStringAsync();
-                _logger.LogInformation($"=== RESPUESTA DE TIPOS USUARIO ===");
-                _logger.LogInformation($"Status: {response.StatusCode}");
-                _logger.LogInformation($"JSON: {json}");
-
                 if (!response.IsSuccessStatusCode)
                 {
                     _logger.LogWarning($"Error al obtener tipos de usuario: {response.StatusCode}");
                     return new List<TipoUsuario>();
                 }
 
-                // ✅ Deserializar usando la estructura de la respuesta
-                try
-                {
-                    var options = new JsonSerializerOptions
-                    {
-                        PropertyNameCaseInsensitive = true
-                    };
+                var json = await response.Content.ReadAsStringAsync();
+                _logger.LogInformation($"=== RESPUESTA DE TIPOS USUARIO ===");
+                _logger.LogInformation($"Status: {response.StatusCode}");
+                _logger.LogInformation($"JSON: {json}");
 
-                    // ✅ Usar la estructura que devuelve el microservicio
-                    var result = JsonSerializer.Deserialize<ApiResponse<List<TipoUsuario>>>(json, options);
-
-                    if (result != null && result.Data != null)
-                    {
-                        _logger.LogInformation($"✅ Se encontraron {result.Data.Count} tipos de usuario");
-                        return result.Data;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Error al deserializar como ApiResponse");
-                }
-
-                // ✅ Si falla, intentar deserializar como lista directamente
+                // ✅ Deserializar directamente como lista de TipoUsuario
                 try
                 {
                     var list = JsonSerializer.Deserialize<List<TipoUsuario>>(json, new JsonSerializerOptions
@@ -79,7 +57,7 @@ namespace CarnetDigitalWeb.Services
 
                     if (list != null)
                     {
-                        _logger.LogInformation($"✅ Se encontraron {list.Count} tipos (lista directa)");
+                        _logger.LogInformation($"✅ Se encontraron {list.Count} tipos de usuario");
                         return list;
                     }
                 }
@@ -124,20 +102,6 @@ namespace CarnetDigitalWeb.Services
 
                 try
                 {
-                    var result = JsonSerializer.Deserialize<ApiResponse<TipoUsuario>>(json, new JsonSerializerOptions
-                    {
-                        PropertyNameCaseInsensitive = true
-                    });
-
-                    if (result != null && result.Data != null)
-                    {
-                        return result.Data;
-                    }
-                }
-                catch { }
-
-                try
-                {
                     var item = JsonSerializer.Deserialize<TipoUsuario>(json, new JsonSerializerOptions
                     {
                         PropertyNameCaseInsensitive = true
@@ -173,7 +137,7 @@ namespace CarnetDigitalWeb.Services
                         new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
                 }
 
-                var json = JsonSerializer.Serialize(new { Nombre = tipo.Nombre });
+                var json = JsonSerializer.Serialize(new { nombre = tipo.Nombre });
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                 var response = await client.PostAsync("api/TipoUsuario/", content);
@@ -187,12 +151,21 @@ namespace CarnetDigitalWeb.Services
                 var responseJson = await response.Content.ReadAsStringAsync();
                 _logger.LogInformation($"Respuesta de creación: {responseJson}");
 
-                var result = JsonSerializer.Deserialize<ApiResponse<TipoUsuario>>(responseJson, new JsonSerializerOptions
+                try
                 {
-                    PropertyNameCaseInsensitive = true
-                });
+                    var item = JsonSerializer.Deserialize<TipoUsuario>(responseJson, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
 
-                return result?.Data;
+                    if (item != null)
+                    {
+                        return item;
+                    }
+                }
+                catch { }
+
+                return null;
             }
             catch (Exception ex)
             {
@@ -215,14 +188,20 @@ namespace CarnetDigitalWeb.Services
                         new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
                 }
 
-                var json = JsonSerializer.Serialize(new { Nombre = tipo.Nombre });
+                // ✅ Enviar Id y Nombre en el body
+                var json = JsonSerializer.Serialize(new
+                {
+                    id = tipo.Id,      // ✅ En minúscula
+                    nombre = tipo.Nombre
+                });
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                 var response = await client.PutAsync($"api/TipoUsuario/{tipo.Id}", content);
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    _logger.LogWarning($"Error al actualizar tipo de usuario {tipo.Id}: {response.StatusCode}");
+                    var error = await response.Content.ReadAsStringAsync();
+                    _logger.LogWarning($"Error al actualizar tipo de usuario {tipo.Id}: {response.StatusCode} - {error}");
                     return false;
                 }
 

@@ -543,7 +543,9 @@
         const id = Number(document.getElementById('idTipo').value);
         const esEdicion = id > 0;
 
+        // ✅ Enviar el ID en el body para PUT
         const datos = {
+            id: id,
             nombre: document.getElementById('nombre').value.trim()
         };
 
@@ -588,22 +590,19 @@
 
             if (!response.ok) {
                 let mensaje = `Error ${response.status} al guardar el tipo`;
-
                 if (textoRespuesta) {
                     try {
                         const errorJson = JSON.parse(textoRespuesta);
-                        mensaje = errorJson.mensaje ?? errorJson.message ?? errorJson.detail ?? mensaje;
+                        mensaje = errorJson.mensaje ?? errorJson.message ?? errorJson.error ?? mensaje;
                     } catch {
                         mensaje = textoRespuesta;
                     }
                 }
-
                 mostrarAlerta(mensaje, 'danger');
                 return;
             }
 
             cerrarModalFormulario();
-
             mostrarAlerta(
                 esEdicion
                     ? 'Tipo actualizado correctamente'

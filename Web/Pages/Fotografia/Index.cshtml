@@ -1,42 +1,110 @@
-@page
+﻿@page
 @model CarnetDigitalWeb.Pages.Fotografia.IndexModel
 @{
     ViewData["Title"] = "Fotografía";
 }
 
-<div class="card-panel" style="max-width:600px">
-    <h6 class="text-muted mb-3">SRV13 - Fotografia</h6>
+<div class="page-header">
+    <h2><i class="bi bi-image"></i> Fotografía del Usuario</h2>
+</div>
 
-    <form method="post" enctype="multipart/form-data">
-        <div class="mb-3">
-            <label class="form-label">Identificador del usuario</label>
-            <input type="number" class="form-control" asp-for="UsuarioId" placeholder="Ej: 1" />
+<div class="grid-cards">
+    <div class="card-bordered">
+        <div class="card-bordered-header">
+            <h3>Administración</h3>
         </div>
+        <form method="post" enctype="multipart/form-data" id="formFoto">
+            <div class="card-bordered-body">
+                <div class="form-group">
+                    <label for="UsuarioId">Identificador del usuario *</label>
+                    <input type="number" min="1" id="UsuarioId" class="form-control"
+                           asp-for="UsuarioId" placeholder="Ej: 1" />
+                </div>
 
-        <div class="d-flex gap-2 mb-4">
-            <button type="submit" asp-page-handler="Obtener" class="btn btn-outline-primary btn-sm">
-                <i class="bi bi-download"></i> Obtener
-            </button>
-            <button type="submit" asp-page-handler="Eliminar" class="btn btn-outline-danger btn-sm"
-                    onclick="return confirm('¿Realmente desea eliminar la fotografía del usuario indicado?');">
-                <i class="bi bi-trash"></i> Eliminar
-            </button>
-        </div>
+                <div class="form-group">
+                    <label for="Foto">Nueva fotografía</label>
+                    <input type="file" id="Foto" class="form-control" asp-for="Foto" accept="image/*" />
+                    <small style="color:#6c757d; font-size:12px;">
+                        Máximo 1 MB. Idealmente en formato 4:3. Requerida solo para actualizar.
+                    </small>
+                </div>
+            </div>
+            <div class="card-bordered-footer">
+                <button type="submit" asp-page-handler="Actualizar" class="btn btn-warning">
+                    <i class="bi bi-upload"></i> Actualizar
+                </button>
+                <button type="submit" asp-page-handler="Obtener" class="btn btn-info">
+                    <i class="bi bi-download"></i> Obtener
+                </button>
+                <button type="button" class="btn btn-danger" onclick="abrirModalEliminar()">
+                    <i class="bi bi-trash"></i> Eliminar
+                </button>
 
-        <div class="mb-3">
-            <label class="form-label">Nueva fotografía (máx. 1 MB, formato 4:3)</label>
-            <input type="file" class="form-control" asp-for="Foto" accept="image/*" />
-        </div>
-        <button type="submit" asp-page-handler="Actualizar" class="btn btn-primary">
-            <i class="bi bi-upload"></i> Actualizar fotografía
-        </button>
-    </form>
+                <!-- Disparo real de la eliminación (lo activa el modal de confirmación) -->
+                <button type="submit" asp-page-handler="Eliminar" id="btnEliminarSubmit" style="display:none;"></button>
+            </div>
+        </form>
+    </div>
 
     @if (!string.IsNullOrEmpty(Model.FotoBase64))
     {
-        <div class="mt-4">
-            <hr />
-            <img class="foto-preview" src="data:image/jpeg;base64,@Model.FotoBase64" />
+        <div class="card-bordered">
+            <div class="card-bordered-header">
+                <h3>Fotografía</h3>
+            </div>
+            <div class="card-bordered-body" style="text-align:center;">
+                <img style="max-width:100%; height:auto; border-radius:8px;"
+                     src="data:image/jpeg;base64,@Model.FotoBase64" alt="Fotografía del usuario" />
+            </div>
         </div>
     }
 </div>
+
+<!-- MODAL ELIMINAR -->
+<div class="modal" id="modalEliminar">
+    <div class="modal-dialog" style="max-width:500px;">
+        <div class="modal-content">
+            <div class="modal-header modal-header-danger">
+                <h5><i class="bi bi-exclamation-triangle"></i> Confirmar eliminación</h5>
+                <button type="button" class="btn-close" onclick="cerrarModalEliminar()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>¿Realmente desea eliminar la fotografía del usuario seleccionado?</p>
+                <p style="color:#6c757d;"><strong id="usuarioEliminar"></strong></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="cerrarModalEliminar()">No</button>
+                <button type="button" class="btn btn-danger" onclick="confirmarEliminar()">
+                    <i class="bi bi-trash"></i> Sí, eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function abrirModalEliminar() {
+        const usuarioId = document.getElementById('UsuarioId').value.trim();
+        if (!usuarioId) {
+            alert('Indique el identificador del usuario.');
+            return;
+        }
+        document.getElementById('usuarioEliminar').textContent = 'Usuario: ' + usuarioId;
+        document.getElementById('modalEliminar').style.display = 'flex';
+    }
+
+    function cerrarModalEliminar() {
+        document.getElementById('modalEliminar').style.display = 'none';
+    }
+
+    function confirmarEliminar() {
+        cerrarModalEliminar();
+        document.getElementById('btnEliminarSubmit').click();
+    }
+
+    window.addEventListener('click', function (event) {
+        if (event.target === document.getElementById('modalEliminar')) {
+            cerrarModalEliminar();
+        }
+    });
+</script>

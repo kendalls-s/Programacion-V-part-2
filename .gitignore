@@ -1,8 +1,8 @@
 # ---------------------------------------------
-# .gitignore para solución .NET / Visual Studio
+# .gitignore para proyectos .NET / Visual Studio
 # ---------------------------------------------
 
-# Salida de compilación
+# Carpetas de compilación
 [Bb]in/
 [Oo]bj/
 [Oo]ut/
@@ -20,38 +20,55 @@ bld/
 [Ll]og/
 [Ll]ogs/
 
-# Carpeta y caché de Visual Studio
+# Carpeta y caché de Visual Studio (config de usuario, índices de Copilot)
 .vs/
-*.suo
+.vscode/
+
+# Archivos específicos del usuario / IDE
 *.user
+*.suo
 *.userosscache
 *.sln.docstates
 *.userprefs
+*.rsuser
+.idea/
+*.sln.iml
+
+# Resultados de compilación y símbolos
+*.dll
+*.exe
+*.pdb
+*.cache
+*.deps.json
+*.runtimeconfig.json
+*.staticwebassets.*.json
+artifacts/
+*.binlog
 
 # Resultados de MSBuild / Roslyn
 project.lock.json
 project.fragment.lock.json
-artifacts/
-*.binlog
 
-# Archivos de IDE (Rider / VS Code)
-.idea/
-*.sln.iml
-.vscode/
-
-# Archivos de publicación (mantener los perfiles .pubxml versionados,
-# ignorar solo los ajustes locales del usuario)
-*.pubxml.user
-PublishScripts/
-publish/
-
-# NuGet
+# Archivos generados por NuGet
 *.nupkg
 *.snupkg
-**/[Pp]ackages/*
-!**/[Pp]ackages/build/
+project.assets.json
+project.lock.json
+project.fragment.lock.json
+project.nuget.cache
 *.nuget.props
 *.nuget.targets
+*.nuget.g.props
+*.nuget.g.targets
+*.nuget.dgspec.json
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+
+# Publicación
+[Pp]ublish/
+PublishScripts/
+*.pubxml.user
+PubTmp/
 
 # Resultados de test y cobertura
 [Tt]est[Rr]esult*/
@@ -63,6 +80,10 @@ coverage*.xml
 coverage*.info
 TestResults/
 
+# Bases de datos y archivos locales
+*.mdf
+*.ldf
+*.ndf
 # Archivos temporales del sistema operativo
 .DS_Store
 Thumbs.db
@@ -70,6 +91,8 @@ ehthumbs.db
 Desktop.ini
 *~
 *.tmp
+*.temp
+*.log
 *.bak
 *.swp
 

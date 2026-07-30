@@ -20,6 +20,7 @@ namespace CarnetDigitalWeb.Pages.EstadoUsuario
         [BindProperty]
         public string? Estado { get; set; }
 
+        // Resultado devuelto por SRV12 (se muestra en pantalla).
         public UsuarioEstado? Resultado { get; set; }
 
         public void OnGet()
@@ -31,7 +32,7 @@ namespace CarnetDigitalWeb.Pages.EstadoUsuario
             var token = HttpContext.Session.GetString("Token");
             if (string.IsNullOrWhiteSpace(token))
             {
-                Avisar("Debe indicar el token antes de continuar.", "warning");
+                Avisar("Debe iniciar sesión para continuar.", "warning");
                 return Page();
             }
 
@@ -41,7 +42,7 @@ namespace CarnetDigitalWeb.Pages.EstadoUsuario
                 return Page();
             }
 
-            var (ok, error, data) = await _service.CambiarEstadoAsync(UsuarioId.Value, Estado, token);
+            var (ok, error, data) = await _service.CambiarEstadoAsync(UsuarioId.Value, Estado.Trim(), token);
             if (!ok)
             {
                 Avisar(error!, "danger");

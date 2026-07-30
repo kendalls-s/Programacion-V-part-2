@@ -4,55 +4,143 @@
     ViewData["Title"] = "Parámetros";
 }
 
-<div class="card-panel">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h6 class="text-muted mb-0">SRV15 - Parametro</h6>
-        <a class="btn btn-primary btn-sm" asp-page="Form">
-            <i class="bi bi-plus-lg"></i> Nuevo
+<div class="page-header">
+    <h2><i class="bi bi-sliders"></i> Administración de Parámetros</h2>
+    <div>
+        <a class="btn btn-primary" asp-page="Form">
+            <i class="bi bi-plus-circle"></i> Nuevo Parámetro
         </a>
     </div>
+</div>
 
-    <table class="table table-hover align-middle">
-        <thead>
-            <tr>
-                <th>Código</th>
-                <th>Valor</th>
-                <th style="width:100px">Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var p in Model.Items)
-            {
-                <tr>
-                    <td>@p.Id</td>
-                    <td>@p.Valor</td>
-                    <td>
-                        <a class="btn btn-sm btn-outline-primary" asp-page="Form" asp-route-id="@p.Id">
-                            <i class="bi bi-pencil"></i>
-                        </a>
-                        <form method="post" asp-page-handler="Eliminar" asp-route-id="@p.Id" class="d-inline"
-                              onsubmit="return confirm('¿Realmente desea eliminar el elemento seleccionado?');">
-                            <button type="submit" class="btn btn-sm btn-outline-danger">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+@if (!Model.Items.Any())
+{
+    <div class="empty-state">
+        <i class="bi bi-sliders" style="font-size:4rem; color:#dee2e6;"></i>
+        <p>No hay parámetros registrados</p>
+        <a class="btn btn-primary" asp-page="Form">
+            <i class="bi bi-plus-circle"></i> Crear primer parámetro
+        </a>
+    </div>
+}
+else
+{
+    <div class="grid-cards">
+        @{ var indice = 0; }
+        @foreach (var p in Model.Items)
+        {
+            indice++;
+            <div class="card-bordered">
+                <div class="card-bordered-header">
+                    <h3>@p.Id</h3>
+                </div>
+                <div class="card-bordered-body">
+                    <div class="info-row">
+                        <span class="label"><i class="bi bi-card-text"></i> Valor:</span>
+                        <span class="value">@p.Valor</span>
+                    </div>
+                </div>
+                <div class="card-bordered-footer">
+                    <a class="btn btn-warning btn-sm" asp-page="Form" asp-route-id="@p.Id">
+                        <i class="bi bi-pencil"></i> Editar
+                    </a>
+                    <button type="button" class="btn btn-danger btn-sm btn-eliminar-parametro"
+                            data-form="form-eliminar-@indice"
+                            data-etiqueta="@p.Id">
+                        <i class="bi bi-trash"></i> Eliminar
+                    </button>
+                </div>
+            </div>
+
+            <form method="post" asp-page-handler="Eliminar" asp-route-id="@p.Id"
+                  id="form-eliminar-@indice" style="display:none;"></form>
+        }
+    </div>
 
     @if (Model.TotalPaginas > 1)
     {
-        <nav>
-            <ul class="pagination pagination-sm">
-                @for (var i = 1; i <= Model.TotalPaginas; i++)
+        <div class="paginacion-wrapper" style="margin-top:20px;">
+            <div class="paginacion-info">
+                Página <span>@Model.Pagina</span> de <span>@Model.TotalPaginas</span>
+            </div>
+            <div class="paginacion-botones">
+                @if (Model.Pagina > 1)
                 {
-                    <li class="page-item @(i == Model.Pagina ? "active" : "")">
-                        <a class="page-link" asp-page="Index" asp-route-pagina="@i">@i</a>
-                    </li>
+                    <a class="btn-paginacion" asp-page="Index" asp-route-pagina="@(Model.Pagina - 1)">
+                        <i class="bi bi-chevron-left"></i> Anterior
+                    </a>
                 }
-            </ul>
-        </nav>
+                else
+                {
+                    <span class="btn-paginacion" style="opacity:.5; pointer-events:none;">
+                        <i class="bi bi-chevron-left"></i> Anterior
+                    </span>
+                }
+                <span class="paginacion-numero">@Model.Pagina</span>
+                @if (Model.Pagina < Model.TotalPaginas)
+                {
+                    <a class="btn-paginacion" asp-page="Index" asp-route-pagina="@(Model.Pagina + 1)">
+                        Siguiente <i class="bi bi-chevron-right"></i>
+                    </a>
+                }
+                else
+                {
+                    <span class="btn-paginacion" style="opacity:.5; pointer-events:none;">
+                        Siguiente <i class="bi bi-chevron-right"></i>
+                    </span>
+                }
+            </div>
+        </div>
     }
+}
+
+<!-- MODAL ELIMINAR -->
+<div class="modal" id="modalEliminar">
+    <div class="modal-dialog" style="max-width:500px;">
+        <div class="modal-content">
+            <div class="modal-header modal-header-danger">
+                <h5><i class="bi bi-exclamation-triangle"></i> Confirmar eliminación</h5>
+                <button type="button" class="btn-close" onclick="cerrarModalEliminar()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>¿Realmente desea eliminar el elemento seleccionado?</p>
+                <p style="color:#6c757d;"><strong id="parametroEliminar"></strong></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="cerrarModalEliminar()">Cancelar</button>
+                <button type="button" class="btn btn-danger" onclick="confirmarEliminar()">
+                    <i class="bi bi-trash"></i> Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+    let formEliminarActual = null;
+
+    document.querySelectorAll('.btn-eliminar-parametro').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            formEliminarActual = document.getElementById(btn.dataset.form);
+            document.getElementById('parametroEliminar').textContent = btn.dataset.etiqueta || '';
+            document.getElementById('modalEliminar').style.display = 'flex';
+        });
+    });
+
+    function cerrarModalEliminar() {
+        formEliminarActual = null;
+        document.getElementById('modalEliminar').style.display = 'none';
+    }
+
+    function confirmarEliminar() {
+        if (formEliminarActual) {
+            formEliminarActual.submit();
+        }
+    }
+
+    window.addEventListener('click', function (event) {
+        if (event.target === document.getElementById('modalEliminar')) {
+            cerrarModalEliminar();
+        }
+    });
+</script>

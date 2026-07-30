@@ -1,33 +1,63 @@
-@page
+﻿@page
 @model CarnetDigitalWeb.Pages.EstadoUsuario.IndexModel
 @{
     ViewData["Title"] = "Cambio de Estado";
 }
 
-<div class="card-panel" style="max-width:520px">
-    <h6 class="text-muted mb-3">SRV12 - EstadoUsuario</h6>
+<div class="page-header">
+    <h2><i class="bi bi-toggle2-on"></i> Cambio de Estado</h2>
+</div>
 
-    <form method="post">
-        <div class="mb-3">
-            <label class="form-label">Identificador del usuario</label>
-            <input type="number" class="form-control" asp-for="UsuarioId" placeholder="Ej: 1" />
+<div class="grid-cards">
+    <div class="card-bordered">
+        <div class="card-bordered-header">
+            <h3>Actualizar estado</h3>
         </div>
-        <div class="mb-3">
-            <label class="form-label">Código de estado</label>
-            <input type="text" class="form-control" asp-for="Estado" placeholder="Ej: Activo, Inactivo" />
-        </div>
-        <button type="submit" class="btn btn-primary">
-            <i class="bi bi-check2-circle"></i> Cambiar estado
-        </button>
-    </form>
+        <form method="post">
+            <div class="card-bordered-body">
+                <div class="form-group">
+                    <label for="UsuarioId">Identificador del usuario *</label>
+                    <input type="number" min="1" id="UsuarioId" class="form-control"
+                           asp-for="UsuarioId" placeholder="Ej: 1" />
+                </div>
+                <div class="form-group">
+                    <label for="Estado">Código de estado *</label>
+                    <input type="text" id="Estado" class="form-control"
+                           asp-for="Estado" placeholder="Ej: Activo, Inactivo" />
+                    <small style="color:#6c757d; font-size:12px;">
+                        Estados básicos: Activo, Inactivo (se permiten nuevos estados).
+                    </small>
+                </div>
+            </div>
+            <div class="card-bordered-footer">
+                <button type="submit" class="btn btn-warning">
+                    <i class="bi bi-check2-circle"></i> Cambiar estado
+                </button>
+            </div>
+        </form>
+    </div>
 
     @if (Model.Resultado is not null)
     {
-        <div class="mt-4">
-            <hr />
-            <p class="mb-1"><strong>Usuario:</strong> @Model.Resultado.NombreCompleto</p>
-            <p class="mb-1"><strong>Id usuario:</strong> @Model.Resultado.UsuarioId</p>
-            <p class="mb-1"><strong>Estado actual:</strong> <span class="badge bg-success">@Model.Resultado.Estado</span></p>
+        <div class="card-bordered">
+            <div class="card-bordered-header">
+                <h3>Estado actualizado</h3>
+                <span class="badge-success">@Model.Resultado.Estado</span>
+            </div>
+            <div class="card-bordered-body">
+                <div class="info-row">
+                    <span class="label"><i class="bi bi-person"></i> Usuario:</span>
+                    <span class="value">@Model.Resultado.NombreCompleto</span>
+                </div>
+                <div class="info-row">
+                    <span class="label"><i class="bi bi-hash"></i> Id usuario:</span>
+                    <span class="value">@Model.Resultado.UsuarioId</span>
+                </div>
+                <div class="info-row">
+                    <span class="label"><i class="bi bi-toggle2-on"></i> Estado:</span>
+                    <span class="value">@Model.Resultado.Estado</span>
+                </div>
+            </div>
         </div>
     }
 </div>

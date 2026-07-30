@@ -102,21 +102,15 @@ public static class InstitucionEndpoint
             }
         });
         // ==========================================
-        // GET POR ID
+        // GET POR ID - PÚBLICO
         // ==========================================
         group.MapGet("/{id:int}", async (
             int id,
             IInstitucionService service,
             IBitacoraClient bitacora,
-            ITokenValidator validator,
             HttpContext context) =>
         {
             string token = ObtenerToken(context);
-
-            if (!await validator.ValidateAsync(token))
-            {
-                return Results.Unauthorized();
-            }
 
             try
             {
@@ -132,29 +126,32 @@ public static class InstitucionEndpoint
                     });
                 }
 
-                string usuario =
-                    ObtenerUsuarioDesdeToken(token);
-
-                string detalleJson =
-                    JsonSerializer.Serialize(new
-                    {
-                        Accion = "CONSULTA",
-                        Descripcion =
-                            $"El usuario consulta la institución {id}"
-                    });
-
-                bool registroBitacora =
-                    await bitacora.RegistrarAsync(
-                        token,
-                        usuario,
-                        $"El usuario consulta la institución {id}",
-                        detalleJson
-                    );
-
-                if (!registroBitacora)
+                if (!string.IsNullOrWhiteSpace(token))
                 {
-                    Console.WriteLine(
-                        "La consulta se realizó, pero no se pudo registrar la bitácora.");
+                    string usuario =
+                        ObtenerUsuarioDesdeToken(token);
+
+                    string detalleJson =
+                        JsonSerializer.Serialize(new
+                        {
+                            Accion = "CONSULTA",
+                            Descripcion =
+                                $"El usuario consulta la institución {id}"
+                        });
+
+                    bool registroBitacora =
+                        await bitacora.RegistrarAsync(
+                            token,
+                            usuario,
+                            $"El usuario consulta la institución {id}",
+                            detalleJson
+                        );
+
+                    if (!registroBitacora)
+                    {
+                        Console.WriteLine(
+                            "La consulta se realizó, pero no se pudo registrar la bitácora.");
+                    }
                 }
 
                 return Results.Ok(new
@@ -166,12 +163,15 @@ public static class InstitucionEndpoint
             }
             catch (Exception ex)
             {
-                await RegistrarErrorBitacora(
-                    bitacora,
-                    token,
-                    $"Error al consultar la institución {id}",
-                    ex
-                );
+                if (!string.IsNullOrWhiteSpace(token))
+                {
+                    await RegistrarErrorBitacora(
+                        bitacora,
+                        token,
+                        $"Error al consultar la institución {id}",
+                        ex
+                    );
+                }
 
                 return Results.Problem(
                     statusCode: 500,

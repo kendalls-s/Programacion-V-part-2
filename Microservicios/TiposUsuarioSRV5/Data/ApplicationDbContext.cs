@@ -18,10 +18,10 @@ namespace TiposUsuarioSRV5.Data
 
             modelBuilder.Entity<TipoUsuario>(entity =>
             {
-                entity.ToTable("TIPOUSUARIO", "PameRojas");
+                entity.ToTable("TipoUsuario", "dbo");  // ✅ Cambiar a dbo
                 entity.HasKey(e => e.Id);
-                entity.Property(e => e.Id).HasColumnName("ID");
-                entity.Property(e => e.Nombre).HasColumnName("NOMBRE").IsRequired().HasMaxLength(50);
+                entity.Property(e => e.Id).HasColumnName("Id");
+                entity.Property(e => e.Nombre).HasColumnName("Nombre").HasMaxLength(100);
             });
         }
     }

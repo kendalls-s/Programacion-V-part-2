@@ -21,6 +21,7 @@ namespace CarnetDigitalWeb.Pages.Fotografia
         [BindProperty]
         public IFormFile? Foto { get; set; }
 
+        // Base64 de la fotografía (se muestra en pantalla).
         public string? FotoBase64 { get; set; }
 
         public void OnGet()
@@ -30,11 +31,17 @@ namespace CarnetDigitalWeb.Pages.Fotografia
         public async Task<IActionResult> OnPostObtenerAsync()
         {
             var token = Token();
-            if (string.IsNullOrWhiteSpace(token)) { Avisar("Debe indicar el token antes de continuar.", "warning"); return Page(); }
+            if (string.IsNullOrWhiteSpace(token)) { Avisar("Debe iniciar sesión para continuar.", "warning"); return Page(); }
             if (!UsuarioId.HasValue) { Avisar("Indique el identificador del usuario.", "warning"); return Page(); }
 
             var (ok, error, foto) = await _service.ObtenerAsync(UsuarioId.Value, token);
             if (!ok) { Avisar(error!, "danger"); return Page(); }
+
+            if (string.IsNullOrEmpty(foto))
+            {
+                Avisar("El usuario indicado no tiene una fotografía registrada.", "warning");
+                return Page();
+            }
 
             FotoBase64 = foto;
             return Page();
@@ -43,7 +50,7 @@ namespace CarnetDigitalWeb.Pages.Fotografia
         public async Task<IActionResult> OnPostActualizarAsync()
         {
             var token = Token();
-            if (string.IsNullOrWhiteSpace(token)) { Avisar("Debe indicar el token antes de continuar.", "warning"); return Page(); }
+            if (string.IsNullOrWhiteSpace(token)) { Avisar("Debe iniciar sesión para continuar.", "warning"); return Page(); }
             if (!UsuarioId.HasValue || Foto is null) { Avisar("Indique el identificador del usuario y seleccione una imagen.", "warning"); return Page(); }
             if (Foto.Length > TamanoMaximoBytes) { Avisar("La fotografía no debe superar 1 MB.", "warning"); return Page(); }
 
@@ -54,7 +61,7 @@ namespace CarnetDigitalWeb.Pages.Fotografia
             var (ok, error, data) = await _service.ActualizarAsync(UsuarioId.Value, base64, token);
             if (!ok) { Avisar(error!, "danger"); return Page(); }
 
-            FotoBase64 = data?.FotografiaBase64;
+            FotoBase64 = data?.FotografiaBase64 ?? base64;
             Avisar("La fotografía se actualizó correctamente.", "success");
             return Page();
         }
@@ -62,7 +69,7 @@ namespace CarnetDigitalWeb.Pages.Fotografia
         public async Task<IActionResult> OnPostEliminarAsync()
         {
             var token = Token();
-            if (string.IsNullOrWhiteSpace(token)) { Avisar("Debe indicar el token antes de continuar.", "warning"); return Page(); }
+            if (string.IsNullOrWhiteSpace(token)) { Avisar("Debe iniciar sesión para continuar.", "warning"); return Page(); }
             if (!UsuarioId.HasValue) { Avisar("Indique el identificador del usuario.", "warning"); return Page(); }
 
             var (ok, error) = await _service.EliminarAsync(UsuarioId.Value, token);

@@ -10,7 +10,7 @@ namespace UsuariosSRV4.Endpoints
         {
             var group = app.MapGroup("/api/Usuarios");
 
-            // ✅ ENDPOINT DE VALIDACIÓN - ESTE ES EL QUE FALTA
+            // ✅ ENDPOINT DE VALIDACIÓN DE CREDENCIALES (con validación de tipo)
             group.MapPost("/validar-credenciales", ValidarCredencialesAsync);
 
             // ✅ OTROS ENDPOINTS
@@ -21,7 +21,9 @@ namespace UsuariosSRV4.Endpoints
             group.MapDelete("/{id}", DeleteAsync);
         }
 
+        // ============================================================
         // ✅ POST: /api/Usuarios/validar-credenciales
+        // ============================================================
         private static async Task<IResult> ValidarCredencialesAsync(
             [FromBody] ValidarCredencialesRequest request,
             IUsuarioService service,
@@ -29,11 +31,11 @@ namespace UsuariosSRV4.Endpoints
         {
             logger.LogInformation($"=== VALIDAR CREDENCIALES ===");
             logger.LogInformation($"Email: {request.Email}");
-            logger.LogInformation($"Password: {request.Password}");
-            logger.LogInformation($"Tipo: {request.Tipo}");
+            logger.LogInformation($"Tipo seleccionado: {request.Tipo}");
 
             try
             {
+                // ✅ Validar credenciales incluyendo el tipo de usuario
                 var (ok, error, data) = await service.ValidarCredencialesAsync(
                     request.Email,
                     request.Password,
@@ -41,26 +43,31 @@ namespace UsuariosSRV4.Endpoints
 
                 logger.LogInformation($"Resultado: ok={ok}, error={error}");
 
+                // ✅ Si no es exitoso, devolver mensaje genérico
                 if (!ok)
                 {
-                    return Results.BadRequest(new { message = error ?? "Credenciales inválidas" });
+                    return Results.BadRequest(new { message = error ?? "Usuario y/o contraseña incorrectos" });
                 }
 
+                // ✅ Si no hay datos, error genérico
                 if (data == null)
                 {
-                    return Results.BadRequest(new { message = "Error al obtener datos del usuario" });
+                    return Results.BadRequest(new { message = "Usuario y/o contraseña incorrectos" });
                 }
 
-                logger.LogInformation($"Validación exitosa para: {request.Email}");
+                logger.LogInformation($"✅ Validación exitosa para: {request.Email} - Tipo: {data.TipoUsuario}");
                 return Results.Ok(data);
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, $"Error en ValidarCredencialesAsync: {request.Email}");
-                return Results.BadRequest(new { message = $"Error: {ex.Message}" });
+                return Results.BadRequest(new { message = "Usuario y/o contraseña incorrectos" });
             }
         }
 
+        // ============================================================
+        // ✅ GET: /api/Usuarios
+        // ============================================================
         private static async Task<IResult> GetAllAsync(IUsuarioService service)
         {
             try
@@ -75,6 +82,9 @@ namespace UsuariosSRV4.Endpoints
             }
         }
 
+        // ============================================================
+        // ✅ GET: /api/Usuarios/{id}
+        // ============================================================
         private static async Task<IResult> GetByIdAsync(int id, IUsuarioService service)
         {
             try
@@ -89,6 +99,9 @@ namespace UsuariosSRV4.Endpoints
             }
         }
 
+        // ============================================================
+        // ✅ POST: /api/Usuarios
+        // ============================================================
         private static async Task<IResult> CreateAsync([FromBody] CrearUsuarioDto dto, IUsuarioService service)
         {
             try
@@ -103,6 +116,9 @@ namespace UsuariosSRV4.Endpoints
             }
         }
 
+        // ============================================================
+        // ✅ PUT: /api/Usuarios/{id}
+        // ============================================================
         private static async Task<IResult> UpdateAsync(int id, [FromBody] ActualizarUsuarioDto dto, IUsuarioService service)
         {
             try
@@ -118,6 +134,9 @@ namespace UsuariosSRV4.Endpoints
             }
         }
 
+        // ============================================================
+        // ✅ DELETE: /api/Usuarios/{id}
+        // ============================================================
         private static async Task<IResult> DeleteAsync(int id, IUsuarioService service)
         {
             try

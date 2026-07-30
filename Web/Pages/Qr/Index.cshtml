@@ -1,27 +1,45 @@
-@page
+﻿@page
 @model CarnetDigitalWeb.Pages.Qr.IndexModel
 @{
     ViewData["Title"] = "Código QR";
 }
 
-<div class="card-panel" style="max-width:520px">
-    <h6 class="text-muted mb-3">SRV14 - CarnetQR</h6>
+<div class="page-header">
+    <h2><i class="bi bi-qr-code"></i> Código QR</h2>
+</div>
 
-    <form method="post">
-        <div class="mb-3">
-            <label class="form-label">Identificación del usuario</label>
-            <input type="text" class="form-control" asp-for="Identificacion" placeholder="Ej: 302450678" />
+<div class="grid-cards">
+    <div class="card-bordered">
+        <div class="card-bordered-header">
+            <h3>Generar código</h3>
         </div>
-        <button type="submit" class="btn btn-primary">
-            <i class="bi bi-qr-code-scan"></i> Generar QR
-        </button>
-    </form>
+        <form method="post">
+            <div class="card-bordered-body">
+                <div class="form-group">
+                    <label for="Identificacion">Identificación del usuario *</label>
+                    <input type="text" id="Identificacion" class="form-control"
+                           asp-for="Identificacion" placeholder="Ej: 402310876" />
+                </div>
+            </div>
+            <div class="card-bordered-footer">
+                <button type="submit" class="btn btn-info">
+                    <i class="bi bi-qr-code-scan"></i> Generar QR
+                </button>
+            </div>
+        </form>
+    </div>
 
     @if (!string.IsNullOrEmpty(Model.QrBase64))
     {
-        <div class="mt-4">
-            <hr />
-            <img class="qr-preview" src="data:image/png;base64,@Model.QrBase64" />
+        <div class="card-bordered">
+            <div class="card-bordered-header">
+                <h3>Resultado</h3>
+                <span class="badge-success">Generado</span>
+            </div>
+            <div class="card-bordered-body" style="text-align:center;">
+                <img style="max-width:100%; height:auto;"
+                     src="data:image/png;base64,@Model.QrBase64" alt="Código QR" />
+            </div>
         </div>
     }
 </div>

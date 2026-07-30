@@ -40,21 +40,12 @@ public static class CarreraEndpoint
         });
 
         // ==========================================
-        // GET POR ID - REQUIERE AUTENTICACIÓN
+        // GET POR ID - PÚBLICO
         // ==========================================
         group.MapGet("/{id:int}", async (
             int id,
-            ICarreraService service,
-            ITokenValidator validator,
-            HttpContext context) =>
+            ICarreraService service) =>
         {
-            string token = ObtenerToken(context);
-
-            if (!await validator.ValidateAsync(token))
-            {
-                return Results.Unauthorized();
-            }
-
             try
             {
                 var carrera = await service.GetById(id);
@@ -104,7 +95,7 @@ public static class CarreraEndpoint
 
             try
             {
-                // ✅ PASAR EL TOKEN AL MÉTODO CREATE
+                
                 var result = await service.Create(request, token);
 
                 if (!result.success)
@@ -199,7 +190,7 @@ public static class CarreraEndpoint
                     });
                 }
 
-                // ✅ PASAR EL TOKEN AL MÉTODO UPDATE
+         
                 var result = await service.Update(request, token);
 
                 if (!result.success)

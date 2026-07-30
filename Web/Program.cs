@@ -1,5 +1,6 @@
 using CarnetDigitalWeb.Models;
 using CarnetDigitalWeb.Services;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,14 +16,9 @@ builder.Services.AddSession(options =>
 
 // ========================================
 // URLs de microservicios.
-// Todos cuelgan de MicroservicioBase con un prefijo de ruta por servicio.
-// La barra final es OBLIGATORIA: sin ella, al combinar con rutas relativas
-// (p.ej. "api/auth/login") .NET descarta el prefijo /Login y la llamada falla.
-// Cada uno se puede sobreescribir con Services:<clave> en appsettings.json.
 // ========================================
 var microBase = (builder.Configuration["MicroservicioBase"] ?? "https://tiusr22pl.cuc-carrera-ti.ac.cr").TrimEnd('/');
 
-// Devuelve la URL configurada en Services:<clave> (con barra final) o {MicroservicioBase}/<rutaBase>/
 string UrlServicio(string clave, string rutaBase)
 {
     var config = builder.Configuration[$"Services:{clave}"];
@@ -30,7 +26,7 @@ string UrlServicio(string clave, string rutaBase)
     return url.TrimEnd('/') + "/";
 }
 
-// HttpClient para LoginSRV1  (/Login)
+// HttpClient para LoginSRV1
 builder.Services.AddHttpClient("Login", c =>
 {
     c.BaseAddress = new Uri(UrlServicio("LoginSRV1", "Login"));
@@ -38,16 +34,17 @@ builder.Services.AddHttpClient("Login", c =>
     c.Timeout = TimeSpan.FromSeconds(30);
 });
 
-// HttpClient para TiposUsuarioSRV5  (/TiposUsuario)
-builder.Services.AddHttpClient("TipoUsuario", c =>
+// HttpClient para TiposUsuarioSRV5
+builder.Services.AddHttpClient("TiposUsuario", c =>
 {
-    c.BaseAddress = new Uri(UrlServicio("TiposUsuarioSRV5", "TiposUsuario"));
+    var url = UrlServicio("TiposUsuarioSRV5", "TiposUsuario");
+    c.BaseAddress = new Uri(url);
     c.DefaultRequestHeaders.Add("Accept", "application/json");
     c.Timeout = TimeSpan.FromSeconds(30);
 });
 builder.Services.AddScoped<ITipoUsuarioService, TipoUsuarioService>();
 
-// HttpClient para TipoIdentificacionSRV6  (/TiposIdentificacion)
+// HttpClient para TipoIdentificacionSRV6
 builder.Services.AddHttpClient("TipoIdentificacion", c =>
 {
     c.BaseAddress = new Uri(UrlServicio("TipoIdentificacionSRV6", "TiposIdentificacion"));
@@ -56,7 +53,7 @@ builder.Services.AddHttpClient("TipoIdentificacion", c =>
 });
 builder.Services.AddScoped<ITipoIdentificacionService, TipoIdentificacionService>();
 
-// ✅ HttpClient para SRV13 - Fotografia
+// HttpClient para Fotografia
 builder.Services.AddHttpClient("Fotografia", c =>
 {
     c.BaseAddress = new Uri(UrlServicio("Fotografia", "Fotografia"));
@@ -64,7 +61,7 @@ builder.Services.AddHttpClient("Fotografia", c =>
     c.Timeout = TimeSpan.FromSeconds(30);
 });
 
-// ✅ HttpClient para SRV12 - EstadoUsuario
+// HttpClient para EstadoUsuario
 builder.Services.AddHttpClient("EstadoUsuario", c =>
 {
     c.BaseAddress = new Uri(UrlServicio("EstadoUsuario", "EstadoUsuario"));
@@ -72,7 +69,7 @@ builder.Services.AddHttpClient("EstadoUsuario", c =>
     c.Timeout = TimeSpan.FromSeconds(30);
 });
 
-// ✅ HttpClient para SRV15 - Parametro
+// HttpClient para Parametro
 builder.Services.AddHttpClient("Parametro", c =>
 {
     c.BaseAddress = new Uri(UrlServicio("Parametro", "Parametro"));
@@ -80,7 +77,7 @@ builder.Services.AddHttpClient("Parametro", c =>
     c.Timeout = TimeSpan.FromSeconds(30);
 });
 
-// HttpClient para SRV8 - Roles
+// HttpClient para Roles
 builder.Services.AddHttpClient("Roles", c =>
 {
     c.BaseAddress = new Uri(UrlServicio("Roles", "RolesAPI"));
@@ -88,7 +85,7 @@ builder.Services.AddHttpClient("Roles", c =>
     c.Timeout = TimeSpan.FromSeconds(30);
 });
 
-// HttpClient para SRV4 - Áreas
+// HttpClient para Áreas
 builder.Services.AddHttpClient("Areas", c =>
 {
     c.BaseAddress = new Uri(UrlServicio("Areas", "areasAPI"));
@@ -96,7 +93,7 @@ builder.Services.AddHttpClient("Areas", c =>
     c.Timeout = TimeSpan.FromSeconds(30);
 });
 
-// HttpClient para SRV2 - Instituciones
+// HttpClient para Instituciones
 builder.Services.AddHttpClient("Instituciones", c =>
 {
     c.BaseAddress = new Uri(UrlServicio("Instituciones", "institucionesAPI"));
@@ -111,22 +108,15 @@ builder.Services.AddHttpClient("Carreras", c =>
     c.Timeout = TimeSpan.FromSeconds(30);
 });
 
-// HttpClient para SRV9 - Bitácora
+// HttpClient para Bitácora
 builder.Services.AddHttpClient("Bitacora", c =>
 {
-    c.BaseAddress = new Uri(
-        UrlServicio("Bitacora", "BitacoraAPI")
-    );
-
-    c.DefaultRequestHeaders.Add(
-        "Accept",
-        "application/json"
-    );
-
+    c.BaseAddress = new Uri(UrlServicio("Bitacora", "BitacoraAPI"));
+    c.DefaultRequestHeaders.Add("Accept", "application/json");
     c.Timeout = TimeSpan.FromSeconds(30);
 });
 
-// ✅ HttpClient para SRV14 - CarnetQR
+// HttpClient para CarnetQR
 builder.Services.AddHttpClient("CarnetQR", c =>
 {
     c.BaseAddress = new Uri(UrlServicio("CarnetQR", "CarnetQR"));
@@ -134,8 +124,7 @@ builder.Services.AddHttpClient("CarnetQR", c =>
     c.Timeout = TimeSpan.FromSeconds(30);
 });
 
-
-// ✅ Servicios
+// Servicios
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IEstadoUsuarioService, EstadoUsuarioService>();
 builder.Services.AddScoped<ICarnetQRService, CarnetQRService>();
@@ -160,31 +149,16 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseSession();
 
-app.MapGet("/set-token", (HttpContext ctx) =>
-{
-    var token = ctx.Request.Query["token"].ToString();
-    var returnUrl = ctx.Request.Query["returnUrl"].ToString();
-
-    if (!string.IsNullOrEmpty(token))
-    {
-        ctx.Session.SetString("Token", token);
-    }
-
-    var redirectUrl = string.IsNullOrEmpty(returnUrl) ? "/EstadoUsuario" : returnUrl;
-    return Results.Redirect(redirectUrl);
-});
-
+// ✅ UN SOLO ENDPOINT /api/login (CON LOGS)
 app.MapPost("/api/login", async (LoginRequest request, ILoginService loginService, HttpContext ctx) =>
 {
     try
     {
-        // ✅ LOG PARA DEPURACIÓN
         Console.WriteLine("=== /api/login RECIBIDO ===");
         Console.WriteLine($"Email: {request.Email}");
         Console.WriteLine($"Password: {request.Password}");
         Console.WriteLine($"Tipo: {request.Tipo}");
 
-        // ✅ VALIDAR QUE LOS DATOS NO ESTÉN VACÍOS
         if (string.IsNullOrEmpty(request.Email))
         {
             return Results.BadRequest(new { message = "El email es requerido" });
@@ -224,7 +198,7 @@ app.MapPost("/api/logout", (HttpContext ctx) =>
     return Results.Ok(new { success = true, message = "Sesión cerrada" });
 });
 
-// ✅ Endpoint de configuración para el frontend
+// Endpoint de configuración
 app.MapGet("/api/config", (IConfiguration config) =>
 {
     var services = new Dictionary<string, string>();
@@ -240,12 +214,35 @@ app.MapGet("/api/config", (IConfiguration config) =>
 
 app.MapRazorPages();
 
+// Endpoint para tipos de usuario
+app.MapGet("/api/tipos-usuario", async (IHttpClientFactory httpClientFactory) =>
+{
+    try
+    {
+        var client = httpClientFactory.CreateClient("TiposUsuario");
+        var response = await client.GetAsync("api/TipoUsuario");
+
+        if (!response.IsSuccessStatusCode)
+        {
+            return Results.BadRequest(new { error = "Error al obtener tipos de usuario" });
+        }
+
+        var json = await response.Content.ReadAsStringAsync();
+        var tipos = JsonSerializer.Deserialize<object>(json);
+        return Results.Ok(tipos);
+    }
+    catch (Exception ex)
+    {
+        return Results.BadRequest(new { error = ex.Message });
+    }
+});
+
 app.MapGet("/", async context =>
 {
     var token = context.Session.GetString("Token");
     if (!string.IsNullOrEmpty(token))
     {
-        context.Response.Redirect("/EstadoUsuario");
+        context.Response.Redirect("/Index");
         return;
     }
     context.Response.Redirect("/Login");

@@ -16,6 +16,124 @@ namespace UsuariosSRV4.Services
             _logger = logger;
         }
 
+        // ============================================================
+        // ✅ VALIDAR CREDENCIALES CON VALIDACIÓN DE CONFIRMACIÓN
+        // ============================================================
+        public async Task<(bool ok, string? error, ValidarCredencialesResponse? data)> ValidarCredencialesAsync(
+            string email, string password, string? tipo = null)
+        {
+            try
+            {
+                _logger.LogInformation($"=== VALIDANDO CREDENCIALES: {email} ===");
+
+                var usuario = await _context.Usuarios
+                    .Include(u => u.TipoUsuario)
+                    .Include(u => u.Estado)
+                    .FirstOrDefaultAsync(u => u.Email == email);
+
+                // ❌ Usuario no existe
+                if (usuario == null)
+                {
+                    _logger.LogWarning($"Usuario no encontrado: {email}");
+                    return (false, "Usuario y/o contraseña incorrectos", null);
+                }
+
+                _logger.LogInformation($"Usuario: {email}, Confirmado: {usuario.Confirmado}, IntentosFallidos: {usuario.IntentosFallidos}, Bloqueado: {usuario.Bloqueado}");
+
+                // ============================================================
+                // 🔐 VALIDACIÓN DE CONFIRMACIÓN - CRUCIAL
+                // ============================================================
+                if (!usuario.Confirmado)
+                {
+                    _logger.LogWarning($"Usuario NO confirmado: {email}");
+                    return (false, "Por favor, confirme su cuenta antes de iniciar sesión. Revise su correo electrónico.", null);
+                }
+
+                // ✅ VERIFICAR BLOQUEO
+                if (usuario.Bloqueado)
+                {
+                    _logger.LogWarning($"Usuario BLOQUEADO: {email}");
+                    return (false, "Usuario bloqueado por intentos fallidos. Contacte al administrador.", null);
+                }
+
+                // ✅ VERIFICAR CONTRASEÑA
+                if (usuario.Contrasena != password)
+                {
+                    usuario.IntentosFallidos++;
+                    _logger.LogWarning($"Contraseña incorrecta, IntentosFallidos: {usuario.IntentosFallidos}");
+
+                    if (usuario.IntentosFallidos >= 3)
+                    {
+                        usuario.Bloqueado = true;
+                        usuario.FechaBloqueo = DateTime.Now;
+                        await _context.SaveChangesAsync();
+                        _logger.LogWarning($"Usuario BLOQUEADO por 3 intentos fallidos: {email}");
+                        return (false, "Usuario y/o contraseña incorrectos", null);
+                    }
+
+                    await _context.SaveChangesAsync();
+                    return (false, "Usuario y/o contraseña incorrectos", null);
+                }
+
+                // ✅ CONTRASEÑA CORRECTA - REINICIAR INTENTOS
+                if (usuario.IntentosFallidos > 0)
+                {
+                    usuario.IntentosFallidos = 0;
+                    usuario.Bloqueado = false;
+                    usuario.FechaBloqueo = null;
+                    await _context.SaveChangesAsync();
+                    _logger.LogInformation($"Intentos reiniciados para: {email}");
+                }
+
+                // ✅ VERIFICAR ESTADO (1 = Activo)
+                if (usuario.EstadoId != 1)
+                {
+                    return (false, "Usuario y/o contraseña incorrectos", null);
+                }
+
+                // ✅ VALIDAR TIPO DE USUARIO
+                if (!string.IsNullOrEmpty(tipo))
+                {
+                    var tipoUsuarioReal = usuario.TipoUsuario != null ? usuario.TipoUsuario.Nombre : "";
+
+                    _logger.LogInformation($"Tipo seleccionado: {tipo}, Tipo real del usuario: {tipoUsuarioReal}");
+
+                    if (!string.Equals(tipoUsuarioReal, tipo, StringComparison.OrdinalIgnoreCase))
+                    {
+                        _logger.LogWarning($"❌ Tipo de usuario NO coincide. Esperado: {tipo}, Real: {tipoUsuarioReal}");
+                        return (false, "Usuario y/o contraseña incorrectos", null);
+                    }
+
+                    _logger.LogInformation($"✅ Tipo de usuario validado correctamente: {tipo}");
+                }
+
+                // ✅ TODAS LAS VALIDACIONES PASARON
+                var result = new ValidarCredencialesResponse
+                {
+                    Id = usuario.Id,
+                    Email = usuario.Email,
+                    NombreCompleto = usuario.NombreCompleto,
+                    TipoUsuario = usuario.TipoUsuario != null ? usuario.TipoUsuario.Nombre : "",
+                    Activo = usuario.EstadoId == 1,
+                    Bloqueado = usuario.Bloqueado,
+                    IntentosFallidos = usuario.IntentosFallidos,
+                    TipoUsuarioId = usuario.TipoUsuarioId,
+                    RolId = usuario.RolId
+                };
+
+                _logger.LogInformation($"✅ Credenciales válidas para: {email}");
+                return (true, null, result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error en ValidarCredencialesAsync: {email}");
+                return (false, "Usuario y/o contraseña incorrectos", null);
+            }
+        }
+
+        // ============================================================
+        // ✅ OBTENER TODOS LOS USUARIOS
+        // ============================================================
         public async Task<(bool ok, string? error, IEnumerable<UsuarioDto>? data)> GetAllAsync()
         {
             try
@@ -41,7 +159,8 @@ namespace UsuariosSRV4.Services
                     IntentosFallidos = u.IntentosFallidos,
                     FechaCreacion = u.FechaCreacion,
                     FotografiaBase64 = null,
-                    Telefonos = (u.Telefonos != null) ? u.Telefonos.Select(t => t.Telefono ?? string.Empty).ToList() : new List<string>()
+                    Telefonos = (u.Telefonos != null) ? u.Telefonos.Select(t => t.Telefono ?? string.Empty).ToList() : new List<string>(),
+                    Confirmado = u.Confirmado
                 });
 
                 return (true, null, result);
@@ -52,6 +171,9 @@ namespace UsuariosSRV4.Services
             }
         }
 
+        // ============================================================
+        // ✅ OBTENER USUARIO POR ID
+        // ============================================================
         public async Task<(bool ok, string? error, UsuarioDto? data)> GetByIdAsync(int id)
         {
             try
@@ -81,7 +203,8 @@ namespace UsuariosSRV4.Services
                     IntentosFallidos = u.IntentosFallidos,
                     FechaCreacion = u.FechaCreacion,
                     FotografiaBase64 = null,
-                    Telefonos = (u.Telefonos != null) ? u.Telefonos.Select(t => t.Telefono ?? string.Empty).ToList() : new List<string>()
+                    Telefonos = (u.Telefonos != null) ? u.Telefonos.Select(t => t.Telefono ?? string.Empty).ToList() : new List<string>(),
+                    Confirmado = u.Confirmado
                 };
 
                 return (true, null, result);
@@ -92,7 +215,9 @@ namespace UsuariosSRV4.Services
             }
         }
 
-        // ✅ CREATE
+        // ============================================================
+        // ✅ CREAR USUARIO
+        // ============================================================
         public async Task<(bool ok, string? error, UsuarioDto? data)> CreateAsync(CrearUsuarioDto dto)
         {
             try
@@ -150,7 +275,9 @@ namespace UsuariosSRV4.Services
             }
         }
 
-        // ✅ UPDATE
+        // ============================================================
+        // ✅ ACTUALIZAR USUARIO
+        // ============================================================
         public async Task<(bool ok, string? error, UsuarioDto? data)> UpdateAsync(int id, ActualizarUsuarioDto dto)
         {
             try
@@ -171,6 +298,7 @@ namespace UsuariosSRV4.Services
                 usuario.TipoUsuarioId = dto.TipoUsuarioId;
                 usuario.EstadoId = dto.Activo ? 1 : 2;
                 usuario.Fotografia = null;
+                usuario.Confirmado = dto.Confirmado ?? usuario.Confirmado;
 
                 if (!string.IsNullOrWhiteSpace(dto.Contrasena))
                 {
@@ -210,7 +338,9 @@ namespace UsuariosSRV4.Services
             }
         }
 
-        // ✅ DELETE
+        // ============================================================
+        // ✅ ELIMINAR USUARIO (CAMBIO DE ESTADO A INACTIVO)
+        // ============================================================
         public async Task<(bool ok, string? error)> DeleteAsync(int id)
         {
             try
@@ -228,103 +358,6 @@ namespace UsuariosSRV4.Services
             catch (Exception ex)
             {
                 return (false, $"Error al eliminar usuario: {ex.Message}");
-            }
-        }
-
-        // ✅ VALIDAR CREDENCIALES CON BLOQUEO DE USUARIO (COMPLETO)
-        public async Task<(bool ok, string? error, ValidarCredencialesResponse? data)> ValidarCredencialesAsync(
-    string email, string password, string? tipo = null)
-        {
-            try
-            {
-                _logger.LogInformation($"=== VALIDANDO CREDENCIALES: {email} ===");
-
-                var usuario = await _context.Usuarios
-                    .Include(u => u.TipoUsuario)
-                    .Include(u => u.Estado)
-                    .FirstOrDefaultAsync(u => u.Email == email);
-
-                if (usuario == null)
-                {
-                    _logger.LogWarning($"Usuario no encontrado: {email}");
-                    return (false, "Usuario no encontrado", null);
-                }
-
-                _logger.LogInformation($"Usuario: {email}, IntentosFallidos: {usuario.IntentosFallidos}, Bloqueado: {usuario.Bloqueado}");
-
-                // ✅ VERIFICAR BLOQUEO
-                if (usuario.Bloqueado)
-                {
-                    _logger.LogWarning($"Usuario BLOQUEADO: {email}");
-                    return (false, "Usuario bloqueado por intentos fallidos. Contacte al administrador.", null);
-                }
-
-                // ✅ VERIFICAR CONTRASEÑA
-                if (usuario.Contrasena != password)
-                {
-                    usuario.IntentosFallidos++;
-                    _logger.LogWarning($"Contraseña incorrecta, IntentosFallidos: {usuario.IntentosFallidos}");
-
-                    if (usuario.IntentosFallidos >= 3)
-                    {
-                        usuario.Bloqueado = true;
-                        usuario.FechaBloqueo = DateTime.Now;
-                        await _context.SaveChangesAsync();
-                        _logger.LogWarning($"Usuario BLOQUEADO por 3 intentos fallidos: {email}");
-                        return (false, "Usuario bloqueado por 3 intentos fallidos. Contacte al administrador.", null);
-                    }
-
-                    await _context.SaveChangesAsync();
-                    return (false, "Contraseña incorrecta", null);
-                }
-
-                // ✅ CONTRASEÑA CORRECTA - REINICIAR INTENTOS
-                if (usuario.IntentosFallidos > 0)
-                {
-                    usuario.IntentosFallidos = 0;
-                    usuario.Bloqueado = false;
-                    usuario.FechaBloqueo = null;
-                    await _context.SaveChangesAsync();
-                    _logger.LogInformation($"Intentos reiniciados para: {email}");
-                }
-
-                // ✅ VERIFICAR ESTADO (1 = Activo)
-                if (usuario.EstadoId != 1)
-                {
-                    var estado = usuario.Estado != null ? usuario.Estado.Nombre : "Inactivo";
-                    return (false, $"Usuario {estado}", null);
-                }
-
-                // ✅ VERIFICAR TIPO
-                if (!string.IsNullOrEmpty(tipo))
-                {
-                    var tipoUsuario = usuario.TipoUsuario != null ? usuario.TipoUsuario.Nombre : "";
-                    if (!tipoUsuario.Equals(tipo, StringComparison.OrdinalIgnoreCase))
-                    {
-                        return (false, "Tipo de usuario no coincide", null);
-                    }
-                }
-
-                var result = new ValidarCredencialesResponse
-                {
-                    Id = usuario.Id,
-                    Email = usuario.Email,
-                    NombreCompleto = usuario.NombreCompleto,
-                    TipoUsuario = usuario.TipoUsuario != null ? usuario.TipoUsuario.Nombre : "",
-                    Activo = usuario.EstadoId == 1,
-                    Bloqueado = usuario.Bloqueado,
-                    IntentosFallidos = usuario.IntentosFallidos,
-                    TipoUsuarioId = usuario.TipoUsuarioId,
-                    RolId = usuario.RolId
-                };
-
-                _logger.LogInformation($"Credenciales válidas para: {email}");
-                return (true, null, result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Error en ValidarCredencialesAsync: {email}");
-                return (false, $"Error: {ex.Message}", null);
             }
         }
     }

@@ -20,16 +20,7 @@ const pantallasDisponibles =
         window.pantallasDisponibles
     );
 
-// Temporal para revisar la estructura recibida
-console.log(
-    'window.rolesIniciales:',
-    window.rolesIniciales
-);
 
-console.log(
-    'todosLosRoles normalizados:',
-    todosLosRoles
-);
 
 // ========================================
 // NORMALIZACIÓN DE DATOS
@@ -509,32 +500,25 @@ function renderizarRoles() {
 // ========================================
 
 function mostrarRoles(roles) {
-    const container =
-        document.getElementById(
-            'listaRoles'
-        );
+
+    const container = document.getElementById("listaRoles");
 
     if (!container) {
         return;
     }
 
-    if (
-        !Array.isArray(roles) ||
-        roles.length === 0
-    ) {
+    if (!Array.isArray(roles) || roles.length === 0) {
+
         container.innerHTML = `
             <div class="empty-state">
-                <i class="fas fa-user-tag fa-4x"></i>
+                <i class="bi bi-person-badge"></i>
 
-                <p>
-                    No hay roles registrados
-                </p>
+                <h3>No hay roles registrados</h3>
 
                 <button class="btn btn-primary"
                         onclick="abrirModalCrear()">
-
-                    <i class="fas fa-plus"></i>
-                    Crear primer rol
+                    <i class="bi bi-plus-circle"></i>
+                    Nuevo Rol
                 </button>
             </div>
         `;
@@ -542,161 +526,142 @@ function mostrarRoles(roles) {
         return;
     }
 
-    let html = '';
+    let html = "";
 
-    roles.forEach(function (
-        rolOriginal
-    ) {
-        const rol =
-            normalizarRol(
-                rolOriginal
-            );
+    roles.forEach(function (rolOriginal) {
 
-        const id =
-            rol.id;
+        const rol = normalizarRol(rolOriginal);
 
-        const nombre =
-            rol.nombre ||
-            'Sin nombre';
+        const id = rol.id;
+        const nombre = rol.nombre || "Sin nombre";
 
-        const nombresPantallas =
-            rol.pantallas
-                .map(function (
-                    pantalla
-                ) {
-                    return pantalla.nombre;
-                })
-                .filter(function (
-                    nombrePantalla
-                ) {
-                    return String(
-                        nombrePantalla
-                    ).trim() !== '';
-                });
+        const pantallas = rol.pantallas
+            .map(function (p) {
+                return p.nombre;
+            })
+            .filter(function (x) {
+                return x && x.trim() !== "";
+            });
 
-        let pantallasHtml = '';
+        let pantallasHtml = "";
 
-        if (
-            nombresPantallas.length > 3
-        ) {
+        if (pantallas.length === 0) {
+
             pantallasHtml =
-                nombresPantallas
-                    .slice(0, 3)
-                    .map(function (
-                        pantalla
-                    ) {
-                        return `
-                            <span class="badge-items">
-                                ${escaparHtml(pantalla)}
-                            </span>
-                        `;
-                    })
-                    .join(' ') +
-                `
-                    <span class="badge-items-more">
-                        +${nombresPantallas.length - 3}
+                `<span class="text-muted">
+                    Ninguna
+                </span>`;
+
+        } else {
+
+            if (pantallas.length > 3) {
+
+                pantallasHtml =
+                    pantallas
+                        .slice(0, 3)
+                        .map(function (nombrePantalla) {
+                            return `
+                    <span class="badge-items">
+                        ${escaparHtml(nombrePantalla)}
                     </span>
                 `;
-        }
-        else {
-            pantallasHtml =
-                nombresPantallas
-                    .map(function (
-                        pantalla
-                    ) {
-                        return `
-                            <span class="badge-items">
-                                ${escaparHtml(pantalla)}
-                            </span>
-                        `;
-                    })
-                    .join(' ');
-        }
+                        })
+                        .join("") +
+                    `
+            <span class="badge-items-more">
+                +${pantallas.length - 3}
+            </span>
+        `;
+            }
+            else {
 
-        const idSeguro =
-            id !== null &&
-                id !== undefined &&
-                !Number.isNaN(id)
-                ? id
-                : null;
+                pantallasHtml =
+                    pantallas
+                        .map(function (nombrePantalla) {
+                            return `
+                    <span class="badge-items">
+                        ${escaparHtml(nombrePantalla)}
+                    </span>
+                `;
+                        })
+                        .join("");
+            }
+
+        }
 
         html += `
-            <div class="card-bordered">
 
-                <div class="card-bordered-header">
+        <div class="card-bordered">
 
-                    <h3>
-                        <i class="fas fa-user-tag"></i>
-                        ${escaparHtml(nombre)}
-                    </h3>
+            <div class="card-bordered-header">
 
-                    <span class="rol-id">
+                <h3>
+                    <i class="bi bi-person-badge"></i>
+                    ${escaparHtml(nombre)}
+                </h3>
+
+            </div>
+
+            <div class="card-bordered-body">
+
+                <div class="info-row">
+
+                    <span class="label">
                         ID:
-                        ${idSeguro ??
-            'No disponible'
-            }
+                    </span>
+
+                    <span class="value">
+                        ${id}
                     </span>
 
                 </div>
 
-                <div class="card-bordered-body">
+                <div class="info-row">
 
-                    <div class="info-row">
+                    <span class="label">
+                        <i class="bi bi-display"></i>
+                        Pantallas:
+                    </span>
 
-                        <span class="label">
-                            <i class="fas fa-desktop"></i>
-                            Pantallas:
-                        </span>
+                    <span class="value">
 
-                        <span class="value">
-                            ${pantallasHtml ||
-            `
-                                <span class="text-muted">
-                                    Ninguna
-                                </span>
-                                `
-            }
-                        </span>
+                        ${pantallasHtml}
 
-                    </div>
-
-                </div>
-
-                <div class="card-bordered-footer">
-
-                    <button
-                        type="button"
-                        class="btn-sm btn-info"
-                        ${idSeguro === null
-                ? 'disabled'
-                : ''
-            }
-                        onclick="editarRol(${idSeguro})">
-
-                        <i class="fas fa-edit"></i>
-                        Editar
-                    </button>
-
-                    <button
-                        type="button"
-                        class="btn-sm btn-danger"
-                        ${idSeguro === null
-                ? 'disabled'
-                : ''
-            }
-                        onclick="abrirModalEliminar(
-                            ${idSeguro},
-                            '${escaparAtributo(nombre)}'
-                        )">
-
-                        <i class="fas fa-trash"></i>
-                        Eliminar
-                    </button>
+                    </span>
 
                 </div>
 
             </div>
+
+            <div class="card-bordered-footer">
+
+                <button
+                    class="btn btn-warning btn-sm"
+                    onclick="editarRol(${id})">
+
+                    <i class="bi bi-pencil-square"></i>
+                    Editar
+
+                </button>
+
+                <button
+                    class="btn btn-danger btn-sm"
+                    onclick="abrirModalEliminar(
+                        ${id},
+                        '${escaparAtributo(nombre)}'
+                    )">
+
+                    <i class="bi bi-trash"></i>
+                    Eliminar
+
+                </button>
+
+            </div>
+
+        </div>
+
         `;
+
     });
 
     container.innerHTML = html;

@@ -188,11 +188,8 @@
         <nav>
 
             <!-- ======================================== -->
-            <!-- SECCIÓN: MÓDULOS                          -->
+            <!-- ✅ SOLO LOS BOTONES SIN TÍTULOS NI DIVISORES -->
             <!-- ======================================== -->
-            <div class="section-title">
-                Módulos
-            </div>
 
             <a href="/EstadoUsuario">
                 <i class="bi bi-toggle2-on"></i>
@@ -234,63 +231,29 @@
                 Bitácora
             </a>
 
-            <!-- ======================================== -->
-            <!-- SECCIÓN: MICROSERVICIOS                   -->
-            <!-- ======================================== -->
-            <div class="divider"></div>
-
-            <div class="section-title">
-                Microservicios
-            </div>
-
-            <!-- Usuarios - Remoto -->
-            <a href="#"
-               onclick="abrirMicroservicio('https://tiusr22pl.cuc-carrera-ti.ac.cr/Usuarios'); return false;">
-                <i class="bi bi-people"></i>
-                Usuarios
-            </a>
-
-            <!-- Tipos de Usuario - Local -->
-            <a href="/TiposUsuario">
-                <i class="bi bi-tags"></i>
-                Tipos de Usuario
-            </a>
-
-            <!-- Tipos de Identificación - Local -->
-            <a href="/TiposIdentificacion">
-                <i class="bi bi-id-card"></i>
-                Tipos de Identificación
-            </a>
-
-            <!-- Carreras - Remoto -->
+            
+            <!-- Carreras -->
             <a href="#"
                onclick="abrirMicroservicio('https://tiusr22pl.cuc-carrera-ti.ac.cr/Carreras'); return false;">
-                <i class="bi bi-mortarboard"></i>
-                Carreras (Remoto)
-            </a>
-
-            <!-- Carreras - Local -->
-            <a href="/Carrera">
                 <i class="bi bi-mortarboard"></i>
                 Carreras
             </a>
 
-            <!-- Áreas - Local -->
+            <!-- Áreas -->
             <a href="/Areas">
                 <i class="bi bi-building"></i>
                 Áreas
             </a>
 
-            <!-- Instituciones - Local -->
+            <!-- Instituciones -->
             <a href="/Instituciones">
                 <i class="bi bi-bank"></i>
                 Instituciones
             </a>
 
             <!-- ======================================== -->
-            <!-- SECCIÓN: CERRAR SESIÓN                   -->
+            <!-- ✅ CERRAR SESIÓN                         -->
             <!-- ======================================== -->
-            <div class="divider"></div>
 
             <a href="#"
                onclick="cerrarSesion(); return false;"
@@ -374,7 +337,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+            document.addEventListener('DOMContentLoaded', function() {
 
                 const token = localStorage.getItem('accessToken');
 
@@ -454,7 +417,7 @@
                 window.location.href = url;
             }
 
-            document.addEventListener('click', function (event) {
+            document.addEventListener('click', function(event) {
 
                 const sidebar =
                     document.getElementById('sidebar');

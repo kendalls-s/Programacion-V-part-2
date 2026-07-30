@@ -1,4 +1,0 @@
-wwwroot\js\usuarios.js
-wwwroot\css\siteusuarios.css
-C:\Users\maddy\source\repos\Parq1926\Programacion-V-part-2\Microservicios\UsuariosSRV4\wwwroot\js\usuarios.js
-C:\Users\maddy\source\repos\Parq1926\Programacion-V-part-2\Microservicios\UsuariosSRV4\wwwroot\css\siteusuarios.css

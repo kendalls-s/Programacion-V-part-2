@@ -26,6 +26,16 @@ namespace CarnetDigitalWeb.Services
             int tamanoPagina,
             bool soloErrores)
         {
+            // ✅ VALIDACIÓN DEL TOKEN (SIN USAR Message)
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                return new BitacoraRespuestaModel
+                {
+                    Success = false
+                    // No uses Message si no existe en el modelo
+                };
+            }
+
             var urlBase =
                 _configuration["Services:Bitacora"]
                 ?? throw new InvalidOperationException(
@@ -101,6 +111,15 @@ namespace CarnetDigitalWeb.Services
 
             if (!response.IsSuccessStatusCode)
             {
+                // ✅ Manejar 401 sin usar Message
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    return new BitacoraRespuestaModel
+                    {
+                        Success = false
+                    };
+                }
+
                 throw new HttpRequestException(
                     $"Bitácora respondió {(int)response.StatusCode}: {contenido}"
                 );
@@ -118,8 +137,7 @@ namespace CarnetDigitalWeb.Services
                     opciones
                 );
 
-            return resultado ??
-                   new BitacoraRespuestaModel();
+            return resultado ?? new BitacoraRespuestaModel();
         }
     }
 }

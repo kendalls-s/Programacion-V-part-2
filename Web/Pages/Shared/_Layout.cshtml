@@ -23,164 +23,220 @@
     @await RenderSectionAsync("Styles", required: false)
 
     <style>
-            :root {
-                --azul: #1b2a4a;
-                --azul-claro: #24365f;
-            }
+        :root {
+            --azul: #1b2a4a;
+            --azul-claro: #24365f;
+        }
 
-            body {
-                background: #f4f6f9;
-            }
+        body {
+            background: #f4f6f9;
+        }
 
+        .sidebar {
+            width: 230px;
+            min-height: 100vh;
+            background: var(--azul);
+            position: fixed;
+            left: 0;
+            top: 0;
+            overflow-y: auto;
+            z-index: 1050;
+        }
+
+        .sidebar .brand {
+            color: #fff;
+            padding: 18px 16px;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(255, 255, 255, .1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar .brand i {
+            font-size: 24px;
+            color: #ffd700;
+            width: 24px;
+            text-align: center;
+        }
+
+        .sidebar .brand .logo-text {
+            font-size: 16px;
+            color: #fff;
+        }
+
+        .sidebar a {
+            display: block;
+            color: #c7d0e0;
+            padding: 12px 18px;
+            text-decoration: none;
+            font-size: .95rem;
+            border-left: 3px solid transparent;
+            transition: all .2s;
+        }
+
+        .sidebar a:hover {
+            background: var(--azul-claro);
+            color: #fff;
+            border-left-color: #ffd700;
+        }
+
+        .sidebar a.active {
+            background: var(--azul-claro);
+            color: #ffd700;
+            border-left-color: #ffd700;
+        }
+
+        .sidebar a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar .logout-link {
+            color: #e74c3c;
+            border-top: 1px solid rgba(255, 255, 255, .1);
+            margin-top: 10px;
+            padding-top: 15px;
+        }
+
+        .sidebar .logout-link:hover {
+            background: rgba(231, 76, 60, .15);
+            color: #ff6b6b;
+            border-left-color: #e74c3c;
+        }
+
+        .sidebar .divider {
+            height: 1px;
+            background: rgba(255, 255, 255, .1);
+            margin: 8px 16px;
+        }
+
+        .content {
+            margin-left: 230px;
+        }
+
+        .topbar {
+            background: #fff;
+            border-bottom: 1px solid #e3e6ec;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .main {
+            padding: 24px;
+            min-height: 80vh;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--azul);
+            cursor: pointer;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .user-avatar {
+            font-size: 28px;
+            color: var(--azul);
+        }
+
+        .user-name {
+            font-weight: 500;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: #6c757d;
+        }
+
+        /* Estilos para toast notifications */
+        #toastContainer {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+            max-width: 350px;
+        }
+
+        #toastContainer .alert {
+            margin-bottom: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            animation: slideIn 0.3s ease;
+        }
+
+        @@keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Badge de estado de sesión */
+        #tokenBadge {
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @@keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .token-expiring {
+            background-color: #ffc107 !important;
+            color: #212529 !important;
+        }
+
+        .token-expired {
+            background-color: #dc3545 !important;
+            color: #fff !important;
+        }
+
+        @@media (max-width: 768px) {
             .sidebar {
-                width: 230px;
-                min-height: 100vh;
-                background: var(--azul);
-                position: fixed;
-                left: 0;
-                top: 0;
-                overflow-y: auto;
-                z-index: 1050;
+                transform: translateX(-100%);
+                transition: transform .3s;
             }
 
-                .sidebar .brand {
-                    color: #fff;
-                    padding: 18px 16px;
-                    font-weight: 600;
-                    border-bottom: 1px solid rgba(255, 255, 255, .1);
-                    display: flex;
-                    align-items: center;
-                    gap: 10px;
-                }
-
-                    .sidebar .brand i {
-                        font-size: 24px;
-                        color: #ffd700;
-                        width: 24px;
-                        text-align: center;
-                    }
-
-                    .sidebar .brand .logo-text {
-                        font-size: 16px;
-                        color: #fff;
-                    }
-
-                .sidebar a {
-                    display: block;
-                    color: #c7d0e0;
-                    padding: 12px 18px;
-                    text-decoration: none;
-                    font-size: .95rem;
-                    border-left: 3px solid transparent;
-                    transition: all .2s;
-                }
-
-                    .sidebar a:hover {
-                        background: var(--azul-claro);
-                        color: #fff;
-                        border-left-color: #ffd700;
-                    }
-
-                    .sidebar a.active {
-                        background: var(--azul-claro);
-                        color: #ffd700;
-                        border-left-color: #ffd700;
-                    }
-
-                    .sidebar a i {
-                        margin-right: 10px;
-                        width: 20px;
-                        text-align: center;
-                    }
-
-                .sidebar .logout-link {
-                    color: #e74c3c;
-                    border-top: 1px solid rgba(255, 255, 255, .1);
-                    margin-top: 10px;
-                    padding-top: 15px;
-                }
-
-                    .sidebar .logout-link:hover {
-                        background: rgba(231, 76, 60, .15);
-                        color: #ff6b6b;
-                        border-left-color: #e74c3c;
-                    }
-
-                .sidebar .divider {
-                    height: 1px;
-                    background: rgba(255, 255, 255, .1);
-                    margin: 8px 16px;
-                }
+            .sidebar.open {
+                transform: translateX(0);
+            }
 
             .content {
-                margin-left: 230px;
-            }
-
-            .topbar {
-                background: #fff;
-                border-bottom: 1px solid #e3e6ec;
-                padding: 10px 20px;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                flex-wrap: wrap;
-                gap: 8px;
-            }
-
-            .main {
-                padding: 24px;
-                min-height: 80vh;
+                margin-left: 0;
             }
 
             .menu-toggle {
-                display: none;
-                background: none;
-                border: none;
-                font-size: 24px;
-                color: var(--azul);
-                cursor: pointer;
+                display: block;
             }
-
-            .user-info {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-            }
-
-            .user-avatar {
-                font-size: 28px;
-                color: var(--azul);
-            }
-
-            .user-name {
-                font-weight: 500;
-                font-size: 14px;
-                color: #333;
-            }
-
-            .user-role {
-                font-size: 12px;
-                color: #6c757d;
-            }
-
-            @@media (max-width: 768px) {
-                .sidebar {
-                    transform: translateX(-100%);
-                    transition: transform .3s;
-                }
-
-                    .sidebar.open {
-                        transform: translateX(0);
-                    }
-
-                .content {
-                    margin-left: 0;
-                }
-
-                .menu-toggle {
-                    display: block;
-                }
-            }
+        }
     </style>
 </head>
 
@@ -235,19 +291,16 @@
                 Bitácora
             </a>
 
-            <!-- ✅ CARRERAS - APUNTA A LA PÁGINA CORRECTA -->
             <a href="~/Carrera">
                 <i class="bi bi-mortarboard"></i>
                 Carreras
             </a>
 
-            <!-- Áreas - Local -->
             <a href="~/Areas">
                 <i class="bi bi-building"></i>
                 Áreas
             </a>
 
-            <!-- Instituciones - Local -->
             <a href="~/Instituciones">
                 <i class="bi bi-bank"></i>
                 Instituciones
@@ -307,6 +360,11 @@
                     ✅ Con sesión
                 </span>
 
+                <!-- Contador de tiempo de sesión -->
+                <span class="badge bg-info text-dark" id="sessionTimer" style="font-size: 11px;">
+                    ⏱️ 0s
+                </span>
+
             </div>
 
         </div>
@@ -336,108 +394,453 @@
 
     </div>
 
+    <!-- Contenedor para notificaciones toast -->
+    <div id="toastContainer"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+    
+    <script>
+        // ============================================================
+        // 🔄 SISTEMA DE RENOVACIÓN DE TOKEN
+        // ============================================================
+
+        let tokenRenewalInterval = null;
+        let tokenRenewalTimeout = null;
+        let isRenewing = false;
+        let sessionSeconds = 0;
+        let sessionTimerInterval = null;
+        let tokenExpirationTime = null;
+
+        // Función para obtener el token
+        function getToken() {
+            return localStorage.getItem('accessToken');
+        }
+
+        // Función para obtener el refresh token
+        function getRefreshToken() {
+            return localStorage.getItem('refreshToken');
+        }
+
+        // Función para actualizar la sesión del servidor
+        function updateServerSession(token) {
+            return fetch('/set-token?token=' + encodeURIComponent(token), {
+                method: 'GET'
+            });
+        }
+
+        // Función para renovar el token
+        async function renewToken() {
+            if (isRenewing) return;
+
+            const refreshToken = getRefreshToken();
+            if (!refreshToken) {
+                console.warn('⚠️ No hay refresh token disponible');
+                return;
+            }
+
+            isRenewing = true;
+
+            try {
+                console.log('🔄 Renovando token...');
+                
+                // Actualizar badge
+                document.getElementById('tokenBadge').textContent = '🔄 Renovando...';
+                document.getElementById('tokenBadge').className = 'badge bg-warning text-dark';
+
+                const response = await fetch('/api/refresh-token', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ refreshToken: refreshToken })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Actualizar tokens
+                    localStorage.setItem('accessToken', data.accessToken);
+                    localStorage.setItem('refreshToken', data.refreshToken);
+                    localStorage.setItem('expiresIn', data.expiresIn || 300);
+
+                    // Actualizar tiempo de expiración
+                    tokenExpirationTime = Date.now() + (data.expiresIn || 300) * 1000;
+
+                    // Actualizar sesión del servidor
+                    await updateServerSession(data.accessToken);
+
+                    console.log(`✅ Token renovado exitosamente. Expira en ${data.expiresIn || 300} segundos`);
+
+                    // Actualizar badge
+                    document.getElementById('tokenBadge').textContent = '✅ Sesión renovada';
+                    document.getElementById('tokenBadge').className = 'badge bg-success';
+
+                    // Mostrar notificación sutil
+                    showToast('🔄 Sesión renovada automáticamente', 'success');
+
+                    // Resetear timer de sesión
+                    sessionSeconds = 0;
+                } else {
+                    console.warn('⚠️ Falló renovación de token:', data.message);
+                    
+                    document.getElementById('tokenBadge').textContent = '⚠️ Error renovando';
+                    document.getElementById('tokenBadge').className = 'badge bg-danger';
+
+                    if (data.message && data.message.toLowerCase().includes('expirado')) {
+                        // Si el refresh token expiró, cerrar sesión
+                        showToast('⏰ Su sesión ha expirado, inicie sesión nuevamente', 'danger');
+                        setTimeout(() => logoutUser(), 2000);
+                    }
+                }
+            } catch (error) {
+                console.error('❌ Error renovando token:', error);
+                document.getElementById('tokenBadge').textContent = '❌ Error';
+                document.getElementById('tokenBadge').className = 'badge bg-danger';
+            } finally {
+                isRenewing = false;
+            }
+        }
+
+        // Función para cerrar sesión
+        async function logoutUser() {
+            try {
+                await fetch('/api/logout', {
+                    method: 'POST'
+                });
+            } catch (e) {
+                console.error('Error al cerrar sesión:', e);
+            }
+
+            // Limpiar localStorage
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+            localStorage.removeItem('tokenType');
+            localStorage.removeItem('expiresIn');
+            localStorage.removeItem('usuarioId');
+            localStorage.removeItem('usuarioEmail');
+            localStorage.removeItem('nombreCompleto');
+            localStorage.removeItem('usuarioTipo');
+            localStorage.removeItem('usuarioTipoId');
+
+            // Detener renovación
+            stopTokenRenewal();
+            
+            // Detener timer de sesión
+            if (sessionTimerInterval) {
+                clearInterval(sessionTimerInterval);
+                sessionTimerInterval = null;
+            }
+
+            // Redirigir a login
+            window.location.href = '/Login?mensaje=Su sesión ha expirado, por favor inicie sesión nuevamente';
+        }
+
+        // Función para iniciar la renovación automática
+        function startTokenRenewal() {
+            // Detener renovación previa si existe
+            stopTokenRenewal();
+
+            const token = getToken();
+            if (!token) {
+                console.warn('⚠️ No hay token para renovar');
+                return;
+            }
+
+            console.log('🔄 Iniciando renovación automática de token (cada 4 minutos)');
+
+            // Iniciar timer de sesión
+            startSessionTimer();
+
+            // Configurar tiempo de expiración
+            const expiresIn = parseInt(localStorage.getItem('expiresIn') || '300');
+            tokenExpirationTime = Date.now() + expiresIn * 1000;
+
+            // Renovar inmediatamente si el token está por expirar
+            const renewalTime = Math.min(240, Math.max(60, expiresIn - 60)); // Renovar 1 minuto antes de expirar
+
+            // Programar renovación
+            tokenRenewalInterval = setInterval(renewToken, 240000); // 4 minutos
+            tokenRenewalTimeout = setTimeout(() => {
+                console.log('⏰ Renovando token por tiempo programado (1 minuto antes de expirar)');
+                renewToken();
+            }, (expiresIn - 60) * 1000);
+
+            // Actualizar badge
+            document.getElementById('tokenBadge').textContent = '✅ Con sesión';
+            document.getElementById('tokenBadge').className = 'badge bg-success';
+        }
+
+        // Función para detener la renovación
+        function stopTokenRenewal() {
+            if (tokenRenewalInterval) {
+                clearInterval(tokenRenewalInterval);
+                tokenRenewalInterval = null;
+            }
+            if (tokenRenewalTimeout) {
+                clearTimeout(tokenRenewalTimeout);
+                tokenRenewalTimeout = null;
+            }
+            console.log('⏹️ Renovación automática detenida');
+        }
+
+        // Función para iniciar el timer de sesión
+        function startSessionTimer() {
+            if (sessionTimerInterval) {
+                clearInterval(sessionTimerInterval);
+            }
+            
+            sessionSeconds = 0;
+            sessionTimerInterval = setInterval(() => {
+                sessionSeconds++;
+                
+                const timerElement = document.getElementById('sessionTimer');
+                if (timerElement) {
+                    const minutes = Math.floor(sessionSeconds / 60);
+                    const seconds = sessionSeconds % 60;
+                    timerElement.textContent = `⏱️ ${minutes}m ${seconds}s`;
+                }
+                
+                // Verificar si el token está por expirar (menos de 1 minuto)
+                if (tokenExpirationTime) {
+                    const timeLeft = Math.floor((tokenExpirationTime - Date.now()) / 1000);
+                    if (timeLeft < 60 && timeLeft > 0) {
+                        document.getElementById('tokenBadge').textContent = `⚠️ Expira en ${timeLeft}s`;
+                        document.getElementById('tokenBadge').className = 'badge bg-warning text-dark';
+                    }
+                }
+            }, 1000);
+        }
+
+        // Función para mostrar toast (notificación)
+        function showToast(message, type = 'info') {
+            const toastContainer = document.getElementById('toastContainer');
+            if (!toastContainer) {
+                // Crear contenedor si no existe
+                const container = document.createElement('div');
+                container.id = 'toastContainer';
+                container.style.position = 'fixed';
+                container.style.bottom = '20px';
+                container.style.right = '20px';
+                container.style.zIndex = '9999';
+                container.style.maxWidth = '350px';
+                document.body.appendChild(container);
+            }
+
+            const toast = document.createElement('div');
+            toast.className = `alert alert-${type} alert-dismissible fade show`;
+            toast.role = 'alert';
+            toast.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            toast.style.marginBottom = '10px';
+            toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+            toast.style.animation = 'slideIn 0.3s ease';
+
+            const container = document.getElementById('toastContainer');
+            container.appendChild(toast);
+
+            // Auto cerrar después de 5 segundos
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.classList.remove('show');
+                    setTimeout(() => toast.remove(), 300);
+                }
+            }, 5000);
+        }
+
+        // ============================================================
+        // 📡 CONEXIÓN SIGNALR PARA ACTUALIZACIÓN EN TIEMPO REAL
+        // ============================================================
+
+        let connection = null;
+
+        function setupSignalR() {
+            if (connection) return;
+
+            connection = new signalR.HubConnectionBuilder()
+                .withUrl("/tokenHub")
+                .withAutomaticReconnect()
+                .build();
+
+            connection.on("TokenUpdated", (newToken) => {
+                console.log('📡 Token actualizado por el servidor');
+                localStorage.setItem('accessToken', newToken);
+                showToast('🔄 Token actualizado desde el servidor', 'info');
+            });
+
+            connection.on("ForceLogout", () => {
+                console.log('📡 Sesión forzada a cerrar por el servidor');
+                showToast('⏰ Sesión cerrada por el servidor', 'danger');
+                setTimeout(() => logoutUser(), 1500);
+            });
+
+            connection.start()
+                .then(() => console.log('📡 Conectado al TokenHub'))
+                .catch(err => console.error('❌ Error conectando al TokenHub:', err));
+        }
+
+        // ============================================================
+        // 🚀 INICIALIZACIÓN
+        // ============================================================
+
+        // Iniciar cuando la página esté lista
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = getToken();
+            if (token) {
+                startTokenRenewal();
+                setupSignalR();
+            }
+
+            // Escuchar cambios en el token desde otras pestañas
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'accessToken') {
+                    if (e.newValue) {
+                        // Token actualizado en otra pestaña
+                        startTokenRenewal();
+                        showToast('🔄 Sesión actualizada desde otra pestaña', 'info');
+                    } else {
+                        // Token eliminado
+                        stopTokenRenewal();
+                        if (sessionTimerInterval) {
+                            clearInterval(sessionTimerInterval);
+                            sessionTimerInterval = null;
+                        }
+                    }
+                }
+            });
+        });
+
+        // Limpiar al salir de la página
+        window.addEventListener('beforeunload', function() {
+            stopTokenRenewal();
+            if (sessionTimerInterval) {
+                clearInterval(sessionTimerInterval);
+                sessionTimerInterval = null;
+            }
+            if (connection) {
+                connection.stop();
+            }
+        });
+
+        // Exponer funciones globalmente
+        window.getToken = getToken;
+        window.getRefreshToken = getRefreshToken;
+        window.renewToken = renewToken;
+        window.startTokenRenewal = startTokenRenewal;
+        window.stopTokenRenewal = stopTokenRenewal;
+        window.logoutUser = logoutUser;
+        window.updateServerSession = updateServerSession;
+        window.showToast = showToast;
+    </script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
 
     <script>
-            // Ruta base de la app (ej: "/CarnetWeb"). Se resuelve en el servidor.
-            window.appBase = '@Url.Content("~/")'.replace(/\/+$/, '');
+        // Ruta base de la app (ej: "/CarnetWeb"). Se resuelve en el servidor.
+        window.appBase = '@Url.Content("~/")'.replace(/\/+$/, '');
 
-            document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function() {
 
-                const token = localStorage.getItem('accessToken');
+            const token = localStorage.getItem('accessToken');
 
-                if (!token) {
-                    window.location.href = window.appBase + '/Login';
-                    return;
-                }
-
-                const nombre =
-                    localStorage.getItem('nombreCompleto') || 'Usuario';
-
-                const tipo =
-                    localStorage.getItem('usuarioTipo') || '';
-
-                document.getElementById('userName').textContent = nombre;
-
-                document.getElementById('userRole').textContent =
-                    tipo ? '(' + tipo + ')' : '';
-
-                fetch(window.appBase + '/api/config')
-                    .then(response => {
-
-                        if (!response.ok) {
-                            throw new Error('No fue posible cargar la configuración.');
-                        }
-
-                        return response.json();
-                    })
-                    .then(config => {
-                        window.serviceConfig = config;
-                    })
-                    .catch(() => {
-
-                        window.serviceConfig = {
-                            TiposUsuarioSRV5: 'https://tiusr22pl.cuc-carrera-ti.ac.cr/TiposUsuario',
-                            TipoIdentificacionSRV6: 'https://tiusr22pl.cuc-carrera-ti.ac.cr/TiposIdentificacion',
-                            Carreras: 'https://tiusr22pl.cuc-carrera-ti.ac.cr/Carreras',
-                            Areas: 'https://tiusr22pl.cuc-carrera-ti.ac.cr/Areas',
-                            Instituciones: 'https://tiusr22pl.cuc-carrera-ti.ac.cr/Instituciones',
-                            Roles: 'https://tiusr22pl.cuc-carrera-ti.ac.cr/RolesAPI',
-                            Bitacora: 'https://tiusr22pl.cuc-carrera-ti.ac.cr/BitacoraAPI'
-                        };
-                    });
-            });
-
-            function toggleSidebar() {
-                document
-                    .getElementById('sidebar')
-                    .classList
-                    .toggle('open');
-            }
-
-            function cerrarSesion() {
-
-                const confirmar =
-                    confirm('¿Está seguro de cerrar sesión?');
-
-                if (!confirmar) {
-                    return;
-                }
-
-                localStorage.clear();
+            if (!token) {
                 window.location.href = window.appBase + '/Login';
+                return;
             }
 
-            function abrirMicroservicio(url) {
+            const nombre =
+                localStorage.getItem('nombreCompleto') || 'Usuario';
 
-                const token =
-                    localStorage.getItem('accessToken');
+            const tipo =
+                localStorage.getItem('usuarioTipo') || '';
 
-                if (!token) {
-                    window.location.href = window.appBase + '/Login';
-                    return;
-                }
+            document.getElementById('userName').textContent = nombre;
 
-                window.location.href = url;
+            document.getElementById('userRole').textContent =
+                tipo ? '(' + tipo + ')' : '';
+
+            fetch(window.appBase + '/api/config')
+                .then(response => {
+
+                    if (!response.ok) {
+                        throw new Error('No fue posible cargar la configuración.');
+                    }
+
+                    return response.json();
+                })
+                .then(config => {
+                    window.serviceConfig = config;
+                })
+                .catch(() => {
+
+                    window.serviceConfig = {
+                        TiposUsuarioSRV5: 'https://tiusr22pl.cuc-carrera-ti.ac.cr/TiposUsuario',
+                        TipoIdentificacionSRV6: 'https://tiusr22pl.cuc-carrera-ti.ac.cr/TiposIdentificacion',
+                        Carreras: 'https://tiusr22pl.cuc-carrera-ti.ac.cr/Carreras',
+                        Areas: 'https://tiusr22pl.cuc-carrera-ti.ac.cr/Areas',
+                        Instituciones: 'https://tiusr22pl.cuc-carrera-ti.ac.cr/Instituciones',
+                        Roles: 'https://tiusr22pl.cuc-carrera-ti.ac.cr/RolesAPI',
+                        Bitacora: 'https://tiusr22pl.cuc-carrera-ti.ac.cr/BitacoraAPI'
+                    };
+                });
+        });
+
+        function toggleSidebar() {
+            document
+                .getElementById('sidebar')
+                .classList
+                .toggle('open');
+        }
+
+        function cerrarSesion() {
+
+            const confirmar =
+                confirm('¿Está seguro de cerrar sesión?');
+
+            if (!confirmar) {
+                return;
             }
 
-            document.addEventListener('click', function(event) {
+            // Detener renovación
+            if (window.stopTokenRenewal) {
+                window.stopTokenRenewal();
+            }
 
-                const sidebar =
-                    document.getElementById('sidebar');
+            localStorage.clear();
+            window.location.href = window.appBase + '/Login';
+        }
 
-                const toggleBtn =
-                    document.querySelector('.menu-toggle');
+        function abrirMicroservicio(url) {
 
-                if (window.innerWidth <= 768 &&
-                    sidebar &&
-                    toggleBtn &&
-                    !sidebar.contains(event.target) &&
-                    !toggleBtn.contains(event.target)) {
+            const token =
+                localStorage.getItem('accessToken');
 
-                    sidebar.classList.remove('open');
-                }
-            });
+            if (!token) {
+                window.location.href = window.appBase + '/Login';
+                return;
+            }
+
+            window.location.href = url;
+        }
+
+        document.addEventListener('click', function(event) {
+
+            const sidebar =
+                document.getElementById('sidebar');
+
+            const toggleBtn =
+                document.querySelector('.menu-toggle');
+
+            if (window.innerWidth <= 768 &&
+                sidebar &&
+                toggleBtn &&
+                !sidebar.contains(event.target) &&
+                !toggleBtn.contains(event.target)) {
+
+                sidebar.classList.remove('open');
+            }
+        });
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)

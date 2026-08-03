@@ -26,7 +26,9 @@
 else
 {
     <div class="grid-cards">
-        @{ var indice = 0; }
+        @{
+            var indice = 0;
+        }
         @foreach (var p in Model.Items)
         {
             indice++;
@@ -119,8 +121,8 @@ else
 <script>
     let formEliminarActual = null;
 
-    document.querySelectorAll('.btn-eliminar-parametro').forEach(function (btn) {
-        btn.addEventListener('click', function () {
+    document.querySelectorAll('.btn-eliminar-parametro').forEach(function(btn) {
+        btn.addEventListener('click', function() {
             formEliminarActual = document.getElementById(btn.dataset.form);
             document.getElementById('parametroEliminar').textContent = btn.dataset.etiqueta || '';
             document.getElementById('modalEliminar').style.display = 'flex';
@@ -138,7 +140,7 @@ else
         }
     }
 
-    window.addEventListener('click', function (event) {
+    window.addEventListener('click', function(event) {
         if (event.target === document.getElementById('modalEliminar')) {
             cerrarModalEliminar();
         }

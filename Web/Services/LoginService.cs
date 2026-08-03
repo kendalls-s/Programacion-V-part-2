@@ -19,32 +19,6 @@ namespace CarnetDigitalWeb.Services
         {
             try
             {
-                _logger.LogInformation($"=== LoginService.LoginAsync ===");
-                _logger.LogInformation($"Email: {request.Email}");
-                _logger.LogInformation($"Password: {request.Password}");
-                _logger.LogInformation($"Tipo: {request.Tipo}");
-
-                // ✅ VALIDAR QUE LOS DATOS NO ESTÉN VACÍOS
-                if (string.IsNullOrEmpty(request.Email))
-                {
-                    _logger.LogWarning("Email vacío en LoginService");
-                    return new LoginResponse
-                    {
-                        Success = false,
-                        Message = "El email es requerido"
-                    };
-                }
-
-                if (string.IsNullOrEmpty(request.Password))
-                {
-                    _logger.LogWarning("Password vacío en LoginService");
-                    return new LoginResponse
-                    {
-                        Success = false,
-                        Message = "La contraseña es requerida"
-                    };
-                }
-
                 var client = _httpClientFactory.CreateClient("Login");
 
                 var loginData = new
@@ -55,60 +29,69 @@ namespace CarnetDigitalWeb.Services
                 };
 
                 var json = JsonSerializer.Serialize(loginData);
-                _logger.LogInformation($"JSON enviado a LoginSRV1: {json}");
-
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                 var response = await client.PostAsync("api/auth/login", content);
+
                 var responseJson = await response.Content.ReadAsStringAsync();
 
-                _logger.LogInformation($"Respuesta de LoginSRV1: {responseJson}");
-                _logger.LogInformation($"Status Code: {response.StatusCode}");
-
-                // ✅ Intentar deserializar la respuesta
-                try
+                if (!response.IsSuccessStatusCode)
                 {
-                    var result = JsonSerializer.Deserialize<LoginResponse>(responseJson, new JsonSerializerOptions
-                    {
-                        PropertyNameCaseInsensitive = true
-                    });
+                    _logger.LogWarning("Login fallido: {StatusCode} - {Response}", response.StatusCode, responseJson);
 
-                    if (result != null)
+                    try
                     {
-                        return result;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Error al deserializar LoginResponse");
-                }
-
-                // ✅ Si no se pudo deserializar, intentar como mensaje de error simple
-                try
-                {
-                    var errorObj = JsonSerializer.Deserialize<Dictionary<string, string>>(responseJson, new JsonSerializerOptions
-                    {
-                        PropertyNameCaseInsensitive = true
-                    });
-
-                    if (errorObj != null && errorObj.TryGetValue("message", out var msg))
-                    {
-                        return new LoginResponse
+                        var errorResponse = JsonSerializer.Deserialize<LoginResponse>(responseJson, new JsonSerializerOptions
                         {
-                            Success = false,
-                            Message = msg
-                        };
+                            PropertyNameCaseInsensitive = true
+                        });
+
+                        if (errorResponse != null && !string.IsNullOrEmpty(errorResponse.Message))
+                        {
+                            return new LoginResponse
+                            {
+                                Success = false,
+                                Message = errorResponse.Message
+                            };
+                        }
                     }
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Error al deserializar mensaje de error");
+                    catch { }
+
+                    return new LoginResponse
+                    {
+                        Success = false,
+                        Message = "Usuario y/o contraseña incorrectos."
+                    };
                 }
 
+                var result = JsonSerializer.Deserialize<LoginResponse>(responseJson, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                if (result == null)
+                {
+                    return new LoginResponse
+                    {
+                        Success = false,
+                        Message = "Error al procesar respuesta del servidor"
+                    };
+                }
+
+                if (!result.Success && string.IsNullOrEmpty(result.Message))
+                {
+                    result.Message = "Usuario y/o contraseña incorrectos.";
+                }
+
+                return result;
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError(ex, "Error de conexión con el microservicio");
                 return new LoginResponse
                 {
                     Success = false,
-                    Message = "Credenciales inválidas"
+                    Message = "No se pudo conectar con el servidor de autenticación"
                 };
             }
             catch (Exception ex)
@@ -117,7 +100,62 @@ namespace CarnetDigitalWeb.Services
                 return new LoginResponse
                 {
                     Success = false,
-                    Message = $"Error de conexión: {ex.Message}"
+                    Message = "Error de conexión: " + ex.Message
+                };
+            }
+        }
+
+        // ✅ IMPLEMENTACIÓN DEL MÉTODO RefreshTokenAsync
+        public async Task<RefreshTokenResponse> RefreshTokenAsync(string refreshToken)
+        {
+            try
+            {
+                var client = _httpClientFactory.CreateClient("Login");
+
+                var refreshData = new { refreshToken = refreshToken };
+                var json = JsonSerializer.Serialize(refreshData);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await client.PostAsync("api/auth/refresh-token", content);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogWarning("Refresh token fallido: {StatusCode}", response.StatusCode);
+                    return new RefreshTokenResponse
+                    {
+                        Success = false,
+                        Message = "Error al renovar el token"
+                    };
+                }
+
+                var responseJson = await response.Content.ReadAsStringAsync();
+                var result = JsonSerializer.Deserialize<RefreshTokenResponse>(responseJson, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                return result ?? new RefreshTokenResponse
+                {
+                    Success = false,
+                    Message = "Error al procesar respuesta del servidor"
+                };
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError(ex, "Error de conexión en RefreshTokenAsync");
+                return new RefreshTokenResponse
+                {
+                    Success = false,
+                    Message = "No se pudo conectar con el servidor de autenticación"
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en RefreshTokenAsync");
+                return new RefreshTokenResponse
+                {
+                    Success = false,
+                    Message = "Error al renovar el token: " + ex.Message
                 };
             }
         }

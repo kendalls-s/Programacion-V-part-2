@@ -151,6 +151,8 @@ builder.Services.AddScoped<ICarreraService, CarreraService>();
 builder.Services.AddScoped<IAutoRegistroService,AutoRegistroService>();
 builder.Services.AddHttpContextAccessor();
 
+
+builder.Services.AddSignalR();
 var app = builder.Build();
 
 // ========================================
@@ -217,6 +219,32 @@ app.MapPost("/api/login", async (LoginRequest request, ILoginService loginServic
         return Results.BadRequest(new { message = $"Error: {ex.Message}" });
     }
 });
+
+// ✅ Endpoint para renovar token
+// ✅ Endpoint para renovar token
+app.MapPost("/api/refresh-token", async (RefreshTokenRequest request, ILoginService loginService, HttpContext ctx) =>
+{
+    if (string.IsNullOrEmpty(request.RefreshToken))
+    {
+        return Results.BadRequest(new { success = false, message = "Refresh token requerido" });
+    }
+
+    var result = await loginService.RefreshTokenAsync(request.RefreshToken);
+
+    if (result.Success && !string.IsNullOrEmpty(result.AccessToken))
+    {
+        // Actualizar sesión del servidor
+        ctx.Session.SetString("Token", result.AccessToken);
+    }
+
+    return Results.Ok(result);
+});
+
+// Modelo para refresh token
+app.MapGet("/api/refresh-token", () => Results.BadRequest(new { success = false, message = "Método no permitido" }));
+
+// Registrar el Hub
+app.MapHub<CarnetDigitalWeb.Hubs.TokenHub>("/tokenHub");
 
 app.MapPost("/api/logout", (HttpContext ctx) =>
 {

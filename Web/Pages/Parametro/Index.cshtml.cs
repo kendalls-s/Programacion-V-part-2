@@ -1,67 +1,112 @@
-using CarnetDigitalWeb.Models;
-using CarnetDigitalWeb.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using CarnetDigitalWeb.Services;
 
 namespace CarnetDigitalWeb.Pages.Parametro
 {
     public class IndexModel : PageModel
     {
-        // Cantidad de elementos por pagina, parametrizable segun HU Web17
-        private const int PorPagina = 15;
+        private readonly IParametroService _parametroService;
+        private readonly ILogger<IndexModel> _logger;
 
-        private readonly IParametroService _service;
-
-        public IndexModel(IParametroService service)
-        {
-            _service = service;
-        }
-
-        public List<Models.Parametro> Items { get; set; } = new();
+        public List<CarnetDigitalWeb.Models.Parametro> Items { get; set; } = new();
         public int Pagina { get; set; } = 1;
         public int TotalPaginas { get; set; } = 1;
+        public int TotalItems { get; set; } = 0;
+        public int TamanoPagina { get; set; } = 10;
+
+        public IndexModel(IParametroService parametroService, ILogger<IndexModel> logger)
+        {
+            _parametroService = parametroService;
+            _logger = logger;
+        }
 
         public async Task<IActionResult> OnGetAsync(int pagina = 1)
         {
-            var token = HttpContext.Session.GetString("Token");
-            if (string.IsNullOrWhiteSpace(token))
+            try
             {
-                Avisar("Debe indicar el token antes de continuar.", "warning");
-                return Page();
+                Pagina = pagina;
+
+                var token = HttpContext.Session.GetString("Token");
+
+                if (string.IsNullOrEmpty(token))
+                {
+                    _logger.LogWarning("⚠️ No hay token en sesión para parámetros");
+                    return RedirectToPage("/Login");
+                }
+
+                _logger.LogInformation("📡 Obteniendo parámetros con token");
+
+                var (ok, error, data) = await _parametroService.GetAllAsync(token);
+
+                if (!ok)
+                {
+                    _logger.LogError("❌ Error al obtener parámetros: {Error}", error);
+                    TempData["Error"] = error ?? "Error al cargar parámetros";
+                    return Page();
+                }
+
+                // ✅ CORREGIDO: Usar el nombre completo
+                var lista = data ?? new List<CarnetDigitalWeb.Models.Parametro>();
+
+                TotalItems = lista.Count;
+                TotalPaginas = (int)Math.Ceiling((double)TotalItems / TamanoPagina);
+
+                if (TotalPaginas > 0 && Pagina > TotalPaginas)
+                {
+                    Pagina = TotalPaginas;
+                }
+
+                Items = lista
+                    .Skip((Pagina - 1) * TamanoPagina)
+                    .Take(TamanoPagina)
+                    .ToList();
+
+                _logger.LogInformation("✅ {Count} parámetros cargados en página {Pagina}", Items.Count, Pagina);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "❌ Error en OnGetAsync");
+                TempData["Error"] = "Error al cargar parámetros";
             }
 
-            var (ok, error, data) = await _service.GetAllAsync(token);
-            if (!ok)
-            {
-                Avisar(error!, "danger");
-                return Page();
-            }
-
-            var lista = data ?? new List<Models.Parametro>();
-            TotalPaginas = Math.Max(1, (int)Math.Ceiling(lista.Count / (double)PorPagina));
-            Pagina = Math.Clamp(pagina, 1, TotalPaginas);
-            Items = lista.Skip((Pagina - 1) * PorPagina).Take(PorPagina).ToList();
             return Page();
         }
 
         public async Task<IActionResult> OnPostEliminarAsync(string id)
         {
-            var token = HttpContext.Session.GetString("Token");
-            if (string.IsNullOrWhiteSpace(token))
+            try
             {
-                Avisar("Debe indicar el token antes de continuar.", "warning");
-                return RedirectToPage();
+                var token = HttpContext.Session.GetString("Token");
+
+                if (string.IsNullOrEmpty(token))
+                {
+                    _logger.LogWarning("⚠️ No hay token en sesión para eliminar parámetro");
+                    return RedirectToPage("/Login");
+                }
+
+                _logger.LogInformation("🗑️ Eliminando parámetro: {Id}", id);
+
+                var (ok, error) = await _parametroService.DeleteAsync(id, token);
+
+                if (!ok)
+                {
+                    _logger.LogWarning("⚠️ Error al eliminar parámetro {Id}: {Error}", id, error);
+                    TempData["Error"] = error ?? "Error al eliminar el parámetro";
+                }
+                else
+                {
+                    TempData["Mensaje"] = $"Parámetro '{id}' eliminado correctamente";
+                    TempData["MensajeTipo"] = "success";
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "❌ Error al eliminar parámetro {Id}", id);
+                TempData["Error"] = "Error al eliminar el parámetro";
             }
 
-            var (ok, error) = await _service.DeleteAsync(id, token);
-            Avisar(ok ? "El parámetro se eliminó correctamente." : error!, ok ? "success" : "danger");
-            return RedirectToPage();
-        }
-
-        private void Avisar(string mensaje, string tipo)
-        {
-            TempData["Mensaje"] = mensaje;
-            TempData["MensajeTipo"] = tipo;
+            return RedirectToPage(new { pagina = Pagina });
         }
     }
 }

@@ -18,7 +18,8 @@
     public class BitacoraRespuestaModel
     {
         public List<BitacoraRegistroModel> Registros { get; set; } = [];
-
+        public bool Success { get; set; }
+        public string? Message { get; set; }
         public int TotalRegistros { get; set; }
 
         public int TotalPaginas { get; set; }

@@ -18,6 +18,23 @@
         public UserInfoDto? User { get; set; }
     }
 
+    // ✅ Modelo para refresh token
+    public class RefreshTokenResponse
+    {
+        public bool Success { get; set; }
+        public string? AccessToken { get; set; }
+        public string? RefreshToken { get; set; }
+        public string? TokenType { get; set; }
+        public int ExpiresIn { get; set; }
+        public string? Message { get; set; }
+    }
+
+    // ✅ Modelo para solicitud de refresh token
+    public class RefreshTokenRequest
+    {
+        public string RefreshToken { get; set; } = string.Empty;
+    }
+
     public class UserInfoDto
     {
         public int Id { get; set; }

@@ -52,4 +52,21 @@ namespace LoginSRV1.DTOs
         public int TipoUsuarioId { get; set; }
         public int RolId { get; set; }
     }
+    public class RegistroRequestDto
+    {
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public string NombreCompleto { get; set; } = string.Empty;
+        public string Tipo { get; set; } = string.Empty;
+        public int? TipoUsuarioId { get; set; }
+        public int? RolId { get; set; }
+    }
+
+    public class RegistroResponseDto
+    {
+        public bool Success { get; set; }
+        public string? Message { get; set; }
+        public string? Email { get; set; }
+        public string? NombreCompleto { get; set; }
+    }
 }

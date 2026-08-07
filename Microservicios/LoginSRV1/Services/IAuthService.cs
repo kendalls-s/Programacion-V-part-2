@@ -8,5 +8,8 @@ namespace LoginSRV1.Services
         Task<LoginResponseDto> RefreshTokenAsync(string refreshToken);
         Task<bool> LogoutAsync(string refreshToken);
         Task<bool> ValidateTokenAsync(string token);
+        Task<ValidarCredencialesResponse?> ValidarCredencialesAsync(string email, string password);
+        Task<RegistroResponseDto> RegistroAsync(RegistroRequestDto request);
+
     }
 }

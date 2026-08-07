@@ -1,41 +1,80 @@
-using LoginSRV1.Data;
-using LoginSRV1.Endpoints;
+using LoginSRV1.Config;
+using LoginSRV1.DTOs;
 using LoginSRV1.Services;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ✅ AuthDB - para Refresh Tokens (SESION)
-// Igual que con la URL de Usuarios: si la config del servidor no trae la cadena
-// (appsettings.json desactualizado en el host), usamos un fallback para no romper.
-// Lo IDEAL es que el servidor tenga la cadena en su appsettings o en una variable
-// de entorno; el fallback es solo una red de seguridad.
-var authConnectionString = builder.Configuration.GetConnectionString("AuthDB")
-    ?? "Server=tcp:tiusr22pl.cuc-carrera-ti.ac.cr,1433;Database=tiusr22pl_AuthDB;User Id=Admin_Carnet;Password=Admin-12345;TrustServerCertificate=True;MultipleActiveResultSets=True;";
+// ============================================================
+// ✅ CONFIGURACIÓN DE JWT
+// ============================================================
+// Obtener la configuración JWT
+var jwtSettings = builder.Configuration.GetSection("Jwt").Get<JwtSettings>();
 
-builder.Services.AddDbContext<AuthDbContext>(options =>
-    options.UseSqlServer(authConnectionString));
-
-// ✅ HttpClient + AuthService
-// (AddHttpClient<IAuthService, AuthService> ya registra IAuthService,
-//  por eso NO se debe volver a registrar con AddScoped: causaba doble registro)
-builder.Services.AddHttpClient<IAuthService, AuthService>(client =>
+if (jwtSettings == null || string.IsNullOrEmpty(jwtSettings.SecretKey))
 {
-    var usuariosUrl = builder.Configuration["Services:UsuariosSRV4"]
-        ?? "https://tiusr22pl.cuc-carrera-ti.ac.cr/Usuarios";
+    throw new InvalidOperationException("Jwt configuration is missing or SecretKey is empty");
+}
 
-    // ⚠️ IMPORTANTE: el BaseAddress DEBE terminar en '/'.
-    // Si no, .NET descarta el último segmento (/Usuarios) al concatenar la ruta
-    // relativa "api/Usuarios/..." y termina llamando a una URL 404, lo que el
-    // AuthService interpreta como "Credenciales inválidas".
-    if (!usuariosUrl.EndsWith("/"))
-        usuariosUrl += "/";
+// Registrar JwtSettings para que esté disponible en el contenedor DI
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
 
-    client.BaseAddress = new Uri(usuariosUrl);
+// ============================================================
+// ✅ AUTENTICACIÓN JWT
+// ============================================================
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
+        ValidateIssuer = true,
+        ValidIssuer = jwtSettings.Issuer,
+        ValidateAudience = true,
+        ValidAudience = jwtSettings.Audience,
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero
+    };
+});
+
+// ============================================================
+// ✅ HTTP CLIENT PARA USUARIOSSRV4
+// ============================================================
+builder.Services.AddHttpClient("UsuariosSRV4", client =>
+{
+    var baseUrl = builder.Configuration["Services:UsuariosSRV4"]
+        ?? throw new InvalidOperationException("Services:UsuariosSRV4 no configurado");
+
+    client.BaseAddress = new Uri(baseUrl.TrimEnd('/') + "/");
     client.DefaultRequestHeaders.Add("Accept", "application/json");
     client.Timeout = TimeSpan.FromSeconds(30);
 });
 
+// ============================================================
+// ✅ SERVICIOS
+// ============================================================
+builder.Services.AddScoped<IAuthService>(sp =>
+{
+    var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
+    var httpClient = httpClientFactory.CreateClient("UsuariosSRV4");
+    var configuration = sp.GetRequiredService<IConfiguration>();
+    var jwtSettingsOptions = sp.GetRequiredService<IOptions<JwtSettings>>();
+    var logger = sp.GetRequiredService<ILogger<AuthService>>();
+
+    return new AuthService(httpClient, configuration, jwtSettingsOptions, logger);
+});
+
+// ============================================================
+// ✅ CORS
+// ============================================================
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -46,12 +85,47 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddAuthorization();
+
+// ============================================================
+// ✅ LOGGING
+// ============================================================
+builder.Services.AddLogging();
+
 var app = builder.Build();
 
+// ============================================================
+// ✅ MIDDLEWARE
+// ============================================================
 app.UseCors("AllowAll");
-app.UseHttpsRedirection();
-app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
 
-app.MapLoginEndpoints();
+// ============================================================
+// ✅ ENDPOINTS DE LOGIN
+// ============================================================
+app.MapPost("/api/auth/login", async (LoginRequestDto request, IAuthService authService) =>
+{
+    var result = await authService.LoginAsync(request);
+    return Results.Ok(result);
+});
+
+app.MapPost("/api/auth/refresh", async (RefreshTokenRequestDto request, IAuthService authService) =>
+{
+    var result = await authService.RefreshTokenAsync(request.RefreshToken);
+    return Results.Ok(result);
+});
+
+app.MapPost("/api/auth/logout", async (string refreshToken, IAuthService authService) =>
+{
+    var result = await authService.LogoutAsync(refreshToken);
+    return Results.Ok(new { success = result });
+});
+
+app.MapGet("/api/auth/validate", async (string token, IAuthService authService) =>
+{
+    var isValid = await authService.ValidateTokenAsync(token);
+    return Results.Ok(new { valid = isValid });
+});
 
 app.Run();

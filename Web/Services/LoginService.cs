@@ -21,10 +21,12 @@ namespace CarnetDigitalWeb.Services
             {
                 var client = _httpClientFactory.CreateClient("Login");
 
+                // ✅ Enviar la contraseña sin encriptar al microservicio
+                // El microservicio debe comparar con BCrypt
                 var loginData = new
                 {
                     email = request.Email,
-                    password = request.Password,
+                    password = request.Password, // Se envía en texto plano, el microservicio la compara con BCrypt
                     tipo = request.Tipo ?? ""
                 };
 
@@ -105,7 +107,6 @@ namespace CarnetDigitalWeb.Services
             }
         }
 
-        // ✅ IMPLEMENTACIÓN DEL MÉTODO RefreshTokenAsync
         public async Task<RefreshTokenResponse> RefreshTokenAsync(string refreshToken)
         {
             try

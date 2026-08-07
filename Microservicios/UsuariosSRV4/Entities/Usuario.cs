@@ -26,6 +26,10 @@ namespace UsuariosSRV4.Entities
         public bool Bloqueado { get; set; } = false;
         public DateTime? FechaBloqueo { get; set; }
 
+        // ✅ PROPIEDADES PARA REFRESH TOKEN (AGREGAR ESTO)
+        public string? RefreshToken { get; set; }
+        public DateTime? RefreshTokenExpiryTime { get; set; }
+
         // Propiedades de navegación
         [ForeignKey("TipoUsuarioId")]
         public virtual TipoUsuario? TipoUsuario { get; set; }

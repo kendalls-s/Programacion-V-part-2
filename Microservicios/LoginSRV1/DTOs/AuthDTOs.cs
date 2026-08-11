@@ -14,7 +14,7 @@ namespace LoginSRV1.DTOs
         public string? AccessToken { get; set; }
         public string? RefreshToken { get; set; }
         public string? TokenType { get; set; }
-        public int? ExpiresIn { get; set; }
+        public int? ExpiresIn { get; set; }  // ← Cambiado de int a int?
         public UserInfoDto? User { get; set; }
     }
 
@@ -52,6 +52,7 @@ namespace LoginSRV1.DTOs
         public int TipoUsuarioId { get; set; }
         public int RolId { get; set; }
     }
+
     public class RegistroRequestDto
     {
         public string Email { get; set; } = string.Empty;

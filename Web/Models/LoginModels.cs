@@ -14,25 +14,8 @@
         public string? AccessToken { get; set; }
         public string? RefreshToken { get; set; }
         public string? TokenType { get; set; }
-        public int ExpiresIn { get; set; }
+        public int? ExpiresIn { get; set; }
         public UserInfoDto? User { get; set; }
-    }
-
-    // ✅ Modelo para refresh token
-    public class RefreshTokenResponse
-    {
-        public bool Success { get; set; }
-        public string? AccessToken { get; set; }
-        public string? RefreshToken { get; set; }
-        public string? TokenType { get; set; }
-        public int ExpiresIn { get; set; }
-        public string? Message { get; set; }
-    }
-
-    // ✅ Modelo para solicitud de refresh token
-    public class RefreshTokenRequest
-    {
-        public string RefreshToken { get; set; } = string.Empty;
     }
 
     public class UserInfoDto
@@ -40,8 +23,25 @@
         public int Id { get; set; }
         public string Email { get; set; } = string.Empty;
         public string NombreCompleto { get; set; } = string.Empty;
-        public string TipoUsuario { get; set; } = string.Empty;
+        public string TipoUsuario { get; set; } = string.Empty;  // ← Solo una vez
         public bool Activo { get; set; }
-        public int? TipoUsuarioId { get; set; }
+        public int? TipoUsuarioId { get; set; }  // ← Solo una vez
+        public int? RolId { get; set; }
+        public string? Rol { get; set; }
+    }
+
+    public class RefreshTokenResponse
+    {
+        public bool Success { get; set; }
+        public string? AccessToken { get; set; }
+        public string? RefreshToken { get; set; }
+        public string? TokenType { get; set; }
+        public int? ExpiresIn { get; set; }
+        public string? Message { get; set; }
+    }
+
+    public class RefreshTokenRequest
+    {
+        public string RefreshToken { get; set; } = string.Empty;
     }
 }

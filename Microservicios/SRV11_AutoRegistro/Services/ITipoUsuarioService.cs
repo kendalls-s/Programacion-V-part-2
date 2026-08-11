@@ -36,62 +36,18 @@ namespace SRV11_AutoRegistro.Services
                 return null;
             }
 
-            var tipoUsuarioUrl =
-                _configuration["Services:TipoUsuario"];
-
-            if (string.IsNullOrWhiteSpace(tipoUsuarioUrl))
-            {
-                Console.WriteLine(
-                    "No está configurada Services:TipoUsuario.");
-
-                return null;
-            }
-
             try
             {
-                var url =
-                    $"{tipoUsuarioUrl.TrimEnd('/')}/{id}";
+                var tiposUsuario = await GetAll();
 
-                Console.WriteLine(
-                    $"Consultando TipoUsuario: {url}");
-
-                using var response =
-                    await _httpClient.GetAsync(url);
-
-                Console.WriteLine(
-                    $"TipoUsuario respondió: " +
-                    $"{(int)response.StatusCode}");
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    return null;
-                }
-
-                return await response.Content
-                    .ReadFromJsonAsync<TipoUsuarioDto>(
-                        JsonOptions);
-            }
-            catch (HttpRequestException ex)
-            {
-                Console.WriteLine(
-                    $"Error HTTP en TipoUsuarioService.GetById: " +
-                    $"{ex.Message}");
-
-                return null;
-            }
-            catch (JsonException ex)
-            {
-                Console.WriteLine(
-                    $"Error JSON en TipoUsuarioService.GetById: " +
-                    $"{ex.Message}");
-
-                return null;
+                return tiposUsuario.FirstOrDefault(
+                    tipo => tipo.Id == id
+                );
             }
             catch (Exception ex)
             {
                 Console.WriteLine(
-                    $"Error en TipoUsuarioService.GetById: " +
-                    $"{ex.Message}");
+                    $"Error en TipoUsuarioService.GetById: {ex.Message}");
 
                 return null;
             }

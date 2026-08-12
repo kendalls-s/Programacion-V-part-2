@@ -1,30 +1,28 @@
 ﻿namespace UsuariosSRV4.DTOs
 {
-    // Refleja la entidad Carrera del microservicio SRV3_Carreras
-    public class CarreraDto
+    // Refleja la entidad Institucion del microservicio SRV2_Instituciones
+    public class InstitucionDto
     {
         public int Id { get; set; }
         public string Nombre { get; set; } = string.Empty;
-        public string Director { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Telefono { get; set; } = string.Empty;
-        public int InstitucionId { get; set; }
-        public string InstitucionNombre { get; set; } = string.Empty;
+        public string Dominios { get; set; } = string.Empty;
         public bool Activo { get; set; }
     }
 
-    // SRV3_Carreras responde SIEMPRE envuelto: { codigo, mensaje, data }
-    public class CarreraEnvelope
+    // SRV2_Instituciones responde SIEMPRE envuelto: { codigo, mensaje, data }
+    public class InstitucionEnvelope
     {
         public int Codigo { get; set; }
         public string Mensaje { get; set; } = string.Empty;
-        public CarreraDto? Data { get; set; }
+        public InstitucionDto? Data { get; set; }
     }
 
-    public class CarreraListEnvelope
+    public class InstitucionListEnvelope
     {
         public int Codigo { get; set; }
         public string Mensaje { get; set; } = string.Empty;
-        public List<CarreraDto> Data { get; set; } = new();
+        public List<InstitucionDto> Data { get; set; } = new();
     }
 }

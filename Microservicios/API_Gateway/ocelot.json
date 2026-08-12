@@ -1,18 +1,74 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/auth/{everything}",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/Login/api/auth/{everything}",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5019
+          "Host": "tiusr22pl.cuc-carrera-ti.ac.cr",
+          "Port": 443
         }
       ],
       "UpstreamPathTemplate": "/gateway/login/{everything}",
       "UpstreamHttpMethod": [
         "GET",
         "POST"
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/Usuarios/api/Usuarios/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tiusr22pl.cuc-carrera-ti.ac.cr",
+          "Port": 443
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/usuarios/{everything}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/usuario/fotografia/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 60312
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/fotografia/{everything}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Carrera/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5280
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/carreras/{everything}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Area/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5202
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/areas/{everything}",
+      "UpstreamHttpMethod": [
+        "GET"
       ]
     }
   ],

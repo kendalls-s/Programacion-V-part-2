@@ -9,11 +9,22 @@ namespace UsuariosSRV4.Services
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger<UsuarioService> _logger;
+        private readonly IAreaApiClient _areaClient;
+        private readonly ICarreraApiClient _carreraClient;
+        private readonly IInstitucionApiClient _institucionClient;
 
-        public UsuarioService(ApplicationDbContext context, ILogger<UsuarioService> logger)
+        public UsuarioService(
+            ApplicationDbContext context,
+            ILogger<UsuarioService> logger,
+            IAreaApiClient areaClient,
+            ICarreraApiClient carreraClient,
+            IInstitucionApiClient institucionClient)
         {
             _context = context;
             _logger = logger;
+            _areaClient = areaClient;
+            _carreraClient = carreraClient;
+            _institucionClient = institucionClient;
         }
 
         // ============================================================
@@ -143,25 +154,20 @@ namespace UsuariosSRV4.Services
                     .Include(u => u.Estado)
                     .Include(u => u.TipoIdentificacion)
                     .Include(u => u.Telefonos)
+                    .Include(u => u.Areas)
+                    .Include(u => u.Carreras)
+                    .Include(u => u.Instituciones)
                     .Where(u => u.EstadoId == 1)
                     .ToListAsync();
 
-                var result = usuarios.Select(u => new UsuarioDto
-                {
-                    Id = u.Id,
-                    Email = u.Email ?? string.Empty,
-                    TipoIdentificacion = (u.TipoIdentificacion != null) ? u.TipoIdentificacion.Nombre ?? string.Empty : string.Empty,
-                    NumeroIdentificacion = u.NumeroIdentificacion ?? string.Empty,
-                    NombreCompleto = u.NombreCompleto ?? string.Empty,
-                    TipoUsuario = (u.TipoUsuario != null) ? u.TipoUsuario.Nombre ?? string.Empty : string.Empty,
-                    Activo = u.EstadoId == 1,
-                    Bloqueado = u.Bloqueado,
-                    IntentosFallidos = u.IntentosFallidos,
-                    FechaCreacion = u.FechaCreacion,
-                    FotografiaBase64 = null,
-                    Telefonos = (u.Telefonos != null) ? u.Telefonos.Select(t => t.Telefono ?? string.Empty).ToList() : new List<string>(),
-                    Confirmado = u.Confirmado
-                });
+                // Se traen los catálogos completos UNA sola vez y se arma un
+                // diccionario en memoria, para no golpear los microservicios
+                // de Areas/Carreras/Instituciones con una llamada por usuario.
+                var (areasPorId, carrerasPorId, institucionesPorId) = await CargarCatalogosAsync();
+
+                var result = usuarios
+                    .Select(u => MapearUsuarioDto(u, areasPorId, carrerasPorId, institucionesPorId))
+                    .ToList();
 
                 return (true, null, result);
             }
@@ -183,6 +189,9 @@ namespace UsuariosSRV4.Services
                     .Include(u => u.Estado)
                     .Include(u => u.TipoIdentificacion)
                     .Include(u => u.Telefonos)
+                    .Include(u => u.Carreras)
+                    .Include(u => u.Areas)
+                    .Include(u => u.Instituciones)
                     .FirstOrDefaultAsync(u => u.Id == id);
 
                 if (u == null)
@@ -190,22 +199,7 @@ namespace UsuariosSRV4.Services
                     return (false, "Usuario no encontrado", null);
                 }
 
-                var result = new UsuarioDto
-                {
-                    Id = u.Id,
-                    Email = u.Email ?? string.Empty,
-                    TipoIdentificacion = (u.TipoIdentificacion != null) ? u.TipoIdentificacion.Nombre ?? string.Empty : string.Empty,
-                    NumeroIdentificacion = u.NumeroIdentificacion ?? string.Empty,
-                    NombreCompleto = u.NombreCompleto ?? string.Empty,
-                    TipoUsuario = (u.TipoUsuario != null) ? u.TipoUsuario.Nombre ?? string.Empty : string.Empty,
-                    Activo = u.EstadoId == 1,
-                    Bloqueado = u.Bloqueado,
-                    IntentosFallidos = u.IntentosFallidos,
-                    FechaCreacion = u.FechaCreacion,
-                    FotografiaBase64 = null,
-                    Telefonos = (u.Telefonos != null) ? u.Telefonos.Select(t => t.Telefono ?? string.Empty).ToList() : new List<string>(),
-                    Confirmado = u.Confirmado
-                };
+                var result = await MapearUsuarioDtoConsultandoServiciosAsync(u);
 
                 return (true, null, result);
             }
@@ -237,8 +231,8 @@ namespace UsuariosSRV4.Services
                     NombreCompleto = dto.NombreCompleto ?? string.Empty,
                     TipoIdentificacionId = dto.TipoIdentificacionId,
                     NumeroIdentificacion = dto.NumeroIdentificacion ?? string.Empty,
-                    RolId = 1,
-                    Confirmado = true,
+                    RolId = dto.RolId ?? 1,
+                    Confirmado = dto.Confirmado,
                     FechaCreacion = DateTime.Now,
                     IntentosFallidos = 0,
                     Bloqueado = false,
@@ -248,21 +242,8 @@ namespace UsuariosSRV4.Services
                 _context.Usuarios.Add(usuario);
                 await _context.SaveChangesAsync();
 
-                var telefonosList = dto.Telefonos;
-                if (telefonosList != null)
-                {
-                    foreach (var telefono in telefonosList)
-                    {
-                        if (!string.IsNullOrWhiteSpace(telefono))
-                        {
-                            _context.UsuariosTelefonos.Add(new UsuarioTelefono
-                            {
-                                UsuarioId = usuario.Id,
-                                Telefono = telefono ?? string.Empty
-                            });
-                        }
-                    }
-                }
+                AgregarTelefonos(usuario.Id, dto.Telefonos);
+                AgregarRelaciones(usuario.Id, dto.InstitucionId, dto.AreaId, dto.CarreraId);
 
                 await _context.SaveChangesAsync();
 
@@ -284,6 +265,9 @@ namespace UsuariosSRV4.Services
             {
                 var usuario = await _context.Usuarios
                     .Include(u => u.Telefonos)
+                    .Include(u => u.Areas)
+                    .Include(u => u.Carreras)
+                    .Include(u => u.Instituciones)
                     .FirstOrDefaultAsync(u => u.Id == id);
 
                 if (usuario == null)
@@ -296,36 +280,40 @@ namespace UsuariosSRV4.Services
                 usuario.NumeroIdentificacion = dto.NumeroIdentificacion ?? string.Empty;
                 usuario.NombreCompleto = dto.NombreCompleto ?? string.Empty;
                 usuario.TipoUsuarioId = dto.TipoUsuarioId;
-                usuario.EstadoId = dto.Activo ? 1 : 2;
-                usuario.Fotografia = null;
+                usuario.EstadoId = dto.EstadoId ?? (dto.Activo ? 1 : 2);
                 usuario.Confirmado = dto.Confirmado ?? usuario.Confirmado;
+                usuario.RolId = dto.RolId ?? usuario.RolId;
 
                 if (!string.IsNullOrWhiteSpace(dto.Contrasena))
                 {
                     usuario.Contrasena = dto.Contrasena ?? string.Empty;
                 }
 
-                var telefonosActuales = usuario.Telefonos.ToList();
-                foreach (var tel in telefonosActuales)
+                // Teléfonos: se reemplaza la lista completa
+                foreach (var tel in usuario.Telefonos.ToList())
                 {
                     _context.UsuariosTelefonos.Remove(tel);
                 }
+                AgregarTelefonos(usuario.Id, dto.Telefonos);
 
-                var telefonosList = dto.Telefonos;
-                if (telefonosList != null)
+                // Institución / Área / Carrera: solo se tocan si vinieron en el DTO,
+                // para no perder la relación existente en un PUT parcial.
+                if (dto.InstitucionId != null)
                 {
-                    foreach (var telefono in telefonosList)
-                    {
-                        if (!string.IsNullOrWhiteSpace(telefono))
-                        {
-                            _context.UsuariosTelefonos.Add(new UsuarioTelefono
-                            {
-                                UsuarioId = usuario.Id,
-                                Telefono = telefono ?? string.Empty
-                            });
-                        }
-                    }
+                    foreach (var rel in usuario.Instituciones.ToList())
+                        _context.UsuariosInstituciones.Remove(rel);
                 }
+                if (dto.AreaId != null)
+                {
+                    foreach (var rel in usuario.Areas.ToList())
+                        _context.UsuariosAreas.Remove(rel);
+                }
+                if (dto.CarreraId != null)
+                {
+                    foreach (var rel in usuario.Carreras.ToList())
+                        _context.UsuariosCarreras.Remove(rel);
+                }
+                AgregarRelaciones(usuario.Id, dto.InstitucionId, dto.AreaId, dto.CarreraId);
 
                 await _context.SaveChangesAsync();
 
@@ -359,6 +347,205 @@ namespace UsuariosSRV4.Services
             {
                 return (false, $"Error al eliminar usuario: {ex.Message}");
             }
+        }
+
+        // ============================================================
+        // 🔧 HELPERS PRIVADOS
+        // ============================================================
+
+        private void AgregarTelefonos(int usuarioId, List<string>? telefonos)
+        {
+            if (telefonos == null) return;
+
+            foreach (var telefono in telefonos)
+            {
+                if (!string.IsNullOrWhiteSpace(telefono))
+                {
+                    _context.UsuariosTelefonos.Add(new UsuarioTelefono
+                    {
+                        UsuarioId = usuarioId,
+                        Telefono = telefono
+                    });
+                }
+            }
+        }
+
+        private void AgregarRelaciones(int usuarioId, string? institucionId, string? areaId, string? carreraId)
+        {
+            if (!string.IsNullOrWhiteSpace(institucionId))
+            {
+                _context.UsuariosInstituciones.Add(new UsuarioInstitucion
+                {
+                    UsuarioId = usuarioId,
+                    InstitucionId = institucionId
+                });
+            }
+
+            if (!string.IsNullOrWhiteSpace(areaId))
+            {
+                _context.UsuariosAreas.Add(new UsuarioArea
+                {
+                    UsuarioId = usuarioId,
+                    AreaId = areaId
+                });
+            }
+
+            if (!string.IsNullOrWhiteSpace(carreraId))
+            {
+                _context.UsuariosCarreras.Add(new UsuarioCarrera
+                {
+                    UsuarioId = usuarioId,
+                    CarreraId = carreraId
+                });
+            }
+        }
+
+        // Trae los 3 catálogos completos en paralelo (usado para listados)
+        private async Task<(Dictionary<int, AreaDto> areas, Dictionary<int, CarreraDto> carreras, Dictionary<int, InstitucionDto> instituciones)> CargarCatalogosAsync()
+        {
+            var areasTask = _areaClient.GetAllAsync();
+            var carrerasTask = _carreraClient.GetAllAsync();
+            var institucionesTask = _institucionClient.GetAllAsync();
+
+            await Task.WhenAll(areasTask, carrerasTask, institucionesTask);
+
+            var areasPorId = areasTask.Result.ToDictionary(a => a.Id);
+            var carrerasPorId = carrerasTask.Result.ToDictionary(c => c.Id);
+            var institucionesPorId = institucionesTask.Result.ToDictionary(i => i.Id);
+
+            return (areasPorId, carrerasPorId, institucionesPorId);
+        }
+
+        // Mapeo usando catálogos ya cargados en memoria (para listados masivos)
+        private static UsuarioDto MapearUsuarioDto(
+            Usuario u,
+            Dictionary<int, AreaDto> areasPorId,
+            Dictionary<int, CarreraDto> carrerasPorId,
+            Dictionary<int, InstitucionDto> institucionesPorId)
+        {
+            var areas = u.Areas
+                .Select(ua => (int.TryParse(ua.AreaId, out var aid) && areasPorId.TryGetValue(aid, out var a))
+                    ? a
+                    : CrearAreaIndefinida(ua.AreaId))
+                .ToList();
+
+            var carreras = u.Carreras
+                .Select(uc => (int.TryParse(uc.CarreraId, out var cid) && carrerasPorId.TryGetValue(cid, out var c))
+                    ? c
+                    : CrearCarreraIndefinida(uc.CarreraId))
+                .ToList();
+
+            var instituciones = u.Instituciones
+                .Select(ui => (int.TryParse(ui.InstitucionId, out var iid) && institucionesPorId.TryGetValue(iid, out var i))
+                    ? i
+                    : CrearInstitucionIndefinida(ui.InstitucionId))
+                .ToList();
+
+            return ConstruirDto(u, areas, carreras, instituciones);
+        }
+
+        // ============================================================
+        // 🔧 PLACEHOLDERS "INDEFINIDO"
+        // Se usan cuando el usuario SÍ tiene la relación guardada
+        // (existe la fila en UsuarioArea/UsuarioCarrera/UsuarioInstitucion)
+        // pero el microservicio dueño del catálogo no devolvió el dato
+        // (caído, timeout, o el Id ya no existe allá). Así el front
+        // siempre recibe algo explícito en vez de que el dato desaparezca
+        // silenciosamente de la lista.
+        // ============================================================
+        private static AreaDto CrearAreaIndefinida(string? rawId) => new()
+        {
+            Id = int.TryParse(rawId, out var id) ? id : 0,
+            Nombre = "Indefinido",
+            InstitucionNombre = "Indefinido",
+            Activo = false
+        };
+
+        private static CarreraDto CrearCarreraIndefinida(string? rawId) => new()
+        {
+            Id = int.TryParse(rawId, out var id) ? id : 0,
+            Nombre = "Indefinido",
+            InstitucionNombre = "Indefinido",
+            Activo = false
+        };
+
+        private static InstitucionDto CrearInstitucionIndefinida(string? rawId) => new()
+        {
+            Id = int.TryParse(rawId, out var id) ? id : 0,
+            Nombre = "Indefinido",
+            Activo = false
+        };
+
+        // Mapeo consultando directamente los microservicios (usado para un solo usuario)
+        private async Task<UsuarioDto> MapearUsuarioDtoConsultandoServiciosAsync(Usuario u)
+        {
+            var areaTasks = u.Areas
+                .Select(ua => int.TryParse(ua.AreaId, out var aid) ? _areaClient.GetByIdAsync(aid) : Task.FromResult<AreaDto?>(null))
+                .ToList();
+
+            var carreraTasks = u.Carreras
+                .Select(uc => int.TryParse(uc.CarreraId, out var cid) ? _carreraClient.GetByIdAsync(cid) : Task.FromResult<CarreraDto?>(null))
+                .ToList();
+
+            var institucionTasks = u.Instituciones
+                .Select(ui => int.TryParse(ui.InstitucionId, out var iid) ? _institucionClient.GetByIdAsync(iid) : Task.FromResult<InstitucionDto?>(null))
+                .ToList();
+
+            await Task.WhenAll(areaTasks.Cast<Task>()
+                .Concat(carreraTasks.Cast<Task>())
+                .Concat(institucionTasks.Cast<Task>()));
+
+            var areas = u.Areas
+                .Zip(areaTasks, (ua, t) => t.Result ?? CrearAreaIndefinida(ua.AreaId))
+                .ToList();
+
+            var carreras = u.Carreras
+                .Zip(carreraTasks, (uc, t) => t.Result ?? CrearCarreraIndefinida(uc.CarreraId))
+                .ToList();
+
+            var instituciones = u.Instituciones
+                .Zip(institucionTasks, (ui, t) => t.Result ?? CrearInstitucionIndefinida(ui.InstitucionId))
+                .ToList();
+
+            return ConstruirDto(u, areas, carreras, instituciones);
+        }
+
+        private static UsuarioDto ConstruirDto(
+            Usuario u,
+            List<AreaDto> areas,
+            List<CarreraDto> carreras,
+            List<InstitucionDto> instituciones)
+        {
+            return new UsuarioDto
+            {
+                Id = u.Id,
+                Email = u.Email ?? string.Empty,
+                TipoIdentificacion = u.TipoIdentificacion?.Nombre ?? string.Empty,
+                NumeroIdentificacion = u.NumeroIdentificacion ?? string.Empty,
+                NombreCompleto = u.NombreCompleto ?? string.Empty,
+                TipoUsuario = u.TipoUsuario?.Nombre ?? string.Empty,
+                Activo = u.EstadoId == 1,
+                Bloqueado = u.Bloqueado,
+                IntentosFallidos = u.IntentosFallidos,
+                FechaCreacion = u.FechaCreacion,
+                FotografiaBase64 = u.Fotografia != null ? Convert.ToBase64String(u.Fotografia) : null,
+                Telefonos = u.Telefonos?.Select(t => t.Telefono ?? string.Empty).ToList() ?? new List<string>(),
+                Confirmado = u.Confirmado,
+                RolId = u.RolId,
+                EstadoId = u.EstadoId,
+
+                Areas = areas,
+                Carreras = carreras,
+                Instituciones = instituciones,
+
+                AreaNombre = areas.FirstOrDefault()?.Nombre,
+                CarreraNombre = carreras.FirstOrDefault()?.Nombre,
+                InstitucionNombre = instituciones.FirstOrDefault()?.Nombre,
+
+                AreaId = u.Areas?.FirstOrDefault()?.AreaId,
+                CarreraId = u.Carreras?.FirstOrDefault()?.CarreraId,
+                InstitucionId = u.Instituciones?.FirstOrDefault()?.InstitucionId
+            };
         }
     }
 }

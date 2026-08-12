@@ -1,21 +1,24 @@
 ﻿namespace UsuariosSRV4.DTOs
 {
+    // Refleja la entidad TipoIdentificacion del microservicio TipoIdentificacionSRV6
     public class TipoIdentificacionDto
     {
         public int Id { get; set; }
         public string Nombre { get; set; } = string.Empty;
-        public bool Activo { get; set; }
     }
 
-    public class TipoIdentificacionCreateDto
+    // TipoIdentificacionSRV6 responde envuelto: { codigo, mensaje, data }
+    public class TipoIdentificacionEnvelope
     {
-        public string Nombre { get; set; } = string.Empty;
+        public int Codigo { get; set; }
+        public string Mensaje { get; set; } = string.Empty;
+        public TipoIdentificacionDto? Data { get; set; }
     }
 
-    public class TipoIdentificacionUpdateDto
+    public class TipoIdentificacionListEnvelope
     {
-        public int Id { get; set; }
-        public string Nombre { get; set; } = string.Empty;
-        public bool Activo { get; set; }
+        public int Codigo { get; set; }
+        public string Mensaje { get; set; } = string.Empty;
+        public List<TipoIdentificacionDto> Data { get; set; } = new();
     }
 }

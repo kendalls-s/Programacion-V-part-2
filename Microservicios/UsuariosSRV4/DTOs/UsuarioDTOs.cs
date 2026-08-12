@@ -17,6 +17,28 @@
         public bool Confirmado { get; set; }
         public int? RolId { get; set; }
         public int? EstadoId { get; set; }
+
+        // ============================================================
+        // ✅ DATOS ENRIQUECIDOS: Instituciones / Areas / Carreras
+        // Se llenan consultando los microservicios respectivos a través
+        // de los ApiClients (ver Services/*ApiClient.cs). Si algún
+        // servicio remoto no responde, estas listas simplemente quedan
+        // vacías y no se rompe la respuesta del usuario.
+        // ============================================================
+        public List<InstitucionDto> Instituciones { get; set; } = new();
+        public List<AreaDto> Areas { get; set; } = new();
+        public List<CarreraDto> Carreras { get; set; } = new();
+
+        // Campos de conveniencia para pantallas tipo "Carnet" (HU USR2/GRD2)
+        // que solo necesitan mostrar UN nombre, no la lista completa.
+        public string? InstitucionNombre { get; set; }
+        public string? AreaNombre { get; set; }
+        public string? CarreraNombre { get; set; }
+
+        // Se conservan por compatibilidad con el front actual (IDs crudos)
+        public string? CarreraId { get; set; }
+        public string? AreaId { get; set; }
+        public string? InstitucionId { get; set; }
     }
 
     public class CrearUsuarioDto
@@ -30,6 +52,11 @@
         public int? RolId { get; set; }
         public List<string> Telefonos { get; set; } = new();
         public bool Confirmado { get; set; } = true;
+
+        // Relaciones opcionales al crear el usuario
+        public string? InstitucionId { get; set; }
+        public string? AreaId { get; set; }
+        public string? CarreraId { get; set; }
     }
 
     public class ActualizarUsuarioDto
@@ -46,9 +73,14 @@
         public bool? Confirmado { get; set; }
         public int? RolId { get; set; }
         public int? EstadoId { get; set; }
+
+        // Relaciones opcionales al actualizar el usuario
+        public string? InstitucionId { get; set; }
+        public string? AreaId { get; set; }
+        public string? CarreraId { get; set; }
     }
 
-    // ✅ FiltroUsuarioDto - AGREGADO
+    // ✅ FiltroUsuarioDto
     public class FiltroUsuarioDto
     {
         public string? Email { get; set; }

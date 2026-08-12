@@ -1,13 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace UsuariosSRV4.Entities
 {
-    [Table("UsuarioCarera")] 
+    [Table("UsuarioCarrera")]
+    [PrimaryKey(nameof(UsuarioId), nameof(CarreraId))]
     public class UsuarioCarrera
     {
-        [Key]
-        public int Id { get; set; }
         public int UsuarioId { get; set; }
         public string CarreraId { get; set; } = string.Empty;
 

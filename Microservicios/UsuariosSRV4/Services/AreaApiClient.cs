@@ -1,75 +1,62 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json;
 using UsuariosSRV4.DTOs;
 
 namespace UsuariosSRV4.Services
 {
+    // Consume el microservicio SRV4_Areas (hosteado en Services:AreasSRV4)
     public class AreaApiClient : IAreaApiClient
     {
         private readonly HttpClient _http;
+        private readonly ILogger<AreaApiClient> _logger;
+        private static readonly JsonSerializerOptions JsonOpts = new()
+        {
+            PropertyNameCaseInsensitive = true
+        };
 
-        public AreaApiClient(HttpClient http)
+        public AreaApiClient(HttpClient http, ILogger<AreaApiClient> logger)
         {
             _http = http;
+            _logger = logger;
         }
 
         public async Task<List<AreaDto>> GetAllAsync(CancellationToken ct = default)
         {
-            var result = await _http.GetFromJsonAsync<List<AreaDto>>("api/Areas", ct);
-            return result ?? new List<AreaDto>();
+            try
+            {
+                var envelope = await _http.GetFromJsonAsync<AreaListEnvelope>("api/Area", JsonOpts, ct);
+                return envelope?.Data ?? new List<AreaDto>();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "No se pudo obtener la lista de áreas desde SRV4_Areas");
+                return new List<AreaDto>();
+            }
         }
 
         public async Task<AreaDto?> GetByIdAsync(int id, CancellationToken ct = default)
         {
-            return await _http.GetFromJsonAsync<AreaDto>($"api/Areas/{id}", ct);
-        }
-
-        public async Task<(bool ok, HttpStatusCode status, string? message)> CreateAsync(AreaCreateDto dto, CancellationToken ct = default)
-        {
-            var response = await _http.PostAsJsonAsync("api/Areas", dto, ct);
-            string? msg = null;
             try
             {
-                var payload = await response.Content.ReadFromJsonAsync<Dictionary<string, string?>>(cancellationToken: ct);
-                if (payload != null && payload.TryGetValue("message", out var m))
-                {
-                    msg = m;
-                }
-            }
-            catch { /* ignorar parseos fallidos */ }
-            return (response.IsSuccessStatusCode, response.StatusCode, msg);
-        }
+                var response = await _http.GetAsync($"api/Area/{id}", ct);
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                    return null;
 
-        public async Task<(bool ok, HttpStatusCode status, string? message)> UpdateAsync(int id, AreaUpdateDto dto, CancellationToken ct = default)
-        {
-            var response = await _http.PutAsJsonAsync($"api/Areas/{id}", dto, ct);
-            string? msg = null;
-            try
-            {
-                var payload = await response.Content.ReadFromJsonAsync<Dictionary<string, string?>>(cancellationToken: ct);
-                if (payload != null && payload.TryGetValue("message", out var m))
+                if (!response.IsSuccessStatusCode)
                 {
-                    msg = m;
+                    _logger.LogWarning("SRV4_Areas respondió {Status} al consultar el área {Id}", response.StatusCode, id);
+                    return null;
                 }
-            }
-            catch { /* ignorar parseos fallidos */ }
-            return (response.IsSuccessStatusCode, response.StatusCode, msg);
-        }
 
-        public async Task<(bool ok, HttpStatusCode status, string? message)> DeleteAsync(int id, CancellationToken ct = default)
-        {
-            var response = await _http.DeleteAsync($"api/Areas/{id}", ct);
-            string? msg = null;
-            try
-            {
-                var payload = await response.Content.ReadFromJsonAsync<Dictionary<string, string?>>(cancellationToken: ct);
-                if (payload != null && payload.TryGetValue("message", out var m))
-                {
-                    msg = m;
-                }
+                var envelope = await response.Content.ReadFromJsonAsync<AreaEnvelope>(JsonOpts, ct);
+                return envelope?.Data;
             }
-            catch { /* ignorar parseos fallidos */ }
-            return (response.IsSuccessStatusCode, response.StatusCode, msg);
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "No se pudo obtener el área {Id} desde SRV4_Areas", id);
+                return null;
+            }
         }
     }
 }

@@ -1,75 +1,62 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json;
 using UsuariosSRV4.DTOs;
 
 namespace UsuariosSRV4.Services
 {
+    // Consume el microservicio SRV3_Carreras (hosteado en Services:CarrerasSRV3)
     public class CarreraApiClient : ICarreraApiClient
     {
         private readonly HttpClient _http;
+        private readonly ILogger<CarreraApiClient> _logger;
+        private static readonly JsonSerializerOptions JsonOpts = new()
+        {
+            PropertyNameCaseInsensitive = true
+        };
 
-        public CarreraApiClient(HttpClient http)
+        public CarreraApiClient(HttpClient http, ILogger<CarreraApiClient> logger)
         {
             _http = http;
+            _logger = logger;
         }
 
         public async Task<List<CarreraDto>> GetAllAsync(CancellationToken ct = default)
         {
-            var result = await _http.GetFromJsonAsync<List<CarreraDto>>("carreras", ct);
-            return result ?? new List<CarreraDto>();
+            try
+            {
+                var envelope = await _http.GetFromJsonAsync<CarreraListEnvelope>("api/Carrera", JsonOpts, ct);
+                return envelope?.Data ?? new List<CarreraDto>();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "No se pudo obtener la lista de carreras desde SRV3_Carreras");
+                return new List<CarreraDto>();
+            }
         }
 
         public async Task<CarreraDto?> GetByIdAsync(int id, CancellationToken ct = default)
         {
-            return await _http.GetFromJsonAsync<CarreraDto>($"carreras/{id}", ct);
-        }
-
-        public async Task<(bool ok, HttpStatusCode status, string? message)> CreateAsync(CarreraCreateDto dto, CancellationToken ct = default)
-        {
-            var response = await _http.PostAsJsonAsync("carreras", dto, ct);
-            string? msg = null;
             try
             {
-                var payload = await response.Content.ReadFromJsonAsync<Dictionary<string, string?>>(cancellationToken: ct);
-                if (payload != null && payload.TryGetValue("message", out var m))
-                {
-                    msg = m;
-                }
-            }
-            catch { /* ignorar parseos fallidos */ }
-            return (response.IsSuccessStatusCode, response.StatusCode, msg);
-        }
+                var response = await _http.GetAsync($"api/Carrera/{id}", ct);
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                    return null;
 
-        public async Task<(bool ok, HttpStatusCode status, string? message)> UpdateAsync(int id, CarreraUpdateDto dto, CancellationToken ct = default)
-        {
-            var response = await _http.PutAsJsonAsync($"carreras/{id}", dto, ct);
-            string? msg = null;
-            try
-            {
-                var payload = await response.Content.ReadFromJsonAsync<Dictionary<string, string?>>(cancellationToken: ct);
-                if (payload != null && payload.TryGetValue("message", out var m))
+                if (!response.IsSuccessStatusCode)
                 {
-                    msg = m;
+                    _logger.LogWarning("SRV3_Carreras respondió {Status} al consultar la carrera {Id}", response.StatusCode, id);
+                    return null;
                 }
-            }
-            catch { /* ignorar parseos fallidos */ }
-            return (response.IsSuccessStatusCode, response.StatusCode, msg);
-        }
 
-        public async Task<(bool ok, HttpStatusCode status, string? message)> DeleteAsync(int id, CancellationToken ct = default)
-        {
-            var response = await _http.DeleteAsync($"carreras/{id}", ct);
-            string? msg = null;
-            try
-            {
-                var payload = await response.Content.ReadFromJsonAsync<Dictionary<string, string?>>(cancellationToken: ct);
-                if (payload != null && payload.TryGetValue("message", out var m))
-                {
-                    msg = m;
-                }
+                var envelope = await response.Content.ReadFromJsonAsync<CarreraEnvelope>(JsonOpts, ct);
+                return envelope?.Data;
             }
-            catch { /* ignorar parseos fallidos */ }
-            return (response.IsSuccessStatusCode, response.StatusCode, msg);
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "No se pudo obtener la carrera {Id} desde SRV3_Carreras", id);
+                return null;
+            }
         }
     }
 }

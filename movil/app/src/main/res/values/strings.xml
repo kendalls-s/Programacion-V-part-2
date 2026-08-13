@@ -1,9 +1,0 @@
-<resources>
-    <string name="app_name">Movil</string>
-    <string name="logo_cuc">Logo del CUC</string>
-    <string name="foto_usuario">Fotografía del usuario</string>
-    <string name="leyenda_sin_foto">No se validará el uso de esta aplicación hasta que haya registrado su fotografía.</string>
-    <string name="label_identificacion">Identificación</string>
-    <string name="label_carrera_area">Carrera / Área</string>
-    <string name="error_carga_usuario">No se pudo cargar la información del usuario. Intente de nuevo.</string>
-</resources>

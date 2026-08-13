@@ -41,6 +41,27 @@
         public string? InstitucionId { get; set; }
     }
 
+    // ============================================================
+    // ✅ DTO PARA GET /api/Usuarios/{id} (consultado vía Gateway)
+    // Solo trae los campos solicitados para la vista de detalle
+    // de usuario. TipoIdentificacion, TipoUsuario y Rol se toman
+    // de sus catálogos (tablas), por lo que si se agregan nuevos
+    // tipos/roles allí, aparecen aquí automáticamente sin tocar código.
+    // ============================================================
+    public class UsuarioDetalleDto
+    {
+        public string Email { get; set; } = string.Empty;
+        public string TipoIdentificacion { get; set; } = string.Empty;
+        public string NumeroIdentificacion { get; set; } = string.Empty;
+        public string NombreCompleto { get; set; } = string.Empty;
+        public List<InstitucionDto> Instituciones { get; set; } = new();
+        public string TipoUsuario { get; set; } = string.Empty;
+        public List<CarreraDto> Carreras { get; set; } = new();
+        public List<AreaDto> Areas { get; set; } = new();
+        public List<string> Telefonos { get; set; } = new();
+        public string Rol { get; set; } = string.Empty;
+    }
+
     public class CrearUsuarioDto
     {
         public string Email { get; set; } = string.Empty;

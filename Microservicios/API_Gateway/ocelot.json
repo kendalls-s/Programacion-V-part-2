@@ -30,50 +30,24 @@
       ]
     },
     {
-      "DownstreamPathTemplate": "/usuario/fotografia/{everything}",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/Fotografia/usuario/fotografia/{everything}",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 60312
+          "Host": "tiusr22pl.cuc-carrera-ti.ac.cr",
+          "Port": 443
         }
       ],
       "UpstreamPathTemplate": "/gateway/fotografia/{everything}",
       "UpstreamHttpMethod": [
-        "GET"
-      ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/Carrera/{everything}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 5280
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/carreras/{everything}",
-      "UpstreamHttpMethod": [
-        "GET"
-      ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/Area/{everything}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 5202
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/areas/{everything}",
-      "UpstreamHttpMethod": [
-        "GET"
+        "GET",
+        "PUT",
+        "DELETE"
       ]
     }
   ],
 
   "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:5059"
+    "BaseUrl": "https://tiusr22pl.cuc-carrera-ti.ac.cr/Gateway"
   }
 }

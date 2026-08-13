@@ -525,7 +525,7 @@ namespace UsuariosSRV4.Endpoints
         {
             try
             {
-                var (ok, error, data) = await service.GetByIdAsync(id);
+                var (ok, error, data) = await service.GetDetalleByIdAsync(id);
                 if (!ok) return Results.NotFound(new { error });
                 return Results.Ok(data);
             }

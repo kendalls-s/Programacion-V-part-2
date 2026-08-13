@@ -6,6 +6,7 @@ namespace UsuariosSRV4.Services
     {
         Task<(bool ok, string? error, IEnumerable<UsuarioDto>? data)> GetAllAsync();
         Task<(bool ok, string? error, UsuarioDto? data)> GetByIdAsync(int id);
+        Task<(bool ok, string? error, UsuarioDetalleDto? data)> GetDetalleByIdAsync(int id);
         Task<(bool ok, string? error, UsuarioDto? data)> CreateAsync(CrearUsuarioDto dto);
         Task<(bool ok, string? error, UsuarioDto? data)> UpdateAsync(int id, ActualizarUsuarioDto dto);
         Task<(bool ok, string? error)> DeleteAsync(int id);

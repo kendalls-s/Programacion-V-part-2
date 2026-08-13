@@ -210,6 +210,57 @@ namespace UsuariosSRV4.Services
         }
 
         // ============================================================
+        // ✅ OBTENER DETALLE DE USUARIO (GET /api/Usuarios/{id})
+        // Devuelve SOLO los campos requeridos para la pantalla de detalle:
+        // Email, TipoIdentificacion, NumeroIdentificacion, NombreCompleto,
+        // Instituciones, TipoUsuario, Carreras, Areas, Telefonos, Rol.
+        // ============================================================
+        public async Task<(bool ok, string? error, UsuarioDetalleDto? data)> GetDetalleByIdAsync(int id)
+        {
+            try
+            {
+                var u = await _context.Usuarios
+                    .Include(u => u.TipoUsuario)
+                    .Include(u => u.TipoIdentificacion)
+                    .Include(u => u.Rol)
+                    .Include(u => u.Telefonos)
+                    .Include(u => u.Carreras)
+                    .Include(u => u.Areas)
+                    .Include(u => u.Instituciones)
+                    .FirstOrDefaultAsync(u => u.Id == id);
+
+                if (u == null)
+                {
+                    return (false, "Usuario no encontrado", null);
+                }
+
+                // Reutiliza la resolución de Areas/Carreras/Instituciones
+                // contra los microservicios dueños de esos catálogos.
+                var completo = await MapearUsuarioDtoConsultandoServiciosAsync(u);
+
+                var result = new UsuarioDetalleDto
+                {
+                    Email = completo.Email,
+                    TipoIdentificacion = completo.TipoIdentificacion,
+                    NumeroIdentificacion = completo.NumeroIdentificacion,
+                    NombreCompleto = completo.NombreCompleto,
+                    TipoUsuario = completo.TipoUsuario,
+                    Rol = u.Rol?.Nombre ?? string.Empty,
+                    Telefonos = completo.Telefonos,
+                    Instituciones = completo.Instituciones,
+                    Areas = completo.Areas,
+                    Carreras = completo.Carreras
+                };
+
+                return (true, null, result);
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Error al obtener usuario: {ex.Message}", null);
+            }
+        }
+
+        // ============================================================
         // ✅ CREAR USUARIO
         // ============================================================
         public async Task<(bool ok, string? error, UsuarioDto? data)> CreateAsync(CrearUsuarioDto dto)

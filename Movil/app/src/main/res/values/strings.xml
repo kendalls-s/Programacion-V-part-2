@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Mi App</string>
+    <string name="login_title">Iniciar Sesión</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Contraseña</string>
+    <string name="login_button">Ingresar</string>
+    <string name="error_credentials">Usuario y/o contraseña incorrectos.</string>
+    <string name="error_fields">Complete todos los campos</string>
+</resources>

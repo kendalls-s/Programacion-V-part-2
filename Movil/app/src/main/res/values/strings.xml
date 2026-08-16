@@ -1,10 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Mi App</string>
+
+    <!-- Login -->
     <string name="login_title">Iniciar Sesión</string>
     <string name="email_hint">Email</string>
     <string name="password_hint">Contraseña</string>
     <string name="login_button">Ingresar</string>
     <string name="error_credentials">Usuario y/o contraseña incorrectos.</string>
     <string name="error_fields">Complete todos los campos</string>
+
+    <!-- USR2 / GRD2 -->
+    <string name="logo_cuc">Logo del CUC</string>
+    <string name="foto_usuario">Fotografía del usuario</string>
+    <string name="leyenda_sin_foto">No se validará el uso de esta aplicación hasta que haya registrado su fotografía.</string>
+    <string name="label_identificacion">Identificación</string>
+    <string name="label_carrera_area">Carrera / Área</string>
+    <string name="error_carga_usuario">No se pudo cargar la información del usuario. Intente de nuevo.</string>
+    <string name="label_foto_qr">Foto QR</string>
+    <string name="label_scan_qr">Scan QR</string>
+    <string name="escanear_qr">Escanear código QR</string>
 </resources>

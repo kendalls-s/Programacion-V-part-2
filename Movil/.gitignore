@@ -1,0 +1,11 @@
+# Archivos generados/locales de Android Studio - NO se deben subir a git
+*.iml
+.gradle/
+/local.properties
+.idea/
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+app/build/

@@ -44,12 +44,21 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val prefs = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+        val prefs = getSharedPreferences(
+            "AppPrefs",
+            Context.MODE_PRIVATE
+        )
+
         val token = prefs.getString("token", null)
         val userId = prefs.getString("userId", null)
 
         if (token == null || userId == null) {
-            startActivity(Intent(this, LoginActivity::class.java))
+            startActivity(
+                Intent(
+                    this,
+                    LoginActivity::class.java
+                )
+            )
             finish()
             return
         }
@@ -64,145 +73,531 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun cargarUsuario(id: String) {
+
         mostrarCargando(true)
 
         lifecycleScope.launch {
+
             try {
-                val usuario = ApiClient.usuarioApi.obtenerUsuario(id)
+
+                val usuario =
+                    ApiClient.usuarioApi.obtenerUsuario(id)
+
                 mostrarCargando(false)
-                configurarPager(usuario, id)
+
+                configurarPager(
+                    usuario,
+                    id
+                )
+
             } catch (e: Exception) {
+
                 e.printStackTrace()
+
                 mostrarCargando(false)
                 mostrarError()
             }
         }
     }
 
-    private fun configurarPager(usuario: Usuario, idUsuario: String) {
-        esGuarda = usuario.tipoUsuario.equals("Guarda", ignoreCase = true)
-        val tituloQr = if (esGuarda) getString(R.string.label_scan_qr) else getString(R.string.label_foto_qr)
+    private fun configurarPager(
+        usuario: Usuario,
+        idUsuario: String
+    ) {
+
+        esGuarda = usuario.tipoUsuario.equals(
+            "Guarda",
+            ignoreCase = true
+        )
+
+        val tituloQr =
+            if (esGuarda) {
+                getString(R.string.label_scan_qr)
+            } else {
+                getString(R.string.label_foto_qr)
+            }
 
         viewPager.isUserInputEnabled = false
 
-        viewPager.adapter = MainPagerAdapter(tituloQr) { vistaDatos ->
-            bindDatosView(vistaDatos, usuario, esGuarda)
-            cargarFotografia(idUsuario, vistaDatos)
-        }
+        viewPager.adapter = MainPagerAdapter(
+
+            tituloQr = tituloQr,
+
+            onDatosViewCreated = { vistaDatos ->
+
+                bindDatosView(
+                    vistaDatos,
+                    usuario,
+                    esGuarda
+                )
+
+                cargarFotografia(
+                    idUsuario
+                )
+            },
+
+            onQrViewCreated = { vistaQr ->
+
+                if (!esGuarda) {
+
+                    cargarQr(
+                        usuario.numeroIdentificacion,
+                        vistaQr
+                    )
+
+                } else {
+
+                    prepararPlaceholderGuarda(
+                        vistaQr
+                    )
+                }
+            }
+        )
     }
 
-    private fun bindDatosView(root: View, usuario: Usuario, esGuarda: Boolean) {
-        ivFoto = root.findViewById(R.id.ivFoto)
-        tvLeyendaSinFoto = root.findViewById(R.id.tvLeyendaSinFoto)
-        tvNombreCompleto = root.findViewById(R.id.tvNombreCompleto)
-        tvTipoUsuario = root.findViewById(R.id.tvTipoUsuario)
-        tvIdentificacion = root.findViewById(R.id.tvIdentificacion)
-        groupCarreraArea = root.findViewById(R.id.groupCarreraArea)
-        tvCarreraArea = root.findViewById(R.id.tvCarreraArea)
-        btnCerrarSesion = root.findViewById(R.id.btnCerrarSesion)
-        btnCamara = root.findViewById(R.id.btnCamara)
+    private fun bindDatosView(
+        root: View,
+        usuario: Usuario,
+        esGuarda: Boolean
+    ) {
 
-        tvNombreCompleto.text = usuario.nombreCompleto
-        tvIdentificacion.text = usuario.numeroIdentificacion
-        tvTipoUsuario.text = usuario.tipoUsuario
+        ivFoto =
+            root.findViewById(R.id.ivFoto)
+
+        tvLeyendaSinFoto =
+            root.findViewById(R.id.tvLeyendaSinFoto)
+
+        tvNombreCompleto =
+            root.findViewById(R.id.tvNombreCompleto)
+
+        tvTipoUsuario =
+            root.findViewById(R.id.tvTipoUsuario)
+
+        tvIdentificacion =
+            root.findViewById(R.id.tvIdentificacion)
+
+        groupCarreraArea =
+            root.findViewById(R.id.groupCarreraArea)
+
+        tvCarreraArea =
+            root.findViewById(R.id.tvCarreraArea)
+
+        btnCerrarSesion =
+            root.findViewById(R.id.btnCerrarSesion)
+
+        btnCamara =
+            root.findViewById(R.id.btnCamara)
+
+        tvNombreCompleto.text =
+            usuario.nombreCompleto
+
+        tvIdentificacion.text =
+            usuario.numeroIdentificacion
+
+        tvTipoUsuario.text =
+            usuario.tipoUsuario
 
         if (esGuarda) {
-            groupCarreraArea.visibility = View.GONE
-            btnCamara.visibility = View.VISIBLE
-            btnCamara.isEnabled = false
+
+            groupCarreraArea.visibility =
+                View.GONE
+
+            btnCamara.visibility =
+                View.VISIBLE
+
+            btnCamara.isEnabled =
+                false
+
             btnCamara.setOnClickListener {
                 viewPager.currentItem = 1
             }
+
         } else {
-            groupCarreraArea.visibility = View.VISIBLE
-            tvCarreraArea.text = usuario.carreraOArea()
-            btnCamara.visibility = View.GONE
+
+            groupCarreraArea.visibility =
+                View.VISIBLE
+
+            tvCarreraArea.text =
+                usuario.carreraOArea()
+
+            btnCamara.visibility =
+                View.GONE
         }
 
         btnCerrarSesion.setOnClickListener {
-            val prefs = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
-            prefs.edit().clear().apply()
+
+            val prefs =
+                getSharedPreferences(
+                    "AppPrefs",
+                    Context.MODE_PRIVATE
+                )
+
+            prefs.edit()
+                .clear()
+                .apply()
+
             ApiClient.token = null
-            val intent = Intent(this, LoginActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+
+            val intent =
+                Intent(
+                    this,
+                    LoginActivity::class.java
+                )
+
+            intent.flags =
+                Intent.FLAG_ACTIVITY_NEW_TASK or
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK
+
             startActivity(intent)
+
             finish()
         }
     }
 
-    private fun cargarFotografia(idUsuario: String, root: View) {
+    private fun cargarFotografia(
+        idUsuario: String
+    ) {
+
         lifecycleScope.launch {
+
             try {
-                val response = ApiClient.usuarioApi.obtenerFotografia(idUsuario)
-                val body = response.string().trim()
+
+                val response =
+                    ApiClient.usuarioApi
+                        .obtenerFotografia(idUsuario)
+
+                val body =
+                    response
+                        .string()
+                        .trim()
 
                 if (body.isBlank()) {
+
                     mostrarFotoNoDisponible()
                     return@launch
                 }
 
                 val crudo = when {
+
                     body.startsWith("{") -> {
-                        val obj = Gson().fromJson(body, FotografiaResponse::class.java)
+
+                        val obj =
+                            Gson().fromJson(
+                                body,
+                                FotografiaResponse::class.java
+                            )
+
                         obj?.fotografiaBase64
                     }
-                    body.startsWith("\"") && body.endsWith("\"") -> {
-                        Gson().fromJson(body, String::class.java)
+
+                    body.startsWith("\"") &&
+                            body.endsWith("\"") -> {
+
+                        Gson().fromJson(
+                            body,
+                            String::class.java
+                        )
                     }
+
                     else -> body
                 }
 
-                val base64 = crudo
-                    ?.trim()
-                    ?.replaceFirst(Regex("^data:image/[^;]+;base64,"), "")
-                    ?.replace("\n", "")
-                    ?.replace("\r", "")
-                    ?: ""
+                val base64 =
+                    crudo
+                        ?.trim()
+                        ?.replaceFirst(
+                            Regex(
+                                "^data:image/[^;]+;base64,"
+                            ),
+                            ""
+                        )
+                        ?.replace("\n", "")
+                        ?.replace("\r", "")
+                        ?: ""
 
                 if (base64.isBlank()) {
+
                     mostrarFotoNoDisponible()
                     return@launch
                 }
 
-                val imageBytes = Base64.decode(base64, Base64.DEFAULT)
-                val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                val imageBytes =
+                    Base64.decode(
+                        base64,
+                        Base64.DEFAULT
+                    )
+
+                val bitmap =
+                    BitmapFactory.decodeByteArray(
+                        imageBytes,
+                        0,
+                        imageBytes.size
+                    )
 
                 if (bitmap != null) {
+
                     ivFoto.setImageBitmap(bitmap)
-                    tvLeyendaSinFoto.visibility = View.GONE
+
+                    tvLeyendaSinFoto.visibility =
+                        View.GONE
+
                     if (esGuarda) {
-                        btnCamara.isEnabled = true
+
+                        btnCamara.isEnabled =
+                            true
+
                     } else {
-                        viewPager.isUserInputEnabled = true
+
+                        viewPager.isUserInputEnabled =
+                            true
                     }
+
                 } else {
+
                     mostrarFotoNoDisponible()
                 }
+
             } catch (e: Exception) {
+
                 e.printStackTrace()
+
                 mostrarFotoNoDisponible()
             }
         }
     }
 
-    private fun mostrarFotoNoDisponible() {
-        ivFoto.setImageResource(R.drawable.ic_avatar_placeholder)
-        tvLeyendaSinFoto.text = getString(R.string.leyenda_sin_foto)
-        tvLeyendaSinFoto.visibility = View.VISIBLE
-        if (esGuarda) {
-            btnCamara.isEnabled = false
-        } else {
-            viewPager.isUserInputEnabled = false
+    private fun cargarQr(
+        identificacion: String,
+        root: View
+    ) {
+
+        val ivCodigoQr =
+            root.findViewById<ImageView>(
+                R.id.ivCodigoQr
+            )
+
+        val progressQr =
+            root.findViewById<ProgressBar>(
+                R.id.progressQr
+            )
+
+        val tvErrorQr =
+            root.findViewById<TextView>(
+                R.id.tvErrorQr
+            )
+
+        progressQr.visibility =
+            View.VISIBLE
+
+        tvErrorQr.visibility =
+            View.GONE
+
+        ivCodigoQr.visibility =
+            View.INVISIBLE
+
+        lifecycleScope.launch {
+
+            try {
+
+                val response =
+                    ApiClient.usuarioApi
+                        .obtenerQr(identificacion)
+
+                val body =
+                    response
+                        .string()
+                        .trim()
+
+                if (body.isBlank()) {
+
+                    mostrarErrorQr(
+                        ivCodigoQr,
+                        progressQr,
+                        tvErrorQr
+                    )
+
+                    return@launch
+                }
+
+                val crudo =
+                    if (
+                        body.startsWith("\"") &&
+                        body.endsWith("\"")
+                    ) {
+
+                        Gson().fromJson(
+                            body,
+                            String::class.java
+                        )
+
+                    } else {
+
+                        body
+                    }
+
+                val base64 =
+                    crudo
+                        ?.trim()
+                        ?.replaceFirst(
+                            Regex(
+                                "^data:image/[^;]+;base64,"
+                            ),
+                            ""
+                        )
+                        ?.replace("\n", "")
+                        ?.replace("\r", "")
+                        ?: ""
+
+                if (base64.isBlank()) {
+
+                    mostrarErrorQr(
+                        ivCodigoQr,
+                        progressQr,
+                        tvErrorQr
+                    )
+
+                    return@launch
+                }
+
+                val qrBytes =
+                    Base64.decode(
+                        base64,
+                        Base64.DEFAULT
+                    )
+
+                val bitmap =
+                    BitmapFactory.decodeByteArray(
+                        qrBytes,
+                        0,
+                        qrBytes.size
+                    )
+
+                if (bitmap != null) {
+
+                    ivCodigoQr.setImageBitmap(
+                        bitmap
+                    )
+
+                    ivCodigoQr.visibility =
+                        View.VISIBLE
+
+                    progressQr.visibility =
+                        View.GONE
+
+                    tvErrorQr.visibility =
+                        View.GONE
+
+                } else {
+
+                    mostrarErrorQr(
+                        ivCodigoQr,
+                        progressQr,
+                        tvErrorQr
+                    )
+                }
+
+            } catch (e: Exception) {
+
+                e.printStackTrace()
+
+                mostrarErrorQr(
+                    ivCodigoQr,
+                    progressQr,
+                    tvErrorQr
+                )
+            }
         }
     }
 
-    private fun mostrarCargando(cargando: Boolean) {
-        progressBar.visibility = if (cargando) View.VISIBLE else View.GONE
-        tvError.visibility = View.GONE
+    private fun mostrarErrorQr(
+        ivCodigoQr: ImageView,
+        progressQr: ProgressBar,
+        tvErrorQr: TextView
+    ) {
+
+        progressQr.visibility =
+            View.GONE
+
+        ivCodigoQr.visibility =
+            View.INVISIBLE
+
+        tvErrorQr.text =
+            "No se pudo cargar el código QR."
+
+        tvErrorQr.visibility =
+            View.VISIBLE
+    }
+
+    private fun prepararPlaceholderGuarda(
+        root: View
+    ) {
+
+        root.findViewById<TextView>(
+            R.id.tvDescripcionQr
+        ).visibility = View.GONE
+
+        root.findViewById<ImageView>(
+            R.id.ivCodigoQr
+        ).visibility = View.GONE
+
+        root.findViewById<ProgressBar>(
+            R.id.progressQr
+        ).visibility = View.GONE
+
+        root.findViewById<TextView>(
+            R.id.tvErrorQr
+        ).visibility = View.GONE
+    }
+
+    private fun mostrarFotoNoDisponible() {
+
+        ivFoto.setImageResource(
+            R.drawable.ic_avatar_placeholder
+        )
+
+        tvLeyendaSinFoto.text =
+            getString(
+                R.string.leyenda_sin_foto
+            )
+
+        tvLeyendaSinFoto.visibility =
+            View.VISIBLE
+
+        if (esGuarda) {
+
+            btnCamara.isEnabled =
+                false
+
+        } else {
+
+            viewPager.isUserInputEnabled =
+                false
+        }
+    }
+
+    private fun mostrarCargando(
+        cargando: Boolean
+    ) {
+
+        progressBar.visibility =
+            if (cargando) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
+
+        tvError.visibility =
+            View.GONE
     }
 
     private fun mostrarError() {
-        tvError.text = getString(R.string.error_carga_usuario)
-        tvError.visibility = View.VISIBLE
+
+        tvError.text =
+            getString(
+                R.string.error_carga_usuario
+            )
+
+        tvError.visibility =
+            View.VISIBLE
     }
 }

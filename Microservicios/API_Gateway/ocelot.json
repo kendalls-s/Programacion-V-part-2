@@ -44,6 +44,20 @@
         "PUT",
         "DELETE"
       ]
+    },
+    {
+      "DownstreamPathTemplate": "/CarnetQR/usuario/qr",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tiusr22pl.cuc-carrera-ti.ac.cr",
+          "Port": 443
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/qr",
+      "UpstreamHttpMethod": [
+        "GET"
+      ]
     }
   ],
 

@@ -1249,7 +1249,7 @@ class MainActivity : AppCompatActivity() {
         )
 
         icono.text =
-            "⌛"
+            "="
 
         icono.setTextColor(
             Color.rgb(

@@ -8,9 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.movil.R
 
 class MainPagerAdapter(
+    private val esGuarda: Boolean,
     private val tituloQr: String,
     private val onDatosViewCreated: (View) -> Unit,
-    private val onQrViewCreated: (View) -> Unit
+    private val onQrViewCreated: (View) -> Unit,
+    private val onScannerViewCreated: (View) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private class SimpleViewHolder(
@@ -46,19 +48,34 @@ class MainPagerAdapter(
 
         } else {
 
-            val view = inflater.inflate(
-                R.layout.fragment_qr_placeholder,
-                parent,
-                false
-            )
+            if (esGuarda) {
 
-            view.findViewById<TextView>(
-                R.id.tvTituloQr
-            ).text = tituloQr
+                val view = inflater.inflate(
+                    R.layout.fragment_scanner_qr,
+                    parent,
+                    false
+                )
 
-            onQrViewCreated(view)
+                onScannerViewCreated(view)
 
-            SimpleViewHolder(view)
+                SimpleViewHolder(view)
+
+            } else {
+
+                val view = inflater.inflate(
+                    R.layout.fragment_qr_placeholder,
+                    parent,
+                    false
+                )
+
+                view.findViewById<TextView>(
+                    R.id.tvTituloQr
+                ).text = tituloQr
+
+                onQrViewCreated(view)
+
+                SimpleViewHolder(view)
+            }
         }
     }
 
